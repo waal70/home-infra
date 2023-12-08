@@ -3,7 +3,7 @@
   replace:
     path: /etc/default/grub
     regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
-    replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=data=writeback,noatime,nodiratime"'
+    replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"'
   when: enable_journaling
   notify: Update GRUB configuration
 
@@ -29,3 +29,14 @@
     mode: '0755'
   when: ansible_distribution == 'Debian'
   become: yes
+
+- name: Force the journal option
+  ansible.builtin.shell: su - && echo u > /proc/sysrq-trigger &&  echo s > /proc/sysrq-trigger && "{{ '/usr/sbin/tune2fs -O has_journal' if enable_journaling | default(true) else '/usr/sbin/tune2fs -O ^has_journal' }} {{ root_partition }}" && e2fsck -fy "{{ root_partition }}" &&  echo s > /proc/sysrq-trigger
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: root
+
+- name: Reboot immediately
+  ansible.builtin.reboot:
+
