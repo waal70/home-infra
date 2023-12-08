@@ -3,21 +3,20 @@
   hosts: proxmox_servers
   become: yes
   roles:
-    - proxmox
-    - server_hardening
-    
----
-handlers:
+    - common
+
+  handlers:
   - name: Update APT cache
     apt:
       update_cache: yes
-      
+
   - name: Restart systemd-journald
     systemd:
         name: systemd-journald
         state: restarted
         become: yes
-    
+
   - name: Update GRUB configuration
     command: update-grub
-    when: ansible_distribution == 'Debian' 
+    when: ansible_distribution == 'Debian'
+

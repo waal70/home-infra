@@ -4,11 +4,9 @@
     path: /etc/default/grub
     regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
     replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=data=writeback,noatime,nodiratime"'
-  when: enable_journaling == true
+  when: enable_journaling
   notify: Update GRUB configuration
 
-
----
 - name: Add tune2fs command to rc.local (Disable/Enable journaling)
   lineinfile:
     path: /etc/rc.local

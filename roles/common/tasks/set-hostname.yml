@@ -1,11 +1,11 @@
 ---
 - name: Set the hostname
   hostname:
-    name: "{{ proxmox_hostname }}"
+    name: "{{ inventory_hostname }}"
 
 - name: Update /etc/hosts file
   lineinfile:
     path: /etc/hosts
     regexp: '^127.0.1.1'
-    line: "{{ ansible_host }} {{ proxmox_hostname }}"
+    line: "{{ ansible_host }} {{ inventory_hostname }}"
     state: present

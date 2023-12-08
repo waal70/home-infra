@@ -1,4 +1,4 @@
 [proxmox_servers]
-proxmox01 ansible_host=your_server_ip ansible_user=your_ssh_user
-proxmox02 ansible_host=your_server_ip ansible_user=your_ssh_user
+proxmox01 ansible_host=172.16.10.75 ansible_user=awaal ansible_home=/home/awaal
+#proxmox02 ansible_host=your_server_ip ansible_user=your_ssh_user
 
