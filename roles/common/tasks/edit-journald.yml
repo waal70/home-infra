@@ -10,3 +10,7 @@
     - { regexp: '^#?ForwardToSyslog', line: 'ForwardToSyslog=no' }
     - { regexp: '^#?SystemMaxUse', line: 'SystemMaxUse=50M' }
   notify: Restart systemd-journald
+
+- name: Vacuum journalctl before
+   become: yes
+   command: journalctl --vacuum-size=10M
