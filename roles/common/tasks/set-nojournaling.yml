@@ -21,7 +21,7 @@
   poll: 0
   become: true
   become_user: root
-  when: "'has_journal' in fs_features"
+  when: fs_features is search("has_journal")
 
 - ansible.builtin.meta: clear_host_errors
 
