@@ -1,9 +1,11 @@
 ---
 - include_tasks: color-shell.yml
+# Do not edit grub defaults...
 #- include_tasks: do-filesystem.yml
 - include_tasks: edit-journald.yml
 - include_tasks: inet6-manual.yml
 - include_tasks: set-hostname.yml
 - include_tasks: set-nojournaling.yml
 - include_tasks: sudoers.yml
-- include_tasks: reboot.yml
+# Reboot will occur later
+#- include_tasks: reboot.yml 
