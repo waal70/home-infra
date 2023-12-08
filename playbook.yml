@@ -4,7 +4,7 @@
   become: yes
   roles:
     - common
-    - log2ram
+#    - log2ram
 
   handlers:
   - name: Update APT cache
@@ -15,7 +15,6 @@
     systemd:
         name: systemd-journald
         state: restarted
-        become: yes
 
   - name: Update GRUB configuration
     command: update-grub

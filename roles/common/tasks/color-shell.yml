@@ -3,10 +3,10 @@
   lineinfile:
     path: "{{ ansible_home }}/."  # Set the actual path to the user's home directory
     dest: .bashrc
-    line: |
-      # Force colors in the terminal
-      export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-      export LS_OPTIONS='--color=auto'
-      alias ls='ls $LS_OPTIONS'
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: 'present'
+  with_items:
+    - { regexp: '^#?force_color_prompt', line: 'force_color_prompt=yes' }
   become: yes
   become_user: "{{ ansible_user }}"

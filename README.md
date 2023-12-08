@@ -19,3 +19,6 @@ It probably won't be worth the name FORK, because I will change it completely to
 * On the installer, go to HELP
 * At the boot: prompt, type: auto url=http://webserver/path/preseed.cfg" there, replacing the URL with the address to your preseed configuration file 
 * Hint: adpi0 has a ps.cfg at the root :)
+
+## Try this:
+ansible-playbook -i inventory/hosts playbook.yml -kK
