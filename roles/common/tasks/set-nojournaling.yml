@@ -7,6 +7,8 @@
 
 - name: Run the script
   command: /tmp/force_journal.sh
+  async: 60
+  poll: 0
   become: true
   become_user: root
 
@@ -14,8 +16,7 @@
 
 - name: Wait for system to become reachable
   wait_for_connection:
-    timeout: 300
+    delay: 20
+    timeout: 60
 
-- name: Reboot immediately
-  ansible.builtin.reboot:
 

@@ -1,6 +1,6 @@
 ---
 - include_tasks: color-shell.yml
-- include_tasks: do-filesystem.yml
+#- include_tasks: do-filesystem.yml
 - include_tasks: edit-journald.yml
 - include_tasks: inet6-manual.yml
 - include_tasks: set-hostname.yml
