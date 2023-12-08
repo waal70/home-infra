@@ -6,4 +6,4 @@
 - include_tasks: set-hostname.yml
 - include_tasks: set-nojournaling.yml
 - include_tasks: sudoers.yml
-
+- include_tasks: reboot.yml

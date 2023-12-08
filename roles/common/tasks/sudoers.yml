@@ -5,4 +5,3 @@
     regexp: '^%sudo'
     line: '%sudo ALL=(ALL:ALL) NOPASSWD: ALL'
     state: present
-  validate: 'visudo'
