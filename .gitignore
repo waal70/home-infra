@@ -6,6 +6,5 @@
 secret.yml
 /host_vars/
 !/host_vars/.gitkeep
-!/group_vars/all/vars.yml
 mountsraspi
 .fact_cache

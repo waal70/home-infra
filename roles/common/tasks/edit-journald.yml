@@ -12,5 +12,5 @@
   notify: Restart systemd-journald
 
 - name: Vacuum journalctl before
-   become: yes
-   command: journalctl --vacuum-size=10M
+  command: journalctl --vacuum-size=10M
+  become: yes

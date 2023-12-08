@@ -3,3 +3,7 @@
 proxmox_version: "6.4"
 
 enable_journaling: false # Set to true to enable journaling, false to disable
+
+root_partition: /dev/sda1
+
+log2ram_size: "80M"
