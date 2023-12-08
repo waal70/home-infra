@@ -1,0 +1,16 @@
+---
+- name: Secure SSH configuration
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state | default('present') }}"
+  with_items:
+    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+    - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no' }
+    - { regexp: '^X11Forwarding', line: 'X11Forwarding no' }
+
+- name: Reload SSH service
+  systemd:
+    name: ssh
+    state: restarted

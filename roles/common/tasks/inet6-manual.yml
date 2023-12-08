@@ -1,0 +1,10 @@
+---
+- name: Set inet6 auto to manual
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  with_items:
+    - { name: 'net.ipv6.conf.all.autoconf', value: '0' }
+    - { name: 'net.ipv6.conf.default.autoconf', value: '0' }
+  become: yes

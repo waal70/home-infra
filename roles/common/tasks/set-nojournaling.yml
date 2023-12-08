@@ -1,0 +1,33 @@
+---
+- name: Disable journaling on the root filesystem and set noatime and nodiratime
+  replace:
+    path: /etc/default/grub
+    regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
+    replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=data=writeback,noatime,nodiratime"'
+  when: enable_journaling == true
+  notify: Update GRUB configuration
+
+
+---
+- name: Add tune2fs command to rc.local (Disable/Enable journaling)
+  lineinfile:
+    path: /etc/rc.local
+    line: "{{ 'tune2fs -O has_journal' if enable_journaling | default(true) else 'tune2fs -O ^has_journal' }} {{ root_partition }}"
+  when: ansible_distribution == 'Debian'
+  become: yes
+
+- name: Create /etc/rc.local if it doesn't exist
+  copy:
+    content: |
+      #!/bin/sh -e
+      exit 0
+    dest: /etc/rc.local
+  when: ansible_distribution == 'Debian'
+  become: yes
+
+- name: Make /etc/rc.local executable
+  file:
+    path: /etc/rc.local
+    mode: '0755'
+  when: ansible_distribution == 'Debian'
+  become: yes

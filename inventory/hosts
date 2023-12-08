@@ -1,0 +1,4 @@
+[proxmox_servers]
+proxmox01 ansible_host=your_server_ip ansible_user=your_ssh_user
+proxmox02 ansible_host=your_server_ip ansible_user=your_ssh_user
+

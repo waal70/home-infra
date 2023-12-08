@@ -1,0 +1,12 @@
+---
+- name: Edit journald.conf
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state | default('present') }}"
+  with_items:
+    - { regexp: '^#?Storage', line: 'Storage=volatile' }
+    - { regexp: '^#?ForwardToSyslog', line: 'ForwardToSyslog=no' }
+    - { regexp: '^#?SystemMaxUse', line: 'SystemMaxUse=50M' }
+  notify: Restart systemd-journald

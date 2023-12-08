@@ -1,0 +1,8 @@
+---
+- name: Edit sudoers for passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL:ALL) NOPASSWD: ALL'
+    state: present
+  validate: 'visudo'

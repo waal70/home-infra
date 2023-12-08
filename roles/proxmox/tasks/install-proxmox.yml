@@ -1,0 +1,8 @@
+---
+- name: Ensure Proxmox is installed
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - proxmox-ve
+    - proxmox-widget-toolkit
