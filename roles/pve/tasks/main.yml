@@ -1,2 +1,4 @@
 ---
 # tasks file for pve
+- include_tasks: proxmox-repo.yml
+- include_tasks: install-proxmox
