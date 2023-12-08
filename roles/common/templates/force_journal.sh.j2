@@ -1,7 +1,7 @@
 #! /bin/sh
 echo u > /proc/sysrq-trigger 
 echo s > /proc/sysrq-trigger 
-tune2fs -O ^has_journal {{ root_filesystem }}
-e2fsck -fy /dev/sda1 {{ root_filesystem }}
+tune2fs -O ^has_journal {{ root_partition }}
+e2fsck -fy {{ root_partition }}
 echo s > /proc/sysrq-trigger 
-#echo b > /proc/sysrq-trigger
+echo b > /proc/sysrq-trigger
