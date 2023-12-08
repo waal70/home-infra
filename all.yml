@@ -1,5 +1,0 @@
----
-# Example variables, customize as needed
-proxmox_version: "6.4"
-
-enable_journaling: false # Set to true to enable journaling, false to disable
