@@ -31,11 +31,8 @@
   become: yes
 
 - name: Force the journal option
-  ansible.builtin.shell: su - && echo u > /proc/sysrq-trigger &&  echo s > /proc/sysrq-trigger && "{{ '/usr/sbin/tune2fs -O has_journal' if enable_journaling | default(true) else '/usr/sbin/tune2fs -O ^has_journal' }} {{ root_partition }}" && e2fsck -fy "{{ root_partition }}" &&  echo s > /proc/sysrq-trigger
-  args:
-    executable: /bin/bash
-  become: yes
-  become_user: root
+  ansible.builtin.script:
+    cmd: ./scripts/force_journal.sh
 
 - name: Reboot immediately
   ansible.builtin.reboot:
