@@ -32,7 +32,7 @@
     update_cache: yes
     cache_valid_time: 3600
     upgrade: full
-  when: _pve_repo is changed or _pve_ceph_repo is changed
+  when: _pve_repo is changed
   retries: 2
   register: _full_upgrade
   until: _full_upgrade is succeeded
