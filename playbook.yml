@@ -1,5 +1,5 @@
 ---
-- name: Manage Proxmox servers
+- name: Manage my Proxmox servers
   hosts: proxmox_servers
   become: yes
   roles:
