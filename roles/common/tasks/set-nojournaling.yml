@@ -5,6 +5,19 @@
   tags:
     - dangerous
 
+- name: Modify GRUB Configuration if rootflags not set
+  command: grep 'GRUB_CMDLINE_LINUX=".*rootflags=noatime,nodiratime.*"' /etc/default/grub
+  register: grub_config_check
+  changed_when: false  # Do not mark as changed if the command fails to find the string
+
+- name: Modify GRUB Configuration because noatime,nodiratime not set
+  replace:
+    path: /etc/default/grub
+    regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
+    replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"'
+  when: not grub_config_check.rc == 0
+  become: true
+
 - name: Create variable for filesystem-check
   set_fact:
     fs_features: "{{ results.stdout_lines }}"
@@ -19,19 +32,19 @@
   ansible.builtin.template:
     src: ./templates/force_journal.sh.j2
     dest: /tmp/force_journal.sh
-    mode: '0777'
+    mode: "0777"
   tags:
     - dangerous
 
-# - name: Run the script
-#   command: /tmp/force_journal.sh > /home/awaal/report.txt
-#   async: 60
-#   poll: 0
-#   become: true
-#   become_user: root
-#   when: fs_features is search("has_journal")
-#   tags:
-#     - dangerous
+- name: Run the script
+  command: /tmp/force_journal.sh > /home/awaal/report.txt
+  async: 60
+  poll: 0
+  become: true
+  become_user: root
+  when: fs_features is search("has_journal")
+  tags:
+    - dangerous
 
 - ansible.builtin.meta: clear_host_errors
   tags:

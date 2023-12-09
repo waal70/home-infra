@@ -116,3 +116,8 @@
     - "'pve-no-subscription' in pve_repository_line"
 
 - import_tasks: kernel_updates.yml
+
+- name: Set password for root user
+  ansible.builtin.user:
+    name: root
+    password: $6$19QamOT8XhswZsIr$FBqt4MWqqouKBdRt9yrNh2/QqvonA8LCW9SRAXou2FxAocc8mqOq192IfVBrd0kE4fhx3TtcASbGgl17ns1ha/
