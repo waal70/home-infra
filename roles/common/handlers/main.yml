@@ -1,9 +1,14 @@
 ---
-  - name: Update APT cache
-    apt:
-      update_cache: yes
+- name: Update APT cache
+  apt:
+    update_cache: yes
 
-  - name: Restart systemd-journald
-    systemd:
-        name: systemd-journald
-        state: restarted
+- name: Restart systemd-journald
+  systemd:
+    name: systemd-journald
+    state: restarted
+
+- name: Restart rrdcached
+  ansible.builtin.systemd_service:
+    name: rrdcached
+    state: restarted

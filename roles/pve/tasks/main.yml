@@ -82,6 +82,17 @@
   ansible.builtin.command: update-grub
   become: true
 
+- name: Reduce rrdcached writes
+  lineinfile:
+    path: /etc/default/rrdcached
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state | default('present') }}"
+  with_items:
+    - { regexp: '^#?WRITE_TIMEOUT', line: 'WRITE_TIMEOUT=3600' }
+    - { regexp: '^#?JOURNAL_PATH', line: '#JOURNAL_PATH=/var/lib/rrdcached/journal/' }
+  notify: Restart rrdcached
+
 - block:
     - name: Remove automatically installed PVE Enterprise repo configuration
       ansible.builtin.apt_repository:
