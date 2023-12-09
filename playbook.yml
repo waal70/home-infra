@@ -4,6 +4,7 @@
   become: yes
   roles:
     - common
+    - pve
 #    - log2ram
 
   handlers:
