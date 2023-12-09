@@ -4,6 +4,8 @@
 /files/fonts/*
 .DS_Store
 secret.yml
+/.vscode/
+/.vscode/*
 /host_vars/
 !/host_vars/.gitkeep
 mountsraspi
