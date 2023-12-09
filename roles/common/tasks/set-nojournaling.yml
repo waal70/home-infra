@@ -6,7 +6,7 @@
     - dangerous
 
 - name: Modify GRUB Configuration if rootflags not set
-  command: grep 'GRUB_CMDLINE_LINUX=".*rootflags=noatime,nodiratime.*"' /etc/default/grub
+  command: grep -q 'GRUB_CMDLINE_LINUX=".*rootflags=noatime,nodiratime.*"' /etc/default/grub
   register: grub_config_check
   changed_when: false  # Do not mark as changed if the command fails to find the string
 
