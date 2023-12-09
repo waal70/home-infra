@@ -23,15 +23,15 @@
   tags:
     - dangerous
 
-- name: Run the script
-  command: /tmp/force_journal.sh > /home/awaal/report.txt
-  async: 60
-  poll: 0
-  become: true
-  become_user: root
-  when: fs_features is search("has_journal")
-  tags:
-    - dangerous
+# - name: Run the script
+#   command: /tmp/force_journal.sh > /home/awaal/report.txt
+#   async: 60
+#   poll: 0
+#   become: true
+#   become_user: root
+#   when: fs_features is search("has_journal")
+#   tags:
+#     - dangerous
 
 - ansible.builtin.meta: clear_host_errors
   tags:
