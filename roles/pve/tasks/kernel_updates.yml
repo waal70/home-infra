@@ -10,7 +10,6 @@
     msg: "PVE kernel update detected by Ansible"
     pre_reboot_delay: "{{ pve_reboot_on_kernel_update_delay }}"
     post_reboot_delay: "{{ pve_reboot_on_kernel_update_delay }}"
-  throttle: "{{ pve_cluster_enabled | bool }}"
   when:
     - "pve_reboot_on_kernel_update | bool"
     - "_pve_kernel_update.new_kernel_exists"
