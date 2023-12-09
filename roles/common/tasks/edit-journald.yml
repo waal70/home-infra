@@ -13,4 +13,4 @@
 
 - name: Vacuum journalctl before
   command: journalctl --vacuum-size=10M
-  become: yes
+  become: true

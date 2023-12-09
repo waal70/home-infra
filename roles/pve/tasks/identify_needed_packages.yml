@@ -1,21 +1,12 @@
+# Packages as per https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm#Install_the_Proxmox_VE_packages
 ---
 - name: Stage packages needed for base PVE installation
   set_fact:
     _pve_install_packages:
       - proxmox-ve
+      - postfix
       - open-iscsi
-      - ksm-control-daemon
-      - systemd-sysv
-
-- name: Stage ZFS packages if ZFS is enabled
-  set_fact:
-    _pve_install_packages: "{{ _pve_install_packages | union(['zfsutils-linux', 'zfs-initramfs', 'zfs-zed']) }}"
-  when: "pve_zfs_enabled | bool"
-
-- name: Stage Ceph packages if Ceph is enabled
-  set_fact:
-    _pve_install_packages: "{{ _pve_install_packages | union(['ceph', 'ceph-common', 'ceph-mds', 'ceph-fuse', 'gdisk']) }}"
-  when: "pve_ceph_enabled | bool"
+      - chrony
 
 - name: Stage any extra packages the user has specified
   set_fact:
