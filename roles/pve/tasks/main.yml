@@ -72,7 +72,9 @@
 
 - name: Remove old Debian kernels after fresh install of pve
   ansible.builtin.apt:
-    name: linux-image-amd64 'linux-image-6.1*'
+    pkg: 
+      - linux-image-amd64 
+      - 'linux-image-6.1*'
     state: absent
     purge: yes
 
