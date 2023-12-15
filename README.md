@@ -21,7 +21,7 @@ Relies on a standard Debian installation, that has some defaults set. These defa
 
 ## Role-pve:
 * Follows https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm to install pve over the standard Debian install
-* Also sets root user password for initial login into web-interface
+* Also sets root user password for initial login into web-interfaceset
 
 ## To use preseed:
 * Publish ./debian-preseed/ps.cfg on a webserver

@@ -1,0 +1,20 @@
+---
+- name: Check current powersave governor
+  ansible.builtin.command: 'cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+  register: governor_output
+- debug: msg="{{ governor_output.stdout }}"
+
+- name: Ensure cpufrequtils is installed
+  ansible.builtin.apt:
+    name: cpufrequtils
+    state: present
+  
+- name: Set powersave governor to powersave if currently other setting
+  ansible.builtin.template:
+    src: etc/default/cpufrequtils.j2
+    dest: /etc/default/cpufrequtils
+    owner: root
+    group: root
+    mode: 0644
+  when: governor_output is search("performance")
+  
