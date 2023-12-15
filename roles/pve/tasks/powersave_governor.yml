@@ -3,7 +3,12 @@
   ansible.builtin.command: cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
   register: governor_output
   failed_when: "governor_output.rc not in [ 0, 1 ]"
-- debug: msg="{{ governor_output.stdout }}"
+
+- name: Create variable for governor check
+  set_fact:
+    cpu_governors: "{{ governor_output.stdout_lines }}"
+- debug:
+    var: cpu_governors
 
 - name: Ensure cpufrequtils is installed
   ansible.builtin.apt:
@@ -17,5 +22,5 @@
     owner: root
     group: root
     mode: 0644
-  when: governor_output is search("performance")
+  when: cpu_governors is search("performance")
   
