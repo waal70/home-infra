@@ -1,8 +1,12 @@
 ---
+- name: Ensure linux-cpupower is installed
+  ansible.builtin.apt:
+    name: linux-cpupower
+    state: present
+
 - name: Check current powersave governor
-  ansible.builtin.command: cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+  ansible.builtin.command: cpupower frequency-info --policy
   register: governor_output
-  failed_when: "governor_output.rc not in [ 0, 1 ]"
 
 - name: Create variable for governor check
   set_fact:
