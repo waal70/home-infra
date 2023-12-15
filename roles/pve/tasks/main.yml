@@ -53,10 +53,12 @@
   ansible.builtin.apt:
     name: proxmox-default-kernel
     state: present
+  register: default_kernel
 
 - name: Reboot after pve-kernel install
   ansible.builtin.reboot:
     msg: "Mandatory reboot after pve-kernel install"
+  when: default_kernel.changed
 
 - import_tasks: identify_needed_packages.yml
 
