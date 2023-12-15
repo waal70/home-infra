@@ -1,6 +1,6 @@
 ---
 - name: Check current powersave governor
-  ansible.builtin.command: 'cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+  ansible.builtin.command: cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
   register: governor_output
 - debug: msg="{{ governor_output.stdout }}"
 
