@@ -19,7 +19,7 @@
   when: not ps.stat.exists
 
 - name: Trigger enabling of service and reload for powertop
-  ansible.builtin.command: {{ item }}
+  ansible.builtin.command: "{{ item }}"
   with_items:
   - systemctl daemon-reload
   - systemctl enable powertop.service
