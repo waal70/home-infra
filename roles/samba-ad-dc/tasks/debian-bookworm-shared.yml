@@ -45,15 +45,6 @@
     src: etc/samba/smb.conf.j2
     dest: /etc/samba/smb.conf
 
-
-
-- name: "Configure DNS forwarder in /etc/samba/smb.conf"
-  replace:
-    path: /etc/samba/smb.conf
-    regexp: '127.0.0.53' 
-    replace: '{{ def_ad_dns_forwarder }}'
-    backup: yes
-
 - name: "back-Up the initial /etc/krb5.conf to /etc/krb5.conf.initial"
   copy:
     src: /etc/krb5.conf
@@ -83,20 +74,3 @@
     regexp: 'errors=remount-ro 0'
     replace: 'user_xattr,acl,barrier=1,errors=remount-ro,relatime 0'
     backup: yes
-
-- name: "Allow traffic for Application Samba4 AD-DC"
-  ufw:
-    rule: allow
-    name: Samba
-
-- name: "Allow all DNS traffic on port 53/tcp"
-  ufw:
-    rule: allow
-    port: '53'
-    proto: "{{ item }}"
-  with_items:
-    - tcp
-    - udp
-
-- name: "Ubuntu login"
-  import_tasks: ubuntu-1804-amd64-login.yml
