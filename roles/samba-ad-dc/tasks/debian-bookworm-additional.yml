@@ -9,6 +9,11 @@
 
 - import_tasks: debian-bookworm-shared.yml
 
+- name: "Transfer krb5.conf.j2 to /etc/krb5.conf"
+  template:
+    src: etc/krb5.conf.j2
+    dest: /etc/krb5.conf
+
 - name: "Join {{ ansible_hostname }} as secondary domain controller"
   ansible.builtin.command: samba-tool domain join {{ smb_realm }} --dns-backend=SAMBA_INTERNAL DC -U"{{ smb_workgroup }}\{{ smb_username }}" --password={{ smb_password }} --option='idmap_ldb:use rfc2307 = yes'
   when: 
