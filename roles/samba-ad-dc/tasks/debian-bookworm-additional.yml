@@ -10,6 +10,6 @@
 - import_tasks: debian-bookworm-shared.yml
 
 - name: "Join {{ ansible_hostname }} as secondary domain controller"
-  ansible.builtin.command: samba-tool domain join {{ smb_realm }} --dns-backend=SAMBA_INTERNAL DC -U"{{ smb_workgroup }}\{{ smb_username }}" --adminpass={{ smb_password }} --option='idmap_ldb:use rfc2307 = yes'
+  ansible.builtin.command: samba-tool domain join {{ smb_realm }} --dns-backend=SAMBA_INTERNAL DC -U"{{ smb_workgroup }}\{{ smb_username }}" --password={{ smb_password }} --option='idmap_ldb:use rfc2307 = yes'
   when: 
     - smb_dc_result.failed  
