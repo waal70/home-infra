@@ -1,4 +1,5 @@
 domain {{ smb_realm }}
 search {{ smb_realm }}
-nameserver 172.16.10.210
-nameserver 8.8.8.8
+nameserver {{ hostvars[groups['samba_ad_dc_servers'][0]]['ansible_default_ipv4']['address'] }}
+nameserver {{ hostvars[groups['samba_ad_dc_servers'][1]]['ansible_default_ipv4']['address'] }}
+

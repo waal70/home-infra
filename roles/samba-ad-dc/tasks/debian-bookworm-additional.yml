@@ -19,7 +19,8 @@
     src: etc/resolv.conf.j2
     dest: /etc/resolv.conf
 
-- name: "Join {{ ansible_hostname }} as secondary domain controller"
+- name: "Join {{ ansible_hostname }} as secondary domain controller because of smb_role={{ smb_role }}"
   ansible.builtin.command: samba-tool domain join {{ smb_realm }} --dns-backend=SAMBA_INTERNAL DC -U"{{ smb_workgroup }}\{{ smb_username }}" --password={{ smb_password }} --option='idmap_ldb:use rfc2307 = yes'
   when: 
-    - smb_dc_result.failed  
+    - smb_dc_result.failed
+  notify: Restart Samba

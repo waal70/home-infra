@@ -14,3 +14,4 @@
     - smb_role == "additional"
     - ansible_distribution_release == "bookworm"
     - ansible_architecture == "x86_64"
+
