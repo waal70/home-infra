@@ -15,6 +15,7 @@ Relies on a standard Debian installation, that has some defaults set. These defa
 * Sets hostname and changes /etc/hosts to reflect
 * Tries to remove the has_journal flag from the root filesystem. Also sets noatime,nodiratime
 * Adds passwordless sudo for members of the sudo group
+* Installs powertop and sets powertop --auto-tune to run at startup
 
 ## Role-log2ram:
 * Installs log2ram - moves /var/log to a memory-based disk
@@ -22,6 +23,10 @@ Relies on a standard Debian installation, that has some defaults set. These defa
 ## Role-pve:
 * Follows https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm to install pve over the standard Debian install
 * Also sets root user password for initial login into web-interfaceset
+
+## Role samba-ad-dc:
+* Installs and configures Samba Active Directory Domain Controller
+* Options are primary or additional
 
 ## To use preseed:
 * Publish ./debian-preseed/ps.cfg on a webserver
