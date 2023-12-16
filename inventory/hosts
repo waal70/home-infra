@@ -2,8 +2,8 @@
 #pve01 ansible_host=172.16.10.251 
 #pve02 ansible_host=172.16.10.201 
 [samba_ad_dc_servers]
-testad0 ansible_host=172.16.10.210 smb_role=primary
-testad1 ansible_host=172.16.10.192 smb_role=additional
+testad0 ansible_host=172.16.10.79 smb_role=primary
+testad1 ansible_host=172.16.10.115 smb_role=additional
 
 [testonly]
 #testad0 ansible_host=172.16.29.114
