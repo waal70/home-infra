@@ -7,7 +7,7 @@
 #
 # Description: Creating a primairy Active Directory Domain Controller.
 
-- import_tasks: debian-bookworm-shared.yml'
+- import_tasks: debian-bookworm-shared.yml
 
 - name: "Transfer resolv.conf.j2 to /etc/resolv.conf"
   template:
