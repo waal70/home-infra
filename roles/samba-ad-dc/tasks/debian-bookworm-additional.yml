@@ -19,15 +19,11 @@
     src: etc/resolv.conf.j2
     dest: /etc/resolv.conf
 
-- name: "Check whether the AD database exists"
-  ansible.builtin.stat:
-    path: /var/lib/samba/private/sam.ldb
-  register: ad_database
-
 - name: "Join {{ ansible_hostname }} as secondary domain controller because of smb_role={{ smb_role }}"
   ansible.builtin.command: samba-tool domain join {{ smb_realm }} --dns-backend=SAMBA_INTERNAL DC -U"{{ smb_workgroup }}\{{ smb_username }}" --password={{ smb_password }} --option='idmap_ldb:use rfc2307 = yes'
   when:
     - smb_dc_result.failed == true
+    - smb_role == 'additional'
     - ad_database.stat.exists == false
   notify: Restart Samba
 

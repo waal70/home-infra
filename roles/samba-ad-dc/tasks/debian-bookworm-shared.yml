@@ -59,3 +59,8 @@
     regexp: 'errors=remount-ro 0'
     replace: 'user_xattr,acl,barrier=1,errors=remount-ro,relatime 0'
     backup: yes
+
+- name: "Check whether the AD database exists"
+  ansible.builtin.stat:
+    path: /var/lib/samba/private/sam.ldb
+  register: ad_database

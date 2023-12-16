@@ -14,11 +14,6 @@
     src: etc/resolv.conf.j2
     dest: /etc/resolv.conf
 
-- name: "Check whether the AD database exists"
-  ansible.builtin.stat:
-    path: /var/lib/samba/private/sam.ldb
-  register: ad_database
-
 - name: "Set {{ ansible_hostname }} as primary domain controller because of smb_role={{ smb_role }}"
   ansible.builtin.command: samba-tool domain provision --server-role=dc --use-rfc2307 --dns-backend=SAMBA_INTERNAL --realm={{ smb_realm }} --domain={{ smb_workgroup }} --adminpass={{ smb_password }}
   when:
