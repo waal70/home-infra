@@ -8,6 +8,13 @@
     - pve
 #    - log2ram
 
+- name: Setup Samba based ad-dc
+  hosts: samba-ad-dc-servers
+  become: yes
+  roles:
+    - common
+    - samba-ad-dc
+
   handlers:
   - name: Update APT cache
     apt:

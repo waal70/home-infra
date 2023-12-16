@@ -1,38 +1,48 @@
-Role Name
+Role Name 
 =========
 
-A brief description of the role goes here.
+Ansible role to setup a Samba-based Active Directory Domain Controller
 
-Requirements
-------------
+Requirements 
+------------ 
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Debian preseeded install with the common and log2ram roles applied
+- Please note that your password should adhere to Samba's password policy
+    i.e. complexity and length!
 
-Role Variables
+Role Variables 
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Set defaut variable(s) in group_vars for reusing in other playbooks.
+-  def_ad_workgroup : 'LAB'
+-  def_ad_realm     : 'LAB.LOCAL'
+-  def_ad_admin     : 'administrator'
+-  def_ad_pass      : 'Welkom123'
+-  def_ad_dns       : '192.168.0.66 192.168.0.67'
+-  def_ad_dc01      : '192.168.0.67'
+-  def_ad_dc02      : '192.168.0.67'
+-  def_ad_basedn    : 'OU=lab,DC=lab,DC=local'
 
-Dependencies
-------------
+You can override these variable(s) in your own playbook
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- smb_workgroup   : TEST
+- smb_realm       : TEST.NET
+- smb_dns_servers : "{{ ansible_default_ipv4.address }}"
+- smb_username    : administrator 
+- smb_password    : Welkom123
 
-Example Playbook
+Example Playbook 
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+    - hosts: adc01
+      become: true
 
-    - hosts: servers
+      vars:
+        # -- Custom settings: role-samba4-primary-ad-dc --
+        smb_workgroup : 'LAB'
+        smb_realm     : 'LAB.LOCAL' 
+        smb_username  : 'administrator'
+        smb_password  : 'Password123'
+
       roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+        - samba-ad-dc

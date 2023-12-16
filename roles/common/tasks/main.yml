@@ -7,5 +7,6 @@
 - include_tasks: set-hostname.yml
 - include_tasks: set-nojournaling.yml
 - include_tasks: sudoers.yml
+- include_tasks: powertop.yml
 # Reboot will occur later
 #- include_tasks: reboot.yml 
