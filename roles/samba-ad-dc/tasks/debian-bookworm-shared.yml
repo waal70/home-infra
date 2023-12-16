@@ -2,12 +2,7 @@
 # Title: Role Samba4
 
 - name: "Check whether this node already is a samba-ad-dc"
-  ansible.builtin.command: 
-    argv: 
-      - samba-tool 
-      - domain 
-      - info 
-      - 127.0.0.1
+  ansible.builtin.shell: samba-tool domain info 127.0.0.1
   register: smb_dc_result
   ignore_errors: true
 
