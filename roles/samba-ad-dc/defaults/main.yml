@@ -23,7 +23,7 @@
 #   Override variable(s) or set put them in your group_vars folder for reusing.
 #
 smb_repository    : '{{ def_ad_repository }}'
-smb_role          : 'primary'
+smb_role          : 'additional'
 smb_workgroup     : 'TEST'
 smb_realm         : 'TEST.ANDRECATHERINE.NET'
 smb_dns_servers   : '{{ ansible_default_ipv4.address }}'
