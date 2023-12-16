@@ -15,6 +15,12 @@
     - common
     - samba-ad-dc
 
+- name: Test stuff
+  hosts: testonly
+  become: true
+  roles:
+    - teststuff
+
   handlers:
   - name: Update APT cache
     apt:

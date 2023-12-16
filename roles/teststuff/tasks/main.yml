@@ -1,0 +1,39 @@
+---
+# tasks file for teststuff
+- name: "Check whether this node already is a samba-ad-dc"
+  ansible.builtin.command: samba-tool domain info {{ ansible_default_ipv4.address }}
+  register: smb_dc_result
+  ignore_errors: true
+
+- name: print
+  ansible.builtin.debug:
+    var: smb_dc_result
+
+- name: check AD database exists. This tells us a provision was executed
+  ansible.builtin.stat:
+    path: /var/lib/samba/private/sam.ldb1
+  register: ad_database
+
+- name: Check samba-ad-dc
+  ansible.builtin.command: samba-tool domain info 127.0.0.1
+  register: smb_dc_result_2
+  notify:
+    - dodebug
+    - Done itworks
+  when: ad_database.stat.exists == true
+  ignore_errors: true
+
+- name: print 2
+  ansible.builtin.debug:
+    var: ad_database
+
+- name: check samba install
+  ansible.builtin.stat:
+    path: /var/run/samba/samba.pid
+  register: samba_pid
+
+
+- name: print 3
+  ansible.builtin.debug:
+    var: smb_dc_result_3
+

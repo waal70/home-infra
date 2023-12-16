@@ -5,6 +5,9 @@
 testad0 ansible_host=172.16.29.114 smb_role=primary
 testad1 ansible_host=172.16.29.7 smb_role=additional
 
+[testonly]
+#testad0 ansible_host=172.16.29.114
+
 [allservers:children]
 proxmox_servers
 samba_ad_dc_servers
