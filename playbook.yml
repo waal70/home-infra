@@ -9,7 +9,7 @@
 #    - log2ram
 
 - name: Setup Samba based ad-dc
-  hosts: samba-ad-dc-servers
+  hosts: samba_ad_dc_servers
   become: yes
   roles:
     - common
