@@ -41,14 +41,12 @@
   when:
     - smb_dc_result.failed
 
-- name: "Symlink to /var/lib/samba/private/krb5.conf to /etc/krb5.conf"
-  file:
+- name: "Copy /var/lib/samba/private/krb5.conf to /etc/krb5.conf"
+  ansible.builtin.file:
     src: /var/lib/samba/private/krb5.conf
     dest: /etc/krb5.conf
-    state: link
+    state: file
     force: yes
-  when:
-    - smb_dc_result.failed
 
 - name: "Enable Services"
   systemd:

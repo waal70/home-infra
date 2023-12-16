@@ -53,13 +53,6 @@
     force: no
   ignore_errors: true
 
-- name: "Symlink to /var/lib/samba/private/krb5.conf to /etc/krb5.conf"
-  file:
-    src: /var/lib/samba/private/krb5.conf
-    dest: /etc/krb5.conf
-    state: link
-    force: yes
-
 - name: "Edit Fstab"
   replace:
     path: /etc/fstab
