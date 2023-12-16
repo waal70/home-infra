@@ -51,6 +51,7 @@
     dest: /etc/krb5.conf.initial
     remote_src: yes
     force: no
+  ignore_errors: true
 
 - name: "Symlink to /var/lib/samba/private/krb5.conf to /etc/krb5.conf"
   file:
