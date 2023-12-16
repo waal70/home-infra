@@ -1,32 +1,25 @@
 ---
 # Title: Role Samba4
-#
-# Author: bitfinity-nl
-# File: tasks/ubt-1804-adc.yml
-#
-# Description:
-#   Add additional domain controller
-#
 
-- name: "Check OS if is allready DC"
+- name: "Check whether this node already is a samba-ad-dc"
   shell: "samba-tool domain info {{ ansible_default_ipv4.address }}"
   register: smb_dc_result
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: "Preseed Kerberos version 5: krb5-config/default_realm"
   raw: "echo krb5-config krb5-config/default_realm string {{ smb_realm }} | sudo debconf-set-selections"
   when:
-    - smb_dc_result.failed == true
+    - smb_dc_result.failed
 
 - name: "Preseed Kerberos version 5: krb5-config/add_servers_realm"
   raw: "echo krb5-config krb5-config/add_servers_realm string {{ smb_realm }} | sudo debconf-set-selections"
   when:
-    - smb_dc_result.failed == true
+    - smb_dc_result.failed
 
 - name: "Preseed PAM Configuration"
   raw: "echo libpam-runtime  libpam-runtime/profiles multiselect     unix, winbind, systemd, mkhomedir | sudo debconf-set-selections"
   when:
-    - smb_dc_result.failed == true
+    - smb_dc_result.failed
 
 - name: "Install dependencies"
   apt:
@@ -35,40 +28,24 @@
     state: present
   vars:
     packages:
-    - acl
+    - krb5-user
     - samba
     - smbclient
-    - krb5-config
-    - krb5-user
     - winbind
-    - libpam-winbind
-    - libnss-winbind
-
-- name: "back-up the initial /etc/samba/smb.conf to /etc/samba/smb.conf.initial"
-  copy:
-    src: /etc/samba/smb.conf
-    dest: /etc/samba/smb.conf.initial
-    remote_src: yes
-    force: no
-  when:
-    - smb_dc_result.failed == true
 
 - name: "rm /etc/samba/smb.conf"
   file:
     path: /etc/samba/smb.conf
     state: absent
   when:
-    - smb_dc_result.failed == true
+    - smb_dc_result.failed
 
-- name: "Transfer adc/smb.conf.j2 to /etc/samba/smb.conf"
+- name: "Transfer smb.conf.j2 to /etc/samba/smb.conf"
   template:
-    src: adc/smb.conf.j2
+    src: etc/samba/smb.conf.j2
     dest: /etc/samba/smb.conf
 
-- name: "Join {{ ansible_hostname }} as additional domain controller"
-  raw: "samba-tool domain join {{ smb_realm }} DC -U{{ smb_workgroup }}\\{{smb_username }} --realm={{ smb_realm }} --domain={{ smb_workgroup }} --adminpass={{ smb_password }}"
-  when:
-    - smb_dc_result.failed == true  
+
 
 - name: "Configure DNS forwarder in /etc/samba/smb.conf"
   replace:
