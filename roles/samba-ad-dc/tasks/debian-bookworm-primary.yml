@@ -75,3 +75,5 @@
     backup: yes
   when:
     - smb_dc_result.failed
+
+- import_tasks: samba-passreqs.yml
