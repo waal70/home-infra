@@ -44,16 +44,11 @@
   become: true
   become_user: root
   when: fs_features is search("has_journal")
-  tags:
-    - dangerous
 
 - ansible.builtin.meta: clear_host_errors
-  tags:
-    - dangerous
 
 - name: Wait for system to become reachable
   wait_for_connection:
     delay: 20
     timeout: 60
-  tags:
-    - dangerous
+  when: fs_features is search("has_journal")
