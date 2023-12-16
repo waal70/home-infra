@@ -1,8 +1,7 @@
 ---
 - name: Force colors in .bashrc
   lineinfile:
-    path: "{{ ansible_home }}/."  # Set the actual path to the user's home directory
-    dest: .bashrc
+    path: "{{ ansible_home }}/.bashrc"  # Set the actual path to the user's home directory
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: 'present'
