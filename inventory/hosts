@@ -1,13 +1,13 @@
 [proxmox_servers]
-pve01 ansible_host=172.16.10.251 
-pve02 ansible_host=172.16.10.201 
-[samba-ad-dc-servers]
+#pve01 ansible_host=172.16.10.251 
+#pve02 ansible_host=172.16.10.201 
+[samba_ad_dc_servers]
 adpi0 ansible_host=172.16.10.210 smb_role=primary
 adpi1 ansible_host=172.16.10. smb_role=additional
 
 [allservers:children]
 proxmox_servers
-sammba-ad-dc-servers
+samba_ad_dc_servers
 
 [allservers:vars]
 ansible_user=awaal
