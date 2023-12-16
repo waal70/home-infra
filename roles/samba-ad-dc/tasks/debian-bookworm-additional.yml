@@ -14,6 +14,11 @@
     src: etc/krb5.conf.j2
     dest: /etc/krb5.conf
 
+- name: "Transfer resolv.conf.j2 to /etc/resolv.conf"
+  template:
+    src: etc/resolv.conf.j2
+    dest: /etc/resolv.conf
+
 - name: "Join {{ ansible_hostname }} as secondary domain controller"
   ansible.builtin.command: samba-tool domain join {{ smb_realm }} --dns-backend=SAMBA_INTERNAL DC -U"{{ smb_workgroup }}\{{ smb_username }}" --password={{ smb_password }} --option='idmap_ldb:use rfc2307 = yes'
   when: 
