@@ -19,16 +19,3 @@
   service:
     name: watchdog-mux
     state: restarted
-
-- name: restart zfs-zed
-  service:
-    name: zfs-zed
-    state: restarted
-
-- name: restart ceph
-  # Needs to use the systemd module directly to be able to
-  # reload the systemd daemon
-  systemd:
-    name: ceph.service
-    state: restarted
-    daemon_reload: true

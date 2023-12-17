@@ -13,7 +13,6 @@
 
 - name: Trust Proxmox' packaging key by importing it
   ansible.builtin.command: wget https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg 
-  become: true
     
 - name: Remove os-prober package
   ansible.builtin.apt:

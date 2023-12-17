@@ -5,4 +5,4 @@
     state: present
   with_items:
     - proxmox-ve
-    - proxmox-widget-toolkit
+
