@@ -46,7 +46,7 @@
 - name: Create the secrets file and give proper permissions
   ansible.builtin.template:
     src: var/lib/samba/private/rsyncd.secret.j2
-    dest: /var/lib/samba/privte/rsyncd.secret
+    dest: /var/lib/samba/private/rsyncd.secret
     owner: root
     group: root
     mode: '0600'
