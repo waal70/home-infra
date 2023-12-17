@@ -6,14 +6,8 @@
 # Will include all hosts the playbook is run on.
 # Inspired from http://xmeblog.blogspot.com/2013/06/ansible-dynamicaly-update-etchosts.html
 
-- name: "Build hosts file for SAMBA DC's"
-  lineinfile:
-    dest=/etc/hosts
-    regexp='.*{{ item }}$'
-    line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}} {{item}}.{{ smb_realm }}"
-    state=present
-  with_items: "{{ groups['samba_ad_dc_servers'] }}"
-
+# Always run shared tasks:
+- import_tasks: debian-bookworm-shared.yml
 
 - name: "For Debian bookworm - primary"
   import_tasks: debian-bookworm-primary.yml

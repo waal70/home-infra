@@ -7,8 +7,6 @@
 #
 # Description: Install samba and provision a domain. This file for primary domain controllers
 
-- import_tasks: debian-bookworm-shared.yml
-
 - name: "Transfer resolv.conf.j2 to /etc/resolv.conf"
   ansible.builtin.template:
     src: etc/resolv.conf.j2

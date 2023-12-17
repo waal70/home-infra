@@ -1,6 +1,14 @@
 ---
 # Title: Role Samba4
 
+- name: "Build hosts file for SAMBA DC's"
+  lineinfile:
+    dest=/etc/hosts
+    regexp='.*{{ item }}$'
+    line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}} {{item}}.{{ smb_realm }}"
+    state=present
+  with_items: "{{ groups['samba_ad_dc_servers'] }}"
+
 - name: "Check whether this node already is a samba-ad-dc"
   ansible.builtin.shell: samba-tool domain info 127.0.0.1
   register: smb_dc_result
