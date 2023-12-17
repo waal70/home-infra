@@ -3,13 +3,13 @@
 #pve02 ansible_host=172.16.10.201 
 
 [samba_primary]
-testad0 ansible_host=172.16.10.79
+testad0 ansible_host=172.16.10.84
 
 [samba_primary:vars]
 smb_role=primary
 
 [samba_additional]
-testad1 ansible_host=172.16.10.115
+testad1 ansible_host=172.16.10.117
 
 [samba_additional:vars]
 smb_role=additional
@@ -19,7 +19,7 @@ samba_primary
 samba_additional
 
 [testonly]
-testad1 ansible_host=172.16.10.115
+testad1 ansible_host=172.16.10.117
 
 [allservers:children]
 proxmox_servers
