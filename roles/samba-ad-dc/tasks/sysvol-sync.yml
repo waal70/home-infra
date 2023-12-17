@@ -86,4 +86,12 @@
     - smb_role == "additional"
     - rsync_dryrun.failed == false
 
-## TODO: add cron-job!
+- name: Set the rsync as a cron-job on the additional servers. Run at 5:30 AM and 17:30
+  ansible.builtin.cron:
+    name: "SysVol sync"
+    minute: "30"
+    hour: "5,17"
+    job: "rsync -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address'] }}/SysVol/ /var/lib/samba/sysvol/"
+  when: 
+    - smb_role == "additional"
+    - rsync_dryrun.failed == false
