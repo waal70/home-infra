@@ -1,24 +1,24 @@
 ---
-# - name: Manage my Proxmox servers
-#   hosts: proxmox_servers
-#   become: yes
-#   roles:
-#     - common
-#     - log2ram
-#     - pve
-
-# - name: Setup Samba based ad-dc
-#   hosts: samba_ad_dc_servers
-#   become: yes
-#   roles:
-#     - common
-#     - samba-ad-dc
-
-- name: Test stuff
-  hosts: testonly
-  become: true
+- name: Manage my Proxmox servers
+  hosts: proxmox_servers
+  become: yes
   roles:
-    - teststuff
+    - common
+    - log2ram
+    - pve
+
+- name: Setup Samba based ad-dc
+  hosts: samba_ad_dc_servers
+  become: yes
+  roles:
+    - common
+    - samba-ad-dc
+
+# - name: Test stuff
+#   hosts: testonly
+#   become: true
+#   roles:
+#     - teststuff
 
   handlers:
   - name: Update APT cache
