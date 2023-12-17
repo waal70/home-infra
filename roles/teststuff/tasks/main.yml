@@ -11,7 +11,7 @@
     var: fs_features
 
 - name: Execute super-dangerous commands
-  ansible.builtin.raw: echo u > /proc/sysrq-trigger && echo s > /proc/sysrq-trigger && sleep 2 && tune2fs -O ^has_journal {{ root_partition }} && sleep 2 && e2fsck -fy {{ root_partition }} && echo s > /proc/sysrq-trigger && echo b > /proc/sysrq-trigger
+  ansible.builtin.shell: echo u > /proc/sysrq-trigger && echo s > /proc/sysrq-trigger && sleep 2 && tune2fs -O ^has_journal {{ root_partition }} && sleep 2 && e2fsck -fy {{ root_partition }} && echo s > /proc/sysrq-trigger && echo b > /proc/sysrq-trigger
   become: true
   become_user: root
   async: 60
