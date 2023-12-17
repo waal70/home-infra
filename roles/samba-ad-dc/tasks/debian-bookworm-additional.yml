@@ -53,7 +53,11 @@
     msg: "Ansible rebooting after joining domain"
   when: ad_database.stat.exists == false
 
-- name: "Always restart samba-ad-dc.service"
+- name: "Always restart samba-ad-dc.service and winbind"
   ansible.builtin.systemd_service:
-    name: samba-ad-dc.service
-    state: reloaded
+    name: "{{ item }}"
+    state: restarted
+  with_items: 
+    - samba-ad-dc.service
+    - winbind.service
+    
