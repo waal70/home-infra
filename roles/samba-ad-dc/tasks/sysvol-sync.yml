@@ -7,13 +7,17 @@
 #
 # Pre-requisites: at least a primary and one additional DC.
 # Description: Sets up sysvol sync between the DC's
-- name: Ensure rsync is installed. Needed for posix.synchronize and the sysvol replication
-  ansible.builtin.apt:
-    name: rsync
-    state: present
+- name: Set prereqs for all hosts
+  hosts: all
+  tasks: 
+    - name: Ensure rsync is installed. Needed for posix.synchronize and the sysvol replication
+      ansible.builtin.apt:
+        name: rsync
+        state: present
 
 - name: Update the Samba PDC
   hosts: samba_primary
+
   tasks:
     - name: Backup the idmap database file
       ansible.builtin.command: tdbbackup -s .bak /var/lib/samba/private/idmap.ldb
@@ -48,6 +52,7 @@
 
 - name: Update the additional domain controllers
   hosts: samba_additional
+  
   tasks:
     - name: "Create the password file on {{ ansible_hostname }}"
       ansible.builtin.copy:
