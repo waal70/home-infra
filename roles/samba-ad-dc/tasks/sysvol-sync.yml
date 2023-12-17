@@ -7,69 +7,64 @@
 #
 # Pre-requisites: at least a primary and one additional DC.
 # Description: Sets up sysvol sync between the DC's
-    - name: Ensure rsync is installed. Needed for posix.synchronize and the sysvol replication
-      ansible.builtin.apt:
-        name: rsync
-        state: present
+- name: Ensure rsync is installed. Needed for posix.synchronize and the sysvol replication
+  ansible.builtin.apt:
+    name: rsync
+    state: present
 
-    - name: Backup the idmap database file
-      ansible.builtin.command: tdbbackup -s .bak /var/lib/samba/private/idmap.ldb
-      creates: /var/lib/samba/private/idmap.ldb.bak
-      when: smb_role == "primary"
+- name: Backup the idmap database file
+  ansible.builtin.command: "tdbbackup -s .bak /var/lib/samba/private/idmap.ldb"
+  creates: /var/lib/samba/private/idmap.ldb.bak
+  when: smb_role == "primary"
 
-    - name: Transfer the backup file
-      ansible.posix.synchronize:
-        src: /var/lib/samba/private/idmap.ldb.bak
-        dest: /var/lib/samba/private/idmap.ldb
-      delegate_to: "{{ item }}"
-      loop: "{{ groups['samba_additional'] }}"
-      when: smb_role == "primary"
+- name: Transfer the backup file
+  ansible.posix.synchronize:
+    src: /var/lib/samba/private/idmap.ldb.bak
+    dest: /var/lib/samba/private/idmap.ldb
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['samba_additional'] }}"
+  when: smb_role == "primary"
 
-    - name: Now put in place the config for rsyncd
-      ansible.builtin.template: 
-        src: etc/rsyncd.conf.j2
-        dest: /etc/rsyncd.conf
-      when: smb_role == "primary"
+- name: Now put in place the config for rsyncd
+  ansible.builtin.template: 
+    src: etc/rsyncd.conf.j2
+    dest: /etc/rsyncd.conf
+  when: smb_role == "primary"
 
-    - name: Create the secrets file and give proper permissions
-      ansible.builtin.template:
-        src: var/lib/samba/private/rsyncd.secret.j2
-        dest: /var/lib/samba/privte/rsyncd.secret
-        owner: root
-        group: root
-        mode: '0600'
-      when: smb_role == "primary"
-    
-    - name: "Enable rsync services for {{ ansible_hostname }}"
-      ansible.builtin.systemd_service:
-        enabled: true
-        masked: false
-        state: reloaded
-        name: rsync.service
-      when: smb_role == "primary"
+- name: Create the secrets file and give proper permissions
+  ansible.builtin.template:
+    src: var/lib/samba/private/rsyncd.secret.j2
+    dest: /var/lib/samba/privte/rsyncd.secret
+    owner: root
+    group: root
+    mode: '0600'
+  when: smb_role == "primary"
+ 
+- name: "Enable rsync services for {{ ansible_hostname }}"
+  ansible.builtin.systemd_service:
+    enabled: true
+    masked: false
+    state: reloaded
+    name: rsync.service
+  when: smb_role == "primary"
 
-    - name: "Create the password file on additional {{ ansible_hostname }}"
-      ansible.builtin.copy:
-        content: "{{ smb_rsyncd_pass }}"
-        dest: /var/lib/samba/rsync-sysvol.secret
-        owner: root
-        group: root
-        mode: '0600'
-        force: true
-      when: smb_role == "additional"
-    
-    - name: Dry run the rsync
-      ansible.builtin.command: rsync --dry-run -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address'] }}/SysVol/ /var/lib/samba/sysvol/
-      register: rsync_dryrun
-      when: smb_role == "additional"
+- name: "Create the password file on additional {{ ansible_hostname }}"
+  ansible.builtin.copy:
+    content: "{{ smb_rsyncd_pass }}"
+    dest: /var/lib/samba/rsync-sysvol.secret
+    owner: root
+    group: root
+    mode: '0600'
+    force: true
+  when: smb_role == "additional"
 
-    - name: Debug the dryrun
-      ansible.builtin.debug:
-        var: rsync_dryrun
-      when: smb_role == "additional"
+- name: Dry run the rsync
+  ansible.builtin.command: rsync --dry-run -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address'] }}/SysVol/ /var/lib/samba/sysvol/
+  register: rsync_dryrun
+  when: smb_role == "additional"
 
-
-
-
-
+- name: Debug the dryrun
+  ansible.builtin.debug:
+    var: rsync_dryrun
+  when: smb_role == "additional"
 
