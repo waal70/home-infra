@@ -18,13 +18,24 @@
     creates: /var/lib/samba/private/idmap.ldb.bak
   when: smb_role == "primary"
 
-- name: Transfer the backup file
-  ansible.posix.synchronize:
+# Note: because rsync is not daemonized (yet), we cannot use ansible.posix.synchronize
+# So we have to revert to fetch and copy...
+
+- name: Fetch the idmap database file
+  ansible.builtin.fetch:
     src: /var/lib/samba/private/idmap.ldb.bak
-    dest: /var/lib/samba/private/idmap.ldb
-  delegate_to: "{{ item }}"
-  loop: "{{ groups['samba_additional'] }}"
+    dest: var/lib/samba/private/idmap.ldb
+    flat: true
   when: smb_role == "primary"
+
+- name: Copy the idmap database file
+  ansible.builtin.copy:
+    src: var/lib/samba/private/idmap.ldb
+    dest: /var/lib/samba/private/idmap.ldb
+    owner: root
+    group: root
+    mode: '0600'
+  when: smb_role == "additional"
 
 - name: Now put in place the config for rsyncd
   ansible.builtin.template: 

@@ -4,8 +4,7 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 Relies on a standard Debian installation, that has some defaults set. These defaults can be set by running the preseed file: ps.cfg from ./debian-preseed
 
 ## Pre-requisites:
-* Check whether your Ansible control node has builtin.ansible.posix available
-* ansible-galaxy collection install ansible.posix 
+* Ansible control node with ansible-core available
 
 ## Services included:
 * [Proxmox]
