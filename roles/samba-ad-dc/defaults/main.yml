@@ -30,5 +30,6 @@ smb_dns_servers   : '{{ ansible_default_ipv4.address }}'
 smb_dns_forwarder : '8.8.8.8 8.8.4.4'
 smb_username      : 'Administrator'
 smb_password      : 'SuperSecret##'
+smb_site          : 'Amsterdam'
 smb_rsyncd_pass   : 'SuperSecretAlso##'
 
