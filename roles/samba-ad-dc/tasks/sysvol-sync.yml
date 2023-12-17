@@ -1,0 +1,70 @@
+---
+# title: role-samba-ad-dc
+#
+# Author: André
+# Version: 1.0
+# File: tasks/sysvol-sync.yml
+#
+# Pre-requisites: at least a primary and one additional DC.
+# Description: Sets up sysvol sync between the DC's
+- name: Ensure rsync is installed. Needed for posix.synchronize and the sysvol replication
+  ansible.builtin.apt:
+    name: rsync
+    state: present
+
+- hosts: samba_primary
+  tasks:
+    - name: Backup the idmap database file
+      ansible.builtin.command: tdbbackup -s .bak /var/lib/samba/private/idmap.ldb
+      creates: /var/lib/samba/private/idmap.ldb.bak
+
+    - name: Transfer the backup file
+      ansible.posix.synchronize:
+        src: /var/lib/samba/private/idmap.ldb.bak
+        dest: /var/lib/samba/private/idmap.ldb
+      delegate_to: "{{ item }}"
+      loop: "{{ groups['samba_additional'] }}"
+
+    - name: Now put in place the config for rsyncd
+      ansible.builtin.template: 
+        src: etc/rsyncd.conf.j2
+        dest: /etc/rsyncd.conf
+
+    - name: Create the secrets file and give proper permissions
+      ansible.builtin.template:
+        src: var/lib/samba/private/rsyncd.secret.j2
+        dest: /var/lib/samba/privte/rsyncd.secret
+        owner: root
+        group: root
+        mode: '0600'
+    
+    - name: "Enable rsync services for {{ ansible_hostname }}"
+      ansible.builtin.systemd_service:
+        enabled: true
+        masked: false
+        state: reloaded
+        name: rsync.service
+
+- hosts: samba_additional
+  tasks:
+    - name: "Create the password file on {{ ansible_hostname }}"
+      ansible.builtin.copy:
+        content: "{{ smb_rsyncd_pass }}"
+        dest: /var/lib/samba/rsync-sysvol.secret
+        owner: root
+        group: root
+        mode: '0600'
+        force: true
+    - name: Dry run the rsync
+      ansible.builtin.command: rsync --dry-run -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address'] }}/SysVol/ /var/lib/samba/sysvol/
+      register: rsync_dryrun
+
+    - name: Debug the dryrun
+      ansible.builtin.debug:
+        var: rsync_dryrun
+
+
+
+
+
+

@@ -1,16 +1,16 @@
 ---
-# title: ansible-role-samba4-primary-ad-dc
+# title: role-samba-ad-dc
 #
-# Author: Luc Rutten
+# Author: André
 # Version: 1.0
-# File: tasks/ubuntu-1604-amd64.yml
+# File: tasks/debian-bookworm-primary.yml
 #
-# Description: Creating a primairy Active Directory Domain Controller.
+# Description: Install samba and provision a domain. This file for primary domain controllers
 
 - import_tasks: debian-bookworm-shared.yml
 
 - name: "Transfer resolv.conf.j2 to /etc/resolv.conf"
-  template:
+  ansible.builtin.template:
     src: etc/resolv.conf.j2
     dest: /etc/resolv.conf
 
@@ -23,7 +23,7 @@
   notify: Restart Samba
 
 - name: "Disable Services"
-  systemd:
+  ansible.builtin.systemd:
     enabled: no
     state: stopped
     name: "{{ item }}"
@@ -36,7 +36,7 @@
     - smb_dc_result.failed == true
 
 - name: "back-Up the initial /etc/krb5.conf to /etc/krb5.conf.initial"
-  copy:
+  ansible.builtin.copy:
     src: /etc/krb5.conf
     dest: /etc/krb5.conf.initial
     remote_src: yes
@@ -52,7 +52,7 @@
     force: yes
 
 - name: "Always Enable Services"
-  systemd_service:
+  ansible.builtin.systemd_service:
     enabled: true
     masked: false
     name: "{{ item }}"
@@ -68,7 +68,7 @@
     state: reloaded
 
 - name: "Edit Fstab"
-  replace:
+  ansible.builtin.replace:
     path: /etc/fstab
     regexp: 'errors=remount-ro 0'
     replace: 'user_xattr,acl,barrier=1,errors=remount-ro,relatime 0'

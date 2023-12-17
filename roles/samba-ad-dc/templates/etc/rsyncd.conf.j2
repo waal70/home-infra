@@ -1,0 +1,8 @@
+[SysVol]
+path = /var/lib/samba/sysvol/
+comment = Samba Sysvol Share
+uid = root
+gid = root
+read only = yes
+auth users = sysvol-replication
+secrets file = /var/lib/samba/private/rsyncd.secret
