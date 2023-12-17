@@ -95,3 +95,7 @@
   when: 
     - smb_role == "additional"
     - rsync_dryrun.failed == false
+
+- name: Reset the ACL on the additional servers.
+  ansible.builtin.command: samba-tool ntacl sysvolreset
+  when: smb_role == "additional"
