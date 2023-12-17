@@ -80,3 +80,10 @@
     var: rsync_dryrun
   when: smb_role == "additional"
 
+- name: Perform the rsync if dryrun was succesfull
+  ansible.builtin.command: rsync -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address'] }}/SysVol/ /var/lib/samba/sysvol/
+  when: 
+    - smb_role == "additional"
+    - rsync_dryrun.failed == false
+
+## TODO: add cron-job!

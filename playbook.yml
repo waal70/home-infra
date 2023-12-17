@@ -1,19 +1,18 @@
 ---
-- name: Manage my Proxmox servers
-  hosts: proxmox_servers
-  become: yes
-  roles:
-    - common
-    - log2ram
-    - pve
-#    - log2ram
+# - name: Manage my Proxmox servers
+#   hosts: proxmox_servers
+#   become: yes
+#   roles:
+#     - common
+#     - log2ram
+#     - pve
 
-- name: Setup Samba based ad-dc
-  hosts: samba_ad_dc_servers
-  become: yes
-  roles:
-    - common
-    - samba-ad-dc
+# - name: Setup Samba based ad-dc
+#   hosts: samba_ad_dc_servers
+#   become: yes
+#   roles:
+#     - common
+#     - samba-ad-dc
 
 - name: Test stuff
   hosts: testonly
