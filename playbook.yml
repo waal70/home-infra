@@ -12,6 +12,7 @@
 #   become: yes
 #   roles:
 #     - common
+#     - log2ram
 #     - samba-ad-dc
 
 # - name: Test stuff
