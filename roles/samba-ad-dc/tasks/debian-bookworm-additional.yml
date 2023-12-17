@@ -48,10 +48,10 @@
     - nmbd.service
     - winbind.service
 
-- name: Obligatory reboot on joining domain, but only if join domain was executed in this run
-  ansible.builtin.reboot:
-    msg: "Ansible rebooting after joining domain"
-  when: ad_database.stat.exists == false
+# - name: Obligatory reboot on joining domain, but only if join domain was executed in this run
+#   ansible.builtin.reboot:
+#     msg: "Ansible rebooting after joining domain"
+#   when: ad_database.stat.exists == false
 
 - name: "Always restart samba-ad-dc.service and winbind"
   ansible.builtin.systemd_service:
