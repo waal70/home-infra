@@ -1,39 +1,55 @@
 ---
 # tasks file for teststuff
-- name: "Check whether this node already is a samba-ad-dc"
-  ansible.builtin.command: samba-tool domain info {{ ansible_default_ipv4.address }}
-  register: smb_dc_result
-  ignore_errors: true
+- name: Get current filesystem features
+  command: debugfs -R features {{ root_partition }}
+  register: results
+  tags:
+    - dangerous
 
-- name: print
-  ansible.builtin.debug:
-    var: smb_dc_result
+- name: Modify GRUB Configuration if rootflags not set
+  command: grep -q 'GRUB_CMDLINE_LINUX=".*rootflags=noatime,nodiratime.*"' /etc/default/grub
+  register: grub_config_check
+  failed_when: "grub_config_check.rc not in [ 0, 1 ]"
+  changed_when: false  # Do not mark as changed if the command fails to find the string
 
-- name: check AD database exists. This tells us a provision was executed
-  ansible.builtin.stat:
-    path: /var/lib/samba/private/sam.ldb1
-  register: ad_database
+- name: Modify GRUB Configuration because noatime,nodiratime not set
+  replace:
+    path: /etc/default/grub
+    regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
+    replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"'
+  when: not grub_config_check.rc == 0
+  become: true
 
-- name: Check samba-ad-dc
-  ansible.builtin.command: samba-tool domain info 127.0.0.1
-  register: smb_dc_result_2
-  notify:
-    - dodebug
-    - Done itworks
-  when: ad_database.stat.exists == true
-  ignore_errors: true
+- name: Create variable for filesystem-check
+  set_fact:
+    fs_features: "{{ results.stdout_lines }}"
+  tags:
+    - dangerous
+- debug:
+    var: fs_features
+  tags:
+    - dangerous
 
-- name: print 2
-  ansible.builtin.debug:
-    var: ad_database
+- name: Create the force journal script
+  ansible.builtin.template:
+    src: ./templates/force_journal.sh.j2
+    dest: /tmp/force_journal.sh
+    mode: "0777"
+  tags:
+    - dangerous
 
-- name: check samba install
-  ansible.builtin.stat:
-    path: /var/run/samba/samba.pid
-  register: samba_pid
+- name: Run the script
+  command: /tmp/force_journal.sh > /home/awaal/report.txt
+  async: 60
+  poll: 0
+  become: true
+  become_user: root
+  when: fs_features is search("has_journal")
 
+- ansible.builtin.meta: clear_host_errors
 
-- name: print 3
-  ansible.builtin.debug:
-    var: smb_dc_result_3
-
+- name: Wait for system to become reachable
+  wait_for_connection:
+    delay: 20
+    timeout: 60
+  when: fs_features is search("has_journal")
