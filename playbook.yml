@@ -1,19 +1,20 @@
 ---
-- name: Setup Proxmox VE over standard Debian bookworm
-  hosts: proxmox_servers
-  become: yes
-  roles:
-    - common
-    - log2ram
-    - pve
 
-# - name: Setup Samba based ad-dc over standard Debian bookworm
-#   hosts: samba_ad_dc_servers
+# - name: Setup Proxmox VE over standard Debian bookworm
+#   hosts: proxmox_servers
 #   become: yes
 #   roles:
 #     - common
 #     - log2ram
-#     - samba-ad-dc
+#     - pve
+
+- name: Setup Samba based ad-dc over standard Debian bookworm
+  hosts: samba_ad_dc_servers
+  become: yes
+  roles:
+    - common
+    - log2ram
+    - samba-ad-dc
 
 # - name: Test stuff
 #   hosts: testonly
