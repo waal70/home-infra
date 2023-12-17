@@ -14,7 +14,8 @@
 
 - name: Backup the idmap database file
   ansible.builtin.command: "tdbbackup -s .bak /var/lib/samba/private/idmap.ldb"
-  creates: /var/lib/samba/private/idmap.ldb.bak
+  args:
+    creates: /var/lib/samba/private/idmap.ldb.bak
   when: smb_role == "primary"
 
 - name: Transfer the backup file
