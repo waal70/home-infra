@@ -19,7 +19,7 @@ samba_primary
 samba_additional
 
 [testonly]
-testad1 ansible_host=172.16.10.117
+testad1 ansible_host=172.16.10.118
 
 [allservers:children]
 proxmox_servers
