@@ -16,5 +16,5 @@
         read only = No
 
 [netlogon]
-        path = /var/lib/samba/sysvol/{{ smb_realm }}/scripts
+        path = /var/lib/samba/sysvol/{{ smb_realm | lower }}/scripts
         read only = No
