@@ -22,7 +22,6 @@
     - e2fsck -fy {{ root_partition }}
     - echo s > /proc/sysrq-trigger 
     - echo b > /proc/sysrq-trigger
-  become: true
 
 - ansible.builtin.meta: clear_host_errors
 
