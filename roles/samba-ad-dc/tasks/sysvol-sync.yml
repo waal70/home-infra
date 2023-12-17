@@ -12,7 +12,8 @@
     name: rsync
     state: present
 
-- hosts: samba_primary
+- name: Update the Samba PDC
+  hosts: samba_primary
   tasks:
     - name: Backup the idmap database file
       ansible.builtin.command: tdbbackup -s .bak /var/lib/samba/private/idmap.ldb
@@ -45,7 +46,8 @@
         state: reloaded
         name: rsync.service
 
-- hosts: samba_additional
+- name: Update the additional domain controllers
+  hosts: samba_additional
   tasks:
     - name: "Create the password file on {{ ansible_hostname }}"
       ansible.builtin.copy:
