@@ -7,6 +7,7 @@
     regexp='.*{{ item }}$'
     line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}} {{item}}.{{ smb_realm }}"
     state=present
+  when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: "{{ groups['samba_ad_dc_servers'] }}"
   ignore_errors: true
 
