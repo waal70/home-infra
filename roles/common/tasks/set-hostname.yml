@@ -6,6 +6,6 @@
 - name: Update /etc/hosts file
   lineinfile:
     path: /etc/hosts
-    regexp: '^127\.0\.1\.1'
+    regexp: '127\.0\.1\.1'
     line: "{{ ansible_host }} {{ inventory_hostname }}"
     state: present
