@@ -10,3 +10,4 @@ secret.yml
 !/host_vars/.gitkeep
 mountsraspi
 .fact_cache
+.vault_pass
