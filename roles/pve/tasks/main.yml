@@ -121,6 +121,6 @@
 - name: Set password for root user
   ansible.builtin.user:
     name: root
-    password: $6$19QamOT8XhswZsIr$FBqt4MWqqouKBdRt9yrNh2/QqvonA8LCW9SRAXou2FxAocc8mqOq192IfVBrd0kE4fhx3TtcASbGgl17ns1ha/
+    password: "{{ root_pass }}"
 
 - import_tasks: powersave_governor.yml
