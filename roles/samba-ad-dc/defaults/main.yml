@@ -10,26 +10,25 @@
 # -- Samba4 AD settings -- 
 #
 # Variable(s):
-#   smb_repository     : 'default' or 'latest'                 # Set which repositories wil be used.    
-#   smb_role           : 'member'                              # Set samba4 role primary (only for initial setup), additional, member. 
+#   smb_role           : 'additional'                          # Set samba4 role primary (only for initial setup), additional, member. 
 #   smb_workgroup      : 'LAB'                                 # Set workgroup (should be in capital letters).
 #   smb_realm          : 'LAB.LOCAL'                           # Set realm (should be in capital letters).
 #   smb_dns_servers    : '{{ ansible_default_ipv4.address }}'  # Set current ipv4 address.
 #   smb_dns_forwarders : '8.8.8.8 8.8.4.4'                     # Set DNS forwarders.
-#   smb_username       : 'administrator'                       # Set administrator account.
-#   smb_password       : 'Welkom123'                           # Set administrator password.
+#   smb_username       : 'Administrator'                       # Set administrator account.
+#   smb_password       : 'Welcome01'                           # Set administrator password.
+#   smb_site           : 'Amsterdam'                           # Sets the SiteName (prevents Default-Site-First-Site)
+#   smb_rsyncd_pass    : 'Welcome01'                           # Sets the rsync daemon secret for sysvol sync
 #
 # Comment:
-#   Override variable(s) or set put them in your group_vars folder for reusing.
+#   Override variable(s) by setting them in ./vars/main.yml
 #
-smb_repository    : '{{ def_ad_repository }}'
 smb_role          : 'additional'
 smb_workgroup     : 'TEST'
 smb_realm         : 'TEST.ANDRECATHERINE.NET'
 smb_dns_servers   : '{{ ansible_default_ipv4.address }}'
 smb_dns_forwarder : '8.8.8.8 8.8.4.4'
 smb_username      : 'Administrator'
-smb_password      : 'SuperSecret##'
+smb_password      : "{{ vault_smb_password }}"
 smb_site          : 'Amsterdam'
-smb_rsyncd_pass   : 'SuperSecretAlso##'
-
+smb_rsyncd_pass   : "{{ vault_smb_password }}"

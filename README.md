@@ -6,6 +6,14 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * Ansible control node with ansible-core available
 * All controlled nodes assume a standard Debian installation that was configured using ps.cfg from ./debian-preseed
 
+## Sensitive info:
+* Configure your editor by exporting EDITOR=nano in your .bashrc
+* Configure your vault password by setting it in .vault_pass
+* Point to this file in your ansible.cfg, by setting "vault_password_file = .vault_pass" in the [defaults]-section
+* Set your sensitive info by running: ansible-vault encrypt_string 'some_sensitive_value' --name 'variable_containing_sensitive_stuff'
+* E.g.: ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'. The resulting string will be able to be used in your .yaml 
+* Run these commands from the point where your ansible.cfg is also stored, probably the root of your playbook
+
 ## Services included:
 * [Proxmox]
 * [log2ram]
