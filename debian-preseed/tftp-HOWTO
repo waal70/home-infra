@@ -1,0 +1,19 @@
+Download netboot.tar.gz from: https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/
+
+Place this downloaded file in your tftp folder - the one that serves boot files (e.g. /srv/tftp)
+
+tar -xvf netboot.tar.gz
+rm netboot.tar.gz
+
+Now manipulate initrd.gz with a preseed.cfg file:
+
+gunzip initrd.gz
+echo preseed.cfg | cpio -H newc -o -A -F initrd
+gzip initrd
+
+in debian-installer/amd64/pxelinux.cfg is the file "default"
+Edit to reflect a timeout value (non-zero) to autoboot
+
+in debian-installer/amd64/boot-screens/txt.cfg
+add to the append-line:
+"auto=true priority=critical interface=auto"
