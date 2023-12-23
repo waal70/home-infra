@@ -1,12 +1,12 @@
 [proxmox_servers]
-pve01 ansible_host=172.16.11.111 
-pve02 ansible_host=172.16.10.146 
+#pve01 ansible_host=172.16.11.111 
+#pve02 ansible_host=172.16.10.146 
 
 [samba_primary]
-#testad0 ansible_host=172.16.11.165
+adpi0 ansible_host=10.0.0.4
 
 [samba_additional]
-#testad1 ansible_host=172.16.11.166
+ad0 ansible_host=10.0.0.55
 
 [testonly]
 #testtest ansible_host=172.16.11.165
