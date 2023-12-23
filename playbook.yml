@@ -4,9 +4,14 @@
   hosts: proxmox_servers
   become: yes
   roles:
-    - common
-    - log2ram
-    - pve
+    - role: common
+      when: pve_reset is undefined
+    - role: log2ram
+      when: pve_reset is undefined
+    - role: pve
+      when: pve_reset is undefined
+    - role: pxe_prep
+      when: pve_reset is defined
 
 - name: Setup Samba based ad-dc over standard Debian bookworm
   hosts: samba_ad_dc_servers

@@ -1,0 +1,9 @@
+---
+# tasks file for pxe_prep
+
+- name: Overwrite MBR to force PXE boot
+  ansible.builtin.command: 'dd if=/dev/zero of=/dev/sda bs=446 count=1'
+
+- name: Async reboot
+  ansible.builtin.command: 'shutdown -r now &'
+  ignore_errors: true

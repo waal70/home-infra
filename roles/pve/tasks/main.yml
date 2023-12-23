@@ -119,7 +119,7 @@
 - name: Ensure the interfaces file is updated, commenting out any IPv6 line
   ansible.builtin.replace:
     path: /etc/network/interfaces
-    regexp: '^iface.*inet6'
+    regexp: '(^iface.*inet6)'
     replace: '# \1'
 
 - import_tasks: kernel_updates.yml
@@ -130,3 +130,18 @@
     password: "{{ root_pass }}"
 
 - import_tasks: powersave_governor.yml
+
+# This block is there to slim down the install afterwards
+- block:
+    - name: Disable and mask services that are not necessary
+      ansible.builtin.systemd_service:
+        name: {{ item }}
+        enabled: false
+        masked: true
+        state: stopped
+      with_items:
+      - pve-ha-lrm
+      - pve-ha-crm
+      - corosync
+  when:
+    - "pve_slim | bool"
