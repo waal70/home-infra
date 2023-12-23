@@ -116,6 +116,12 @@
   when:
     - "'pve-no-subscription' in pve_repository_line"
 
+- name: Ensure the interfaces file is updated, commenting out any IPv6 line
+  ansible.builtin.replace:
+    path: /etc/network/interfaces
+    regexp: '^iface.*inet6'
+    replace: '# \1'
+
 - import_tasks: kernel_updates.yml
 
 - name: Set password for root user
