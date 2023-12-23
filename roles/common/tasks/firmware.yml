@@ -3,6 +3,6 @@
   ansible.builtin.apt:
     pkg:
     - firmware-realtek
-    - firmware-non-free
+    - firmware-misc-nonfree
     state: present
 
