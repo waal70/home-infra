@@ -8,3 +8,9 @@
     - { name: 'net.ipv6.conf.all.autoconf', value: '0' }
     - { name: 'net.ipv6.conf.default.autoconf', value: '0' }
   become: true
+
+- name: Ensure also network/interfaces is updated
+  ansible.builtin.replace:
+    path: /etc/network/interfaces
+    regexp: 'inet6 auto'
+    replace: 'inet6 manual'

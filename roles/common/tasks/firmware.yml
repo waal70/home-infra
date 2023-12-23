@@ -1,8 +1,23 @@
 ---
-- name: Ensure firmware packages are present (for Optiplex servers)
+- name: Check whether proxmox-ve is installed, because Realtek Firmware is incompatible
+  ansible.builtin.package_facts:
+    manager: auto
+
+
+- name: Ensure firmware packages Realtek is present (for Optiplex servers)
   ansible.builtin.apt:
     pkg:
     - firmware-realtek
+    state: present
+  when: "'proxmox-ve' in ansible_facts.packages"
+
+- name: Determine state of proxmox-ve
+  ansible.builtin.debug:
+    msg: "{{ ansible_facts.packages['proxmox-ve'] | length }} versions of pve are installed!"
+  when: "'proxmox-ve' in ansible_facts.packages"
+
+- name: Ensure firmware-misc-nonfree is present
+  ansible.builtin.apt:
+    pkg:
     - firmware-misc-nonfree
     state: present
-

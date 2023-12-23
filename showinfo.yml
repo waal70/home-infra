@@ -1,0 +1,16 @@
+---
+
+- name: Show info on specific host
+  hosts: pve01
+  become: yes
+  
+  tasks:
+  - name: Collect facts
+    ansible.builtin.setup:
+      filter:
+      - 'ansible_en*'
+    register: hostinfo
+
+  - name: Print info
+    ansible.builtin.debug:
+      var: hostinfo
