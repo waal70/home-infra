@@ -1,3 +1,21 @@
+Configure your device to a certain boot order:
+* Primary HD first
+* USB / Removable media seconds
+* NIC / PXE third
+
+This way, on a valid install, you will always boot from the internal drive
+If this drive fails or there is another issue, it will look for a USB image, then do a PXE boot
+
+How to force PXE boot. WARNING: This will obliterate the partitions on your HDD!~
+This is assuming you have "classical" boot, i.e. MBR-based (also named BIOS mode or Legacy mode)
+The MBR stores the bootloading instructions in the first few bits of the hard disk. Zeroing them will therefore be the trick:
+
+dd if=/dev/zero of=/dev/sda bs=446 count=1
+
+Now, your system will find the /dev/sda is no longer appropriate to start from, and will move down the boot prio list!
+
+
+On your designated TFTP-server:
 Download netboot.tar.gz from: wget https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz
 
 Place this downloaded file in your tftp folder - the one that serves boot files (e.g. /srv/tftp)
@@ -17,7 +35,9 @@ Edit to reflect a timeout value (non-zero) to autoboot (e.g. 50 for 5 seconds)
 Add a stanza to preselect "install" as default by adding to the end of this file:
 default install
 
-
 in debian-installer/amd64/boot-screens/txt.cfg
 add to the append-line:
 "auto=true priority=critical interface=auto"
+
+Now, change your DHCP server to give network boot options (IP and filename). For IP, select the designated server. As filename, put /pxelinux.0
+Enjoy your network boot!
