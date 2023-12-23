@@ -1,5 +1,6 @@
 ---
 - include_tasks: color-shell.yml
+- include_tasks: firmware.yml
 # Do not edit grub defaults...
 #- include_tasks: do-filesystem.yml
 - include_tasks: edit-journald.yml

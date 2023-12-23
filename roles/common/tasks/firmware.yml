@@ -1,0 +1,8 @@
+---
+- name: Ensure firmware packages are present (for Optiplex servers)
+  ansible.builtin.apt:
+    pkg:
+    - firmware-realtek
+    - firmware-non-free
+    state: present
+
