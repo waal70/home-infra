@@ -1,6 +1,7 @@
-Download netboot.tar.gz from: https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/
+Download netboot.tar.gz from: wget https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz
 
 Place this downloaded file in your tftp folder - the one that serves boot files (e.g. /srv/tftp)
+The folder is configurable with your tftp server. For Debian, choose tftpd-hpa (unmask, enable, restart). Usually, this has its defaults ok (/etc/default/tftpd-hpa)
 
 tar -xvf netboot.tar.gz
 rm netboot.tar.gz
@@ -12,7 +13,10 @@ echo preseed.cfg | cpio -H newc -o -A -F initrd
 gzip initrd
 
 in debian-installer/amd64/pxelinux.cfg is the file "default"
-Edit to reflect a timeout value (non-zero) to autoboot
+Edit to reflect a timeout value (non-zero) to autoboot (e.g. 50 for 5 seconds)
+Add a stanza to preselect "install" as default by adding to the end of this file:
+default install
+
 
 in debian-installer/amd64/boot-screens/txt.cfg
 add to the append-line:
