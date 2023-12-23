@@ -135,7 +135,7 @@
 - block:
     - name: Disable and mask services that are not necessary
       ansible.builtin.systemd_service:
-        name: {{ item }}
+        name: "{{ item }}"
         enabled: false
         masked: true
         state: stopped
