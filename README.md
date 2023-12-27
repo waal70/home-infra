@@ -5,6 +5,7 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 ## Pre-requisites:
 * Ansible control node with ansible-core available
 * All controlled nodes assume a standard Debian installation that was configured using ps.cfg from ./debian-preseed
+* Private git repository containing sensitive information (ssh-keys) named 'home' as a peer of 'home-infra'
 
 ## Sensitive info:
 * Configure your editor by exporting EDITOR=nano in your .bashrc
@@ -16,10 +17,9 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * In case of a password - the "some_sensitive_value" should already be hashed with mkpasswd -m sha-512
 * E.g.: ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'. The resulting string will be able to be used in your .yaml 
 * This playbook expects to run as user 'ansible' that has a key-pair. The public key is provided in the preseed-stage
-* Expect to type the private key's passphrase a lot, unless you use ssh-agent:
+* Expect to type the private key's passphrase a lot, unless you use ssh-agent (automated in first-run):
 * ssh-agent bash
-* ssh-add <full-path-to-private-key>
-
+* ssh-add full-path-to-private-key
 
 ## Services included:
 * [Proxmox]
