@@ -10,10 +10,12 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * Configure your editor by exporting EDITOR=nano in your .bashrc
 * Configure your vault password by setting it in .vault_pass
 * Point to this file in your ansible.cfg, by setting "vault_password_file = .vault_pass" in the [defaults]-section
+* To keep it out of this repository, I have configured ansible.cfg to point to your home folder. Create the .vault_pass there.
+* Run the following commands from the directory where ansible.cfg is residing, or else it will not pick up the location of .vault_pass
 * Set your sensitive info by running: ansible-vault encrypt_string 'some_sensitive_value' --name 'variable_containing_sensitive_stuff'
+* In case of a password - the "some_sensitive_value" should already be hashed with mkpasswd -m sha-512
 * E.g.: ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'. The resulting string will be able to be used in your .yaml 
-* The string to encrypt should also be hashed, if setting a proper password. Do this by mkpasswd -m sha-512
-* Run these commands from the point where your ansible.cfg is also stored, probably the root of your playbook
+
 
 ## Services included:
 * [Proxmox]
@@ -36,6 +38,10 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * Follows https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm to install pve over the standard Debian install
 * Also sets root user password for initial login into web-interfaceset
 
+## Role-pxe-prep:
+* Overwrites the MBR on the /dev/sda. This will prompt a PXE-based boot next restart.
+* Set "-e pve_reset=true" on the command-line
+
 ## Role samba-ad-dc:
 * Follows https://waal70blog.wordpress.com/2017/05/01/raspberry-pi-as-a-domain-controller/ for provisioning of a domain
 * Follows https://waal70blog.wordpress.com/2017/12/03/joining-a-secondary-raspberry-pi-to-your-domain/ for additional domain controllers
@@ -43,11 +49,14 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * Yes, these are also shameless plugs :)
 
 ## To use preseed:
-* Publish ./debian-preseed/ps.cfg on a webserver
+* Publish ./debian-preseed/preseed.cfg on a webserver
 * On the installer, go to the HELP option
-* At the boot: prompt, type: auto url=http://webserver/ps.cfg" there, replacing webserver with the address to your webserver that is hosting ps.cfg
-* If your client has internet connectivity, you could even refer it to: https://raw.githubusercontent.com/waal70/home-infra/main/debian-preseed/ps.cfg 
-* Hint for myself: adpi0 has a ps.cfg at the root :)
+* At the boot: prompt, type: auto url=http://webserver/preseed.cfg" there, replacing webserver with the address to your webserver that is hosting ps.cfg
+* If your client has internet connectivity, you could even refer it to: https://raw.githubusercontent.com/waal70/home-infra/main/debian-preseed/preseed.cfg 
+* Hint for myself: adpi0 has a preseed.cfg at the root :)
+
+## PXE-boot:
+* See ./debian-preseed/tftp-HOWTO.md
 
 ## To run the playbook: try this:
 ansible-playbook -i inventory/hosts playbook.yml -kK

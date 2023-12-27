@@ -24,33 +24,55 @@ The folder is configurable with your tftp server. For Debian, choose tftpd-hpa (
 tar -xvf netboot.tar.gz
 rm netboot.tar.gz
 
-Now manipulate initrd.gz with a preseed.cfg file:
+You now have two options:
+OPTION ONE: Manipulate initrd.gz with a preseed.cfg file:
 
 gunzip initrd.gz
 echo preseed.cfg | cpio -H newc -o -A -F initrd
 gzip initrd
 
+in debian-installer/amd64/boot-screens/txt.cfg
+add to the append-line:
+"auto=true priority=critical interface=auto"
+
+OPTION TWO: Provide preseed-url as a boot option:
+
+Leave the folder intact, just edit the boot options in /debian-installer/amd64/boot-screens/txt.cfg:
+add to the append-line:
+"auto=true priority=critical interface=auto preseed/url=http://<servername-or-ip/preseed.cfg"
+
+FOR BOTH OPTIONS:
 in debian-installer/amd64/pxelinux.cfg is the file "default"
 Edit to reflect a timeout value (non-zero) to autoboot (e.g. 50 for 5 seconds)
 Add a stanza to preselect "install" as default by adding to the end of this file:
 default install
 
-in debian-installer/amd64/boot-screens/txt.cfg
-add to the append-line:
-"auto=true priority=critical interface=auto"
 
 Now, change your DHCP server to give network boot options (IP and filename). For IP, select the designated server. As filename, put /pxelinux.0
 Enjoy your network boot!
 
+To prep for ansible-user:
+Using preseed/late_command:
+1) Use late_command to add user 'ansible' 
+1a) Use mkpasswd -m sha-512 to generate password, but it is preferred to not set a password and allow key login only
+2) Be sure to escape $-characters in the generated password. Backslash is the escape-characters
+3) Create the .ssh folder in the user's home
+4) Add the user to the sudo group
+5) Add the user's public key to the .authorized_keys file. You can generate a new key-pair with ssh-keygen
+6) Set the appropriate permissions on file and folder
+7) Enable passwordless sudo for this user
+8) Set the appropriate permissions on the sudo entry for the user
 
-Should we create a home directory? In that case, specify -m
-1) Use late_command to add user 'ansible' (use mkpasswd -m sha-512 to generate password):
-2) Then, use another late_command to pass it the appropriate public key:
-Resulting lines are here:
-
-d-i preseed/late_command string in-target useradd -m ansible -p $6$6E8C5G1ewqDviRc1$I4XcH5Y9HdhdVjQDnT9AW6aErJv0wTzukTNps0lMe0VbH.Tk4QyU9ntnipEL2zpf0H0ne9KkvN1nKdddDHEfg.
-d-i preseed/late_command string in-target mkdir -p /home/ansible/.ssh; \
+Resulting lines command is here:
+This is the line if you have a password:
+# d-i preseed/late_command string in-target useradd -m -p \$6\$9xnTHkQ1U34iKGb0\$JOPr5hSM5W085TvbxH1ETdQblQS3isAIvmQun3e8qa06cFOYVAVxY6uc/bUadHAUO.02kK.ayjYyL3mWZMli.1 ansible; \
+This is the line should you decide to use key login only (preferred)
+d-i preseed/late_command string in-target useradd -m ansible; \
+in-target mkdir -p /home/ansible/.ssh; \
+in-target usermod -aG sudo ansible; \
 in-target /bin/sh -c "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCy/RzRMaaeY2w6xtOyETFzlu3FjXHpsD6WEpo3dBXXi2FpN79RQz/ybJF3rJ1CPR0S8NXPbzWXFOf6o9bOETQDKxAQwuEa9K08o4d3aa62QheeBJWvYgOxO827mYS19u6RmsEYWDbtEqudMdDg2rKEBT/HFTf4cvphpvJSCGAkQNSjKCTx0UTqZmKxX8idDemLqxU3VT9ebmfonKQ90Xn1tq/qkZRDMf8yeL90kyHpMLZJhDT91WQvVFuA+eYCXZtIhhNMl71CfizwKHtrvvs59ej3GB29LZClaeTuSO0dBSUvK+cXNFD7JBbkZlz6MFwsl+xpPGfGHqTMIqP/1+rFzwIxJ4KfcEHy7kqH0z101oWqTHJ4QA3I7jMlgZv5kUYNji1CzVGhMM6JK1isKjiXrzQgRCqbEVSBkh0iNDMIs8jEvwOtJAb1UVDopL4gmuTEoPvhbivZxbaUC2S5EuKXZ3N30kKtUiH22DXZ58OGtFavsTyxReWkSRVB3Sm/B9U= ansible' >> /home/ansible/.ssh/authorized_keys"; \
-in-target chown -R ansible:user /home/ansible/.ssh/; \
+in-target chown -R ansible:ansible /home/ansible/.ssh/; \
 in-target chmod 600 /home/ansible/.ssh/authorized_keys; \
-in-target chmod 700 /home/ansible/.ssh/
+in-target chmod 700 /home/ansible/.ssh/; \
+in-target /bin/sh -c "echo 'ansible ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ansible"; \
+in-target chmod 440 /etc/sudoers.d/ansible;
