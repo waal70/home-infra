@@ -1,12 +1,12 @@
 [proxmox_servers]
-#pve01 ansible_host=172.16.11.111 
+pve01 ansible_host=172.16.10.194
 #pve02 ansible_host=172.16.10.146 
 
 [samba_primary]
-adpi0 ansible_host=10.0.0.4
+#adpi0 ansible_host=10.0.0.4
 
 [samba_additional]
-ad0 ansible_host=10.0.0.55
+#ad0 ansible_host=10.0.0.55
 
 [testonly]
 #testtest ansible_host=172.16.11.165
@@ -28,7 +28,7 @@ proxmox_servers
 samba_ad_dc_servers
 
 [allservers:vars]
-ansible_user=awaal
-ansible_home=/home/awaal
+#ansible_user=awaal
+#ansible_home=/home/awaal
 #proxmox02 ansible_host=your_server_ip ansible_user=your_ssh_user
 

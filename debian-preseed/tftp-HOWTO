@@ -52,5 +52,5 @@ d-i preseed/late_command string in-target useradd -m ansible -p $6$6E8C5G1ewqDvi
 d-i preseed/late_command string in-target mkdir -p /home/ansible/.ssh; \
 in-target /bin/sh -c "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCy/RzRMaaeY2w6xtOyETFzlu3FjXHpsD6WEpo3dBXXi2FpN79RQz/ybJF3rJ1CPR0S8NXPbzWXFOf6o9bOETQDKxAQwuEa9K08o4d3aa62QheeBJWvYgOxO827mYS19u6RmsEYWDbtEqudMdDg2rKEBT/HFTf4cvphpvJSCGAkQNSjKCTx0UTqZmKxX8idDemLqxU3VT9ebmfonKQ90Xn1tq/qkZRDMf8yeL90kyHpMLZJhDT91WQvVFuA+eYCXZtIhhNMl71CfizwKHtrvvs59ej3GB29LZClaeTuSO0dBSUvK+cXNFD7JBbkZlz6MFwsl+xpPGfGHqTMIqP/1+rFzwIxJ4KfcEHy7kqH0z101oWqTHJ4QA3I7jMlgZv5kUYNji1CzVGhMM6JK1isKjiXrzQgRCqbEVSBkh0iNDMIs8jEvwOtJAb1UVDopL4gmuTEoPvhbivZxbaUC2S5EuKXZ3N30kKtUiH22DXZ58OGtFavsTyxReWkSRVB3Sm/B9U= ansible' >> /home/ansible/.ssh/authorized_keys"; \
 in-target chown -R ansible:user /home/ansible/.ssh/; \
-in-target chmod 644 /home/ansible/.ssh/authorized_keys; \
+in-target chmod 600 /home/ansible/.ssh/authorized_keys; \
 in-target chmod 700 /home/ansible/.ssh/
