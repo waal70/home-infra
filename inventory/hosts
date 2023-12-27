@@ -1,5 +1,5 @@
 [proxmox_servers]
-pve01 ansible_host=172.16.10.201
+pve01 ansible_host=172.16.10.202
 #pve02 ansible_host=172.16.10.146 
 
 [samba_primary]

@@ -4,9 +4,10 @@
     name: acl
     state: present
 
+# Note the use of "ansible_remote_tmp" - to prevent WARNINGS because of becoming an unprivileged user
 - name: Force colors in .bashrc
   ansible.builtin.lineinfile:
-    path: "{{ interactive_home }}/.bashrc"  # Set the actual path to the user's home directory
+    path: "{{ interactive_home }}/.bashrc"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: 'present'
@@ -14,3 +15,5 @@
     - { regexp: '^#?force_color_prompt', line: 'force_color_prompt=yes' }
   become: true
   become_user: "{{ interactive_user }}"
+  vars:
+    ansible_remote_tmp: /tmp
