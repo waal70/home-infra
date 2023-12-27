@@ -1,11 +1,16 @@
 ---
+- name: Install required packaged to become unprivileged users
+  ansible.builtin.apt:
+    name: acl
+    state: present
+
 - name: Force colors in .bashrc
-  lineinfile:
-    path: "{{ ansible_home }}/.bashrc"  # Set the actual path to the user's home directory
+  ansible.builtin.lineinfile:
+    path: "{{ interactive_home }}/.bashrc"  # Set the actual path to the user's home directory
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: 'present'
   with_items:
     - { regexp: '^#?force_color_prompt', line: 'force_color_prompt=yes' }
   become: true
-  become_user: "{{ ansible_user }}"
+  become_user: "{{ interactive_user }}"

@@ -15,6 +15,10 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * Set your sensitive info by running: ansible-vault encrypt_string 'some_sensitive_value' --name 'variable_containing_sensitive_stuff'
 * In case of a password - the "some_sensitive_value" should already be hashed with mkpasswd -m sha-512
 * E.g.: ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'. The resulting string will be able to be used in your .yaml 
+* This playbook expects to run as user 'ansible' that has a key-pair. The public key is provided in the preseed-stage
+* Expect to type the private key's passphrase a lot, unless you use ssh-agent:
+* ssh-agent bash
+* ssh-add <full-path-to-private-key>
 
 
 ## Services included:
@@ -23,7 +27,7 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * [Samba Active Directory Domain Controller]
 
 ## Role-common:
-* Sets force-colors in .bashrc
+* Sets force-colors in .bashrc (for the interactive_user)
 * Edits journald to reduce journal sizes. Also vacuums to 10M
 * Sets IPv6 to not autoconfigure
 * Sets hostname and changes /etc/hosts to reflect
