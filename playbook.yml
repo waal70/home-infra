@@ -6,6 +6,8 @@
   roles:
     - role: common
       when: pve_reset is undefined
+    - role: no-journal
+      when: pve_reset is undefined
     - role: log2ram
       when: pve_reset is undefined
     - role: pve
@@ -18,6 +20,7 @@
   become: yes
   roles:
     - common
+    - no-journal
     - log2ram
     - samba-ad-dc
 

@@ -1,0 +1,6 @@
+---
+# you could override root_partition to a device of your liking
+# it defaults to the partition where root is mounted:
+# Expecting a max of 1 element so safe to get the first entry ([0])
+root_partition: "{{ ansible_mounts|json_query('[?mount == `/` && fstype == `ext4`].device | [0]') }}"
+

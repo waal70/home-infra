@@ -1,6 +1,12 @@
 ---
+# tasks file for no-journal
+- name: Display currently found root partition
+  ansible.builtin.debug:
+    msg: "Ansible found root partition: {{ root_partition }}"
+
+
 - name: Get current filesystem features
-  command: debugfs -R features {{ root_partition }}
+  command: "debugfs -R features {{ root_partition }}"
   register: results
 
 - name: Modify GRUB Configuration if rootflags not set
@@ -15,7 +21,6 @@
     regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
     replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"'
   when: not grub_config_check.rc == 0
-  become: true
 
 - name: Create variable for filesystem-check
   set_fact:

@@ -3,6 +3,8 @@
 - name: Show info on specific host
   hosts: pve01
   become: yes
+  vars:
+    root_partition: "{{ ansible_mounts|json_query('[?mount == `/` && fstype == `ext4`].device | [0]') }}"
   
   tasks:
   - name: Collect facts
@@ -14,3 +16,8 @@
   - name: Print info
     ansible.builtin.debug:
       var: hostinfo
+  
+  - name: Get partition info
+    ansible.builtin.debug:
+      msg: "{{ root_partition }}"
+
