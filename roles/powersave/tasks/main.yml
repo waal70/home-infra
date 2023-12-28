@@ -1,0 +1,4 @@
+---
+# tasks file for powersave
+- include_tasks: powertop.yml
+- include_tasks: powersave_governor.yml

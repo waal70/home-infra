@@ -1,0 +1,5 @@
+---
+# handlers file for pi-common
+- name: Restart Raspberry
+  ansible.builtin.reboot:
+

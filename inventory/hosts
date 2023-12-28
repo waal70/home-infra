@@ -8,8 +8,8 @@ pve01 ansible_host=172.16.10.202
 [samba_additional]
 #ad0 ansible_host=10.0.0.55
 
-[testonly]
-#testtest ansible_host=172.16.11.165
+[raspberry]
+pi01 ansible_host=172.16.11.226
 
 [samba_primary:vars]
 smb_role=primary
@@ -24,6 +24,7 @@ samba_additional
 [allservers:children]
 proxmox_servers
 samba_ad_dc_servers
+raspberry
 
 [allservers:vars]
 # Set the interactive_* vars if you require an interactive login to the ansible-target

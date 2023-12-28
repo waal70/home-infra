@@ -129,8 +129,6 @@
     name: root
     password: "{{ root_pass }}"
 
-- import_tasks: powersave_governor.yml
-
 # This block is there to slim down the install afterwards
 - block:
     - name: Disable and mask services that are not necessary

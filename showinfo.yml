@@ -1,23 +1,42 @@
 ---
 
 - name: Show info on specific host
-  hosts: pve01
+  hosts: 
+    - pi01
+    - pve01
   become: yes
   vars:
-    root_partition: "{{ ansible_mounts|json_query('[?mount == `/` && fstype == `ext4`].device | [0]') }}"
+    root_partition_default: "{{ ansible_mounts|json_query('[?mount == `/` && fstype == `ext4`].device | [0]') }}"
+    MEMSPLIT: "16"
+    NETNAMES: "0"
+    DISABLE_SSH: "0"
+    DISABLE_VNC: "1"
+    DISABLE_SPI: "1"
+    DISABLE_I2C: "1"
   
   tasks:
+  - name: Set root_partition for all systems
+    ansible.builtin.set_fact:
+      root_partition: "{{ root_partition_default }}"
+
+  - name: Correct root_partition when Raspberry pi found
+    ansible.builtin.set_fact:
+      root_partition: "/dev/mmcblk0p2"
+    when: root_partition_default == '/dev/root'
+
+
   - name: Collect facts
     ansible.builtin.setup:
       filter:
       - '*'
     register: hostinfo
 
-  - name: Print info
-    ansible.builtin.debug:
-      var: hostinfo
+#  - name: Print info
+#    ansible.builtin.debug:
+#      var: hostinfo
   
   - name: Get partition info
     ansible.builtin.debug:
       msg: "{{ root_partition }}"
 
+  
