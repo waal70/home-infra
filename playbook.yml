@@ -5,7 +5,7 @@
   become: yes
   roles:
     - common
-    - no-journal
+#    - no-journal
     - log2ram
     - powersave
 
@@ -35,7 +35,7 @@
   become: yes
   roles:
     - pi-hifiberry
-    
+
 
 # - name: Test stuff
 #   hosts: testonly

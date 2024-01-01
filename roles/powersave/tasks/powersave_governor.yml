@@ -27,9 +27,9 @@
     owner: root
     group: root
     mode: 0644
-  when: cpu_governors is search("performance")
+  when: cpu_governors is not search("powersave")
 
 - name: reboot to set new governor, but only if changed
   ansible.builtin.reboot:
-  when: cpu_governors is search("performance")
+  when: cpu_governors is not search("powersave")
   
