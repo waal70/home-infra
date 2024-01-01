@@ -1,0 +1,14 @@
+---
+# tasks file for pi-hifiberry
+- name: Comment out dtparam=audio=on
+  ansible.builtin.replace:
+    path: /boot/config.txt
+    regexp: '(^dtparam=audio=on.*)'
+    replace: '# \1'
+
+- name: Add noaudio to vc4 overlay
+  ansible.builtin.lineinfile:
+    path: /boot/config.txt
+    regexp: '^dtoverlay=vc4-.*kms-v3d.*'
+    line: 'dtoverlay=vc4-kms-v3d,noaudio'
+

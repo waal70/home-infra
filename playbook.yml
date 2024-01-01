@@ -30,6 +30,13 @@
   roles:
     - pi-common
 
+- name: Add correct overlay to Raspberry pi
+  hosts: hifiberry
+  become: yes
+  roles:
+    - pi-hifiberry
+    
+
 # - name: Test stuff
 #   hosts: testonly
 #   become: true

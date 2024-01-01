@@ -9,7 +9,12 @@ pve01 ansible_host=172.16.10.202
 #ad0 ansible_host=10.0.0.55
 
 [raspberry]
+
+[hifiberry]
 pi01 ansible_host=172.16.11.226
+
+[raspberry:children]
+hifiberry
 
 [samba_primary:vars]
 smb_role=primary
@@ -25,6 +30,9 @@ samba_additional
 proxmox_servers
 samba_ad_dc_servers
 raspberry
+
+[hifiberry:vars]
+dacoverlay=hifiberry-dacplus
 
 [allservers:vars]
 # Set the interactive_* vars if you require an interactive login to the ansible-target

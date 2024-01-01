@@ -54,8 +54,8 @@
     success_msg: "log2ram installation was successful."
   when: log2ram_state == "install"
 
-- name: Gather service facts.
-  ansible.builtin.service_facts:
+#- name: Gather service facts.
+#  ansible.builtin.service_facts:
 
 - name: Uninstall log2ram.
   include_tasks: uninstall.yml
