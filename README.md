@@ -72,3 +72,4 @@ ansible-playbook -i inventory/hosts playbook.yml -kK
 * TODO: Networking is left on DHCP - change to static config
 * TODO: server_hardening role is not used now
 * ~~FIX: setting ^has_journal is hit and miss - does not seem to work all the time - fix this!~~
+* Change repository adding by using the new 822 ansible task
