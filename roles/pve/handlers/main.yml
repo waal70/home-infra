@@ -19,3 +19,9 @@
   service:
     name: watchdog-mux
     state: restarted
+
+- name: Restart rrdcached
+  ansible.builtin.systemd_service:
+    name: rrdcached
+    state: restarted
+

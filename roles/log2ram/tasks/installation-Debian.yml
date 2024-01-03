@@ -15,7 +15,7 @@
     name: log2ram
     types: [deb]
     uris: "http://packages.azlux.fr/debian/"
-    suites: "{ ansible_distribution_release }}"
+    suites: "{{ ansible_distribution_release }}"
     components: main
     signed_by: https://azlux.fr/repo.gpg.key
     state: present
