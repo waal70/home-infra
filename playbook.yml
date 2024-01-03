@@ -1,28 +1,12 @@
 ---
 
-- name: Perform default config on all hosts
-  hosts: all
-  become: yes
-  roles:
-    - common
-    - no-journal
-    - log2ram
-    - powersave
 
-- name: Setup Proxmox VE over standard Debian bookworm
-  hosts: proxmox_servers
+- name: Setup debian_servers
+  hosts: debian_servers
   become: yes
   roles:
-    - role: pve
-      when: pve_reset is undefined
-    - role: pxe_prep
-      when: pve_reset is defined
-
-- name: Setup Samba based ad-dc over standard Debian bookworm
-  hosts: samba_ad_dc_servers
-  become: yes
-  roles:
-     - samba-ad-dc
+    - docker
+    - portainer
 
 - name: Bootstrap Raspberry Pi's on the network
   hosts: raspberry

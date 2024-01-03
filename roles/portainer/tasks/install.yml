@@ -1,0 +1,47 @@
+---
+- name: "Deploy Portainer to {{ inventory_hostname }}"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    labels: "{{ container_labels | default(omit) }}"
+    state: started
+    detach: true
+    recreate: "{{ container_recreate }}"
+    restart_policy: "{{ container_restart_policy }}"
+    links: "{{ container_links | default(omit) }}"
+    networks: "{{ container_network | default(omit, True) }}"
+    networks_cli_compatible: no # avoid ansible 2.12. Deprecation warning
+    published_ports: "{{ container_ports | default(omit, True) }}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "{{ persistent_data_path }}"
+  register: portainer_docker
+
+# - name: "Debug return values from container"
+#   debug:
+#     msg: "{{ portainer_docker.container }}"
+
+- set_fact:
+    portainer_is_running: "{{ portainer_docker.container.State.Running }}"
+
+- set_fact:
+    portainer_endpoint: "http://{{ portainer_docker.container.NetworkSettings.IPAddress }}:{{ host_port }}/api"
+
+- name: "Check!!!"
+  debug:
+    msg: "{{ portainer_is_running }} // {{ portainer_endpoint }}"
+
+- name: Check container status
+  fail:
+    msg: "Portainer did not start: {{ portainer_is_running }}"
+  when: not portainer_is_running
+
+- name: Wait for Portainer web interface to get available
+  uri:
+    url: "http://{{ portainer_docker.container.NetworkSettings.IPAddress }}:{{ host_port }}"
+    method: GET
+  register: wait_portainer_result
+  until: wait_portainer_result is succeeded
+  retries: 10
+  delay: 3
+  changed_when: false

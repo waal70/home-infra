@@ -31,5 +31,5 @@
 
 - name: reboot to set new governor, but only if changed
   ansible.builtin.reboot:
-  when: cpu_governors is not search("powersave")
+  when: ((cpu_governors is not search("powersave")) && (cpu_governors is not search("Unable to determine")))
   

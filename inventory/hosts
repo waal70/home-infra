@@ -6,7 +6,7 @@ pve02 ansible_host=172.16.10.142
 pve03 ansible_host=172.16.10.113
 
 [debian_servers]
-#ams-deb-01 ansible_host=172.16.10.113
+ams-deb-01 ansible_host=172.16.29.155
 
 [samba_primary]
 #adpi0 ansible_host=10.0.0.4
