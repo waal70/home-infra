@@ -1,9 +1,12 @@
 [proxmox_servers]
-#pve01 ansible_host=172.16.10.202
-#pve02 ansible_host=172.16.10.146 
+pve01 ansible_host=172.16.11.108
+#e3:2d is pve01
+pve02 ansible_host=172.16.10.142
+#59:19 is pve02
+pve03 ansible_host=172.16.10.113
 
 [debian_servers]
-ams-deb-01 ansible_host=172.16.10.113
+#ams-deb-01 ansible_host=172.16.10.113
 
 [samba_primary]
 #adpi0 ansible_host=10.0.0.4
@@ -14,7 +17,7 @@ ams-deb-01 ansible_host=172.16.10.113
 [raspberry]
 
 [hifiberry]
-pi01 ansible_host=172.16.11.226
+pi01 ansible_host=172.16.11.227
 
 [raspberry:children]
 hifiberry
@@ -42,5 +45,5 @@ dacoverlay=hifiberry-dacplus
 # Set the interactive_* vars if you require an interactive login to the ansible-target
 interactive_user=awaal
 interactive_home=/home/awaal
-#proxmox02 ansible_host=your_server_ip ansible_user=your_ssh_user
+
 

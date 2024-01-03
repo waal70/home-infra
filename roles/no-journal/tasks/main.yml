@@ -46,16 +46,7 @@
     var: fs_features
 
 - name: Execute sequence of commands to emergency sync, remount ro, clear has_journal and reboot
-  ansible.builtin.raw: |
-    set -eo pipefail
-    && echo u > /proc/sysrq-trigger 
-    && echo s > /proc/sysrq-trigger 
-    && tune2fs -O ^has_journal {{ root_partition }} 
-    && sleep 2 
-    && e2fsck -fy {{ root_partition }} 
-    && sleep 2 
-    && echo s > /proc/sysrq-trigger 
-    && echo b > /proc/sysrq-trigger &>/dev/null &
+  ansible.builtin.raw: echo u > /proc/sysrq-trigger && echo s > /proc/sysrq-trigger && sleep 2 && tune2fs -O ^has_journal {{ root_partition }} && sleep 2 && e2fsck -fy {{ root_partition }} && sleep 5 && echo s > /proc/sysrq-trigger && echo b > /proc/sysrq-trigger &
   args:
     executable: /bin/bash
   when: fs_features is search("has_journal")
