@@ -1,6 +1,9 @@
 [proxmox_servers]
-pve01 ansible_host=172.16.10.202
+#pve01 ansible_host=172.16.10.202
 #pve02 ansible_host=172.16.10.146 
+
+[debian_servers]
+ams-deb-01 ansible_host=172.16.10.113
 
 [samba_primary]
 #adpi0 ansible_host=10.0.0.4
@@ -30,6 +33,7 @@ samba_additional
 proxmox_servers
 samba_ad_dc_servers
 raspberry
+debian_servers
 
 [hifiberry:vars]
 dacoverlay=hifiberry-dacplus

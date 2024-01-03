@@ -18,10 +18,8 @@
     group: root
     mode: 0644
 
-- name: Retrieve log2ram repository key.
-  ansible.builtin.apt_key:
-    url: https://azlux.fr/repo.gpg.key
-    state: present
+- name: Trust Proxmox' packaging key by importing it
+  ansible.builtin.command: wget https://azlux.fr/repo.gpg.key -O /etc/apt/trusted.gpg.d/azlux-log2ram.gpg 
 
 - name: Update apt cache after log2ram repository is enabled.
   ansible.builtin.apt:
