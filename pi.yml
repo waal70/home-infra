@@ -1,0 +1,13 @@
+---
+# file: pi.yml
+- name: Bootstrap Raspberry Pi's on the network
+  hosts: raspberry
+  become: yes
+  roles:
+    - pi-common
+
+- name: Add correct overlay to Raspberry pi
+  hosts: hifiberry
+  become: yes
+  roles:
+    - pi-hifiberry

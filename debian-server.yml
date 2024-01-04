@@ -1,0 +1,10 @@
+---
+# file: debian-server.yml
+- name: Setup debian_servers
+  hosts: 
+    - debian_servers
+    - testsubjects
+  become: yes
+  roles:
+    - docker
+    - portainer

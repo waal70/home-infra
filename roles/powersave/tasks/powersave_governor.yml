@@ -29,7 +29,8 @@
     mode: 0644
   when: cpu_governors is not search("powersave")
 
+# when check includes likely virtualized machines that will have "Unable to determine current policy"
 - name: reboot to set new governor, but only if changed
   ansible.builtin.reboot:
-  when: ((cpu_governors is not search("powersave")) && (cpu_governors is not search("Unable to determine")))
+  when: ((cpu_governors is not search("powersave")) and (cpu_governors is not search("Unable to determine")))
   

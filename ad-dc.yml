@@ -1,0 +1,7 @@
+---
+# file: ad-dc.yml
+- name: Setup Samba based ad-dc over standard Debian bookworm
+  hosts: samba_ad_dc_servers
+  become: true
+  roles:
+     - samba-ad-dc

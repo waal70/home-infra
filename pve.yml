@@ -1,0 +1,11 @@
+---
+# file: pve.yml
+- name: Setup Proxmox VE servers based on standard Debian bookworm
+  hosts: proxmox_servers
+  become: true
+  roles:
+    - role: pve
+      when: pve_reset is undefined
+    - role: pxe_prep
+      when: pve_reset is defined
+

@@ -1,4 +1,12 @@
 ---
+- name: Include vaulted password file
+  ansible.builtin.include_vars:
+    file: ../home/ansible-vault/portainer-vars.yml
+
+- name: debug correct import
+  ansible.builtin.debug:
+    var: admin_password
+
 - name: Configure admin user password
   uri:
     url: "{{ portainer_endpoint }}/users/admin/init"

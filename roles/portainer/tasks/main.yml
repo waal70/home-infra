@@ -4,7 +4,7 @@
 - include_tasks: install.yml
 
 - include_tasks: admin.yml
-  when: admin_user and admin_password is defined
+  when: admin_user is defined
 
 - name: Generate authentication token
   uri:
@@ -15,9 +15,6 @@
     body: '{"Username": "{{ admin_user }}", "Password": "{{ admin_password }}"}'
   register: auth_token
   when: admin_user and admin_password is defined
-
-- include_tasks: endpoints.yml
-  when: endpoints is not none
 
 - include_tasks: settings.yml
   when: configure_settings

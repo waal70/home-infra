@@ -1,0 +1,9 @@
+---
+- name: Perform default config on all hosts
+  hosts: all
+  become: true
+  roles:
+    - common
+    - no-journal
+    - log2ram
+    - powersave

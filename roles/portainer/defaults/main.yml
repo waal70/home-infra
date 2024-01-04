@@ -29,7 +29,7 @@ container_ports:
 
 # Admin User
 admin_user: admin
-admin_password: password
+#admin_password: password admin password delegated to portainer-vars.yml in vault
 
 # Endpoints
 endpoints:
