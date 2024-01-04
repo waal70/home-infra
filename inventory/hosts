@@ -12,10 +12,10 @@ ams-deb-01 ansible_host=172.16.29.155
 test01 ansible_host=172.16.29.104
 
 [samba_primary]
-#adpi0 ansible_host=10.0.0.4
+#adpi0 ansible_host=172.16.29.104
 
 [samba_additional]
-#ad0 ansible_host=10.0.0.55
+#adpi1 ansible_host=172.16.99.99
 
 [raspberry]
 

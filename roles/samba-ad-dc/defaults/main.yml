@@ -5,7 +5,7 @@
 # Version: 1.0
 # File: defaults/main.yml
 #
-# Description: Creating a primairy Active Directory Domain Controller.
+# Description: Creating a primary Active Directory Domain Controller.
 
 # -- Samba4 AD settings --
 #
@@ -25,8 +25,8 @@
 #
 # yamllint disable rule:colons
 smb_role          : 'additional'
-smb_workgroup     : 'HOME'
-smb_realm         : 'HOME.ANDRECATHERINE.NET'
+smb_workgroup     : 'TEST'
+smb_realm         : 'TEST.ANDRECATHERINE.NET'
 smb_dns_servers   : '{{ ansible_default_ipv4.address }}'
 smb_dns_forwarder : '10.0.0.3 185.93.175.43'
 smb_username      : 'Administrator'
@@ -36,5 +36,5 @@ smb_rsyncd_pass   : "{{ vault_smb_password }}"
 
 smb_primary_dns   : "{{ hostvars[groups['samba_ad_dc_servers'][0]]['ansible_host'] }}"
 # If only provisioning main domain: secondary may be undefined, so in that case, do this:
-smb_secondary_dns : "{{ hostvars[groups['samba_ad_dc_servers'][1]]['ansible_default_ipv4']['address'] | default('185.93.175.43') }}"
+smb_secondary_dns : '185.93.175.42'
 # yamllint enable rule:colons

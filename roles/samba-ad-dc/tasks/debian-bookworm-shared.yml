@@ -60,6 +60,12 @@
     dest: /etc/samba/smb.conf
     mode: "0644"
 
+# The default comes from ./defaults/main.yml. This will override if a second server is specified
+- name: "Overwrite secondary dns if appropriate"
+  ansible.builtin.set_fact:
+    smb_secondary_dns: "{{ hostvars[groups['samba_ad_dc_servers'][1]]['ansible_host'] }}"
+  when: groups['samba_ad_dc_servers'] | length > 1
+
 - name: "Back-up the initial /etc/krb5.conf to /etc/krb5.conf.initial" # noqa: ignore-errors
   ansible.builtin.copy:
     src: /etc/krb5.conf
