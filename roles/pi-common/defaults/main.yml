@@ -1,11 +1,11 @@
 ---
 # defaults file for pi-common
-MEMSPLIT: "16"
-DISABLE_NETNAMES: "1" # 1 is disabled predictable (eth0), 0 is enabled (enp0s2)
-DISABLE_SSH: "0"
-DISABLE_VNC: "1"
-DISABLE_SPI: "1"
-DISABLE_I2C: "1"
-DISABLE_SERIAL: "1"
-DISABLE_1WIRE: "1"
-DISABLE_GPIO: "1"
+memsplit: "16"
+disable_netnames: "1" # 1 is disabled predictable (eth0), 0 is enabled (enp0s2)
+disable_ssh: "0"
+disable_vnc: "1"
+disable_spi: "1"
+disable_i2c: "1"
+disable_serial: "1"
+disable_1wire: "1"
+disable_gpio: "1"

@@ -1,6 +1,6 @@
 ---
 - name: Remove existing container
-  docker_container:
+  community.docker.docker_container:
     name: portainer
     state: absent
     purge_networks: true
@@ -8,7 +8,7 @@
   when: remove_existing_container
 
 - name: Remove persistent data
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ persistent_data_path.split(\":\") | first | string }}"
   when: remove_persistent_data

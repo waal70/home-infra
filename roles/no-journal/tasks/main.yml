@@ -16,40 +16,51 @@
 - name: Get current filesystem features
   ansible.builtin.command: "debugfs -R features {{ root_partition }}"
   register: results
+  changed_when: results.rc != 0
 
 - name: Determine if this system is equipped with a grub config
   ansible.builtin.stat:
     path: /etc/default/grub
   register: grubfile
 
-##Begin block GRUB change
-- block:
-  - name: Modify GRUB Configuration if rootflags not set
-    ansible.builtin.command: grep -q 'GRUB_CMDLINE_LINUX=".*rootflags=noatime,nodiratime.*"' /etc/default/grub
-    register: grub_config_check
-    failed_when: "grub_config_check.rc not in [ 0, 1 ]"
-    changed_when: false  # Do not mark as changed if the command fails to find the string
-
-  - name: Modify GRUB Configuration because noatime,nodiratime not set
-    ansible.builtin.replace:
-      path: /etc/default/grub
-      regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
-      replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"'
-    when: not grub_config_check.rc == 0
+## Begin block GRUB change
+- name: Block for grub config changes
   when: grubfile.stat.isreg is defined
-##End block GRUB change
+  block:
+    - name: Modify GRUB Configuration if rootflags not set
+      ansible.builtin.command: grep -q 'GRUB_CMDLINE_LINUX=".*rootflags=noatime,nodiratime.*"' /etc/default/grub
+      register: grub_config_check
+      failed_when: "grub_config_check.rc not in [ 0, 1 ]"
+      changed_when: false  # Do not mark as changed if the command fails to find the string
+
+    - name: Modify GRUB Configuration because noatime,nodiratime not set
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
+        replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"'
+      when: not grub_config_check.rc == 0
+## End block GRUB change
 
 - name: Create variable for filesystem-check
   ansible.builtin.set_fact:
     fs_features: "{{ results.stdout_lines }}"
-- debug:
+
+- name: Print filesystem-check results
+  ansible.builtin.debug:
     var: fs_features
 
 - name: Execute sequence of commands to emergency sync, remount ro, clear has_journal and reboot
-  ansible.builtin.raw: echo u > /proc/sysrq-trigger && echo s > /proc/sysrq-trigger && sleep 2 && tune2fs -O ^has_journal {{ root_partition }} && sleep 2 && e2fsck -fy {{ root_partition }} && sleep 5 && echo s > /proc/sysrq-trigger && echo b > /proc/sysrq-trigger &
+  ansible.builtin.raw: >
+    echo u > /proc/sysrq-trigger &&
+    echo s > /proc/sysrq-trigger &&
+    sleep 2 && tune2fs -O ^has_journal {{ root_partition }} &&
+    sleep 2 && e2fsck -fy {{ root_partition }} &&
+    sleep 5 && echo s > /proc/sysrq-trigger &&
+    echo b > /proc/sysrq-trigger &
   args:
     executable: /bin/bash
   when: fs_features is search("has_journal")
+  changed_when: false
 
 - name: Wait for system to become reachable
   ansible.builtin.wait_for_connection:
@@ -61,9 +72,12 @@
 - name: Get filesystem features after command-sequence
   ansible.builtin.command: debugfs -R features {{ root_partition }}
   register: resultsafter
+  changed_when: false
 
 - name: Amend variable for filesystem-check
   ansible.builtin.set_fact:
     fs_features: "{{ resultsafter.stdout_lines }}"
-- debug:
+
+- name: Print confirmation of new filesystem variable
+  ansible.builtin.debug:
     var: fs_features

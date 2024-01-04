@@ -8,29 +8,31 @@
   ansible.builtin.command: cpupower frequency-info --policy
   register: governor_output
   ignore_errors: true
+  changed_when: false
 
 - name: Create variable for governor check
-  set_fact:
+  ansible.builtin.set_fact:
     cpu_governors: "{{ governor_output.stdout_lines }}"
-- debug:
+
+- name: Print current governors
+  ansible.builtin.debug:
     var: cpu_governors
 
 - name: Ensure cpufrequtils is installed
   ansible.builtin.apt:
     name: cpufrequtils
     state: present
-  
+
 - name: Set powersave governor to powersave if currently other setting
   ansible.builtin.template:
     src: etc/default/cpufrequtils.j2
     dest: /etc/default/cpufrequtils
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: cpu_governors is not search("powersave")
 
 # when check includes likely virtualized machines that will have "Unable to determine current policy"
-- name: reboot to set new governor, but only if changed
+- name: Reboot to set new governor, but only if changed
   ansible.builtin.reboot:
   when: ((cpu_governors is not search("powersave")) and (cpu_governors is not search("Unable to determine")))
-  

@@ -11,18 +11,23 @@
   ansible.builtin.template:
     src: etc/resolv.conf.j2
     dest: /etc/resolv.conf
+    mode: "0644"
 
-- name: "Set {{ ansible_hostname }} as primary domain controller because of smb_role={{ smb_role }}"
-  ansible.builtin.command: samba-tool domain provision --server-role=dc --use-rfc2307 --dns-backend=SAMBA_INTERNAL --site={{ smb_site }} --realm={{ smb_realm }} --domain={{ smb_workgroup }} --adminpass={{ smb_password }}
+- name: "Set {{ ansible_hostname }} as primary domain controller because of smb_role={{ smb_role }}" # noqa: name[template]
+  ansible.builtin.command: >
+    samba-tool domain provision --server-role=dc --use-rfc2307 --dns-backend=SAMBA_INTERNAL
+     --site={{ smb_site }} --realm={{ smb_realm }} --domain={{ smb_workgroup }}
+      --adminpass={{ smb_password }}
   when:
-    - smb_dc_result.failed == true
+    - smb_dc_result.failed
     - smb_role=="primary"
-    - ad_database.stat.exists == false
+    - not ad_database.stat.exists
   notify: Restart Samba
+  changed_when: true
 
 - name: "Disable Services"
   ansible.builtin.systemd:
-    enabled: no
+    enabled: false
     state: stopped
     name: "{{ item }}"
   with_items:
@@ -31,14 +36,15 @@
     - nmbd.service
     - winbind.service
   when:
-    - smb_dc_result.failed == true
+    - smb_dc_result.failed
 
-- name: "back-Up the initial /etc/krb5.conf to /etc/krb5.conf.initial"
+- name: "Back-up the initial /etc/krb5.conf to /etc/krb5.conf.initial"
   ansible.builtin.copy:
     src: /etc/krb5.conf
     dest: /etc/krb5.conf.initial
-    remote_src: yes
-    force: no
+    remote_src: true
+    force: false
+    mode: "0644"
   when:
     - smb_dc_result.failed
 
@@ -47,7 +53,8 @@
     src: /var/lib/samba/private/krb5.conf
     remote_src: true
     dest: /etc/krb5.conf
-    force: yes
+    mode: "0644"
+    force: true
 
 - name: "Always Enable Services"
   ansible.builtin.systemd_service:
@@ -70,8 +77,9 @@
     path: /etc/fstab
     regexp: 'errors=remount-ro 0'
     replace: 'user_xattr,acl,barrier=1,errors=remount-ro,relatime 0'
-    backup: yes
+    backup: true
   when:
     - smb_dc_result.failed
 
-- import_tasks: samba-passreqs.yml
+- name: "Ease up on the password requirements"
+  ansible.builtin.import_tasks: samba-passreqs.yml

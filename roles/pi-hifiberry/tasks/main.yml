@@ -11,4 +11,3 @@
     path: /boot/config.txt
     regexp: '^dtoverlay=vc4-.*kms-v3d.*'
     line: 'dtoverlay=vc4-kms-v3d,noaudio'
-

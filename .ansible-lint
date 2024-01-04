@@ -1,0 +1,4 @@
+# .ansible-lint
+exclude_paths:
+ - .vscode/
+ - .github/

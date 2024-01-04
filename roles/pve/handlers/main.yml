@@ -1,22 +1,22 @@
 ---
 # handlers file for ansible-role-proxmox
-- name: restart pvedaemon
-  service:
+- name: Restart pvedaemon
+  ansible.builtin.service:
     name: pvedaemon
     state: restarted
 
-- name: restart pveproxy
-  service:
+- name: Restart pveproxy
+  ansible.builtin.service:
     name: pveproxy
     state: restarted
 
-- name: reload ssh server configuration
+- name: Reload ssh server configuration
   ansible.builtin.systemd:
     name: ssh.service
     state: reloaded
 
-- name: restart watchdog-mux
-  service:
+- name: Restart watchdog-mux
+  ansible.builtin.service:
     name: watchdog-mux
     state: restarted
 
@@ -24,4 +24,3 @@
   ansible.builtin.systemd_service:
     name: rrdcached
     state: restarted
-

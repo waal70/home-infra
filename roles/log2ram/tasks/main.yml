@@ -1,11 +1,11 @@
 ---
 - name: Install log2ram.
-  include_tasks: "{{ item }}"
+  ansible.builtin.include_tasks: "{{ item }}"
   vars:
     files:
       - "installation-{{ ansible_os_family }}.yml"
       - installation.yml
-  loop: "{{ q('first_found', files, errors='ignore' ) }}"
+  loop: "{{ q('first_found', files, errors='ignore') }}"
   when: log2ram_state == "install"
 
 - name: Check if log2ram is installed (Debian-based systems).
@@ -32,7 +32,7 @@
     - not ansible_os_family == "Debian"
 
 - name: Configure log2ram.
-  include_tasks: configuration.yml
+  ansible.builtin.include_tasks: configuration.yml
   when:
     - log2ram_installed | bool
     - not log2ram_state == "remove"
@@ -54,17 +54,14 @@
     success_msg: "log2ram installation was successful."
   when: log2ram_state == "install"
 
-#- name: Gather service facts.
-#  ansible.builtin.service_facts:
-
 - name: Uninstall log2ram.
-  include_tasks: uninstall.yml
+  ansible.builtin.include_tasks: uninstall.yml
   when:
     - log2ram_state == "remove"
     - log2ram_installed | bool
 
 - name: Update log2ram.
-  include_tasks: update.yml
+  ansible.builtin.include_tasks: update.yml
   when:
     - log2ram_state == "update"
     - log2ram_installed | bool

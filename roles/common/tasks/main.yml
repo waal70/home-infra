@@ -1,7 +1,19 @@
 ---
-- include_tasks: color-shell.yml
-- include_tasks: firmware.yml
-- include_tasks: edit-journald.yml
-- include_tasks: inet6-manual.yml
-- include_tasks: set-hostname.yml
-- include_tasks: sudoers.yml
+# file: common/tasks/main.yml
+- name: Import color-shell tasks for the common-role
+  ansible.builtin.import_tasks: color-shell.yml
+
+- name: Import firmware tasks for the common-role
+  ansible.builtin.import_tasks: firmware.yml
+
+- name: Import journald tasks for the common-role
+  ansible.builtin.import_tasks: edit-journald.yml
+
+- name: Import inet6 tasks for the common-role
+  ansible.builtin.import_tasks: inet6-manual.yml
+
+- name: Import hostname tasks for the common-role
+  ansible.builtin.import_tasks: set-hostname.yml
+
+- name: Import sudoers tasks for the common-role
+  ansible.builtin.import_tasks: sudoers.yml

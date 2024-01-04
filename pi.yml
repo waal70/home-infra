@@ -2,12 +2,12 @@
 # file: pi.yml
 - name: Bootstrap Raspberry Pi's on the network
   hosts: raspberry
-  become: yes
+  become: true
   roles:
     - pi-common
 
 - name: Add correct overlay to Raspberry pi
   hosts: hifiberry
-  become: yes
+  become: true
   roles:
     - pi-hifiberry

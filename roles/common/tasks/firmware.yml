@@ -1,19 +1,20 @@
 ---
-- block:
-  - name: Check whether proxmox-ve is installed, because these firmware packages are incompatible
-    ansible.builtin.package_facts:
-      manager: auto
+- name: Firmware block for Dell servers
+  when: "'Dell' in ansible_board_vendor"
+  block:
+    - name: Gather information on installed packages
+      ansible.builtin.package_facts:
+        manager: auto
 
-  - name: Ensure firmware packages are present (for Optiplex servers), but only if not proxmox
-    ansible.builtin.apt:
-      pkg:
-      - firmware-realtek
-      - firmware-misc-nonfree
-      state: present
+    - name: Install firmware if proxmox-ve is not installed (not a Proxmox server)
+      ansible.builtin.apt:
+        pkg:
+          - firmware-realtek
+          - firmware-misc-nonfree
+        state: present
       when: "'proxmox-ve' not in ansible_facts.packages"
 
-  - name: Determine state of proxmox-ve
-    ansible.builtin.debug:
-      msg: "{{ ansible_facts.packages['proxmox-ve'] | length }} versions of pve are installed!"
-    when: "'proxmox-ve' in ansible_facts.packages"
-  when: "'Dell' in ansible_board_vendor"
+    - name: Print state of proxmox-ve for the user to confirm
+      ansible.builtin.debug:
+        msg: "Version {{ ansible_facts.packages['proxmox-ve'].version }} of proxmox-ve installed"
+      when: "'proxmox-ve' in ansible_facts.packages"

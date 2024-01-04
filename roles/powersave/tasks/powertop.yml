@@ -15,7 +15,7 @@
     dest: /etc/systemd/system/powertop.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: not ps.stat.exists
 
 - name: Trigger enabling of service and daemon-reload for powertop

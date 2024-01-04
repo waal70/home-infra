@@ -11,34 +11,33 @@
     name: wget
     state: present
 
-- name: Trust Proxmox' packaging key by importing it
-  ansible.builtin.command: wget https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg 
-    
+# Andre 01-2024: add the proxmox repository using the new command
+- name: Add Proxmox' repository
+  ansible.builtin.deb822_repository:
+    name: proxmox
+    types: [deb]
+    uris: "{{ pve_repository }}"
+    suites: "{{ ansible_distribution_release }}"
+    components: "{{ pve_components }}"
+    signed_by: https://enterprise.proxmox.com/debian/proxmox-release-{{ ansible_distribution_release }}.gpg
+
 - name: Remove os-prober package
   ansible.builtin.apt:
     name: os-prober
     state: absent
 
-- name: Add Proxmox repository
-  ansible.builtin.apt_repository:
-    repo: "{{ pve_repository_line }}"
-    filename: pve-repo
-    state: present
-  register: _pve_repo
-
 - name: Run apt full-upgrade on repository changes
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
     upgrade: full
-  when: _pve_repo is changed
   retries: 2
   register: _full_upgrade
   until: _full_upgrade is succeeded
 
 - name: Perform system upgrades
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
     upgrade: full
   when: "pve_run_system_upgrades | bool"
@@ -54,16 +53,17 @@
     state: present
   register: default_kernel
 
-- name: Reboot after pve-kernel install
+- name: Reboot after pve-kernel install # noqa: no-handler
   ansible.builtin.reboot:
     msg: "Mandatory reboot after pve-kernel install"
   when: default_kernel.changed
 
-- import_tasks: identify_needed_packages.yml
+- name: Identify packages required for Proxmox install
+  ansible.builtin.import_tasks: identify_needed_packages.yml
 
 - name: Install Proxmox VE and related packages
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
     name: "{{ _pve_install_packages }}"
     state: "{{ 'latest' if pve_run_proxmox_upgrades else 'present' }}"
@@ -73,18 +73,18 @@
 
 - name: Remove old Debian kernels after fresh install of pve
   ansible.builtin.apt:
-    pkg: 
-      - linux-image-amd64 
+    pkg:
+      - linux-image-amd64
       - 'linux-image-6.1*'
     state: absent
-    purge: yes
+    purge: true
 
-- name: update grub
+- name: Update grub
   ansible.builtin.command: update-grub
-  become: true
+  changed_when: true
 
 - name: Reduce rrdcached writes
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/default/rrdcached
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
@@ -94,7 +94,9 @@
     - { regexp: '^#?JOURNAL_PATH', line: '#JOURNAL_PATH=/var/lib/rrdcached/journal/' }
   notify: Restart rrdcached
 
-- block:
+- name: Block to correct for no active subscription
+  when: "'pve-no-subscription' in pve_repository_line"
+  block:
     - name: Remove automatically installed PVE Enterprise repo configuration
       ansible.builtin.apt_repository:
         repo: "{{ item }}"
@@ -109,12 +111,10 @@
         path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
         line: '        orig_cmd(); return;'
         insertafter: '^\s+checked_command: function\(orig_cmd\) {$'
-        firstmatch: yes
-        backup: yes
+        firstmatch: true
+        backup: true
       when:
         - "pve_remove_subscription_warning | bool"
-  when:
-    - "'pve-no-subscription' in pve_repository_line"
 
 - name: Ensure the interfaces file is updated, commenting out any IPv6 line
   ansible.builtin.replace:
@@ -122,7 +122,8 @@
     regexp: '(^iface.*inet6)'
     replace: '# \1'
 
-- import_tasks: kernel_updates.yml
+- name: Import kernel updates tasks
+  ansible.builtin.import_tasks: kernel_updates.yml
 
 - name: Set password for root user
   ansible.builtin.user:
@@ -130,7 +131,9 @@
     password: "{{ root_pass }}"
 
 # This block is there to slim down the install afterwards
-- block:
+- name: Block to slim down the installation
+  when: "pve_slim | bool"
+  block:
     - name: Disable and mask services that are not necessary
       ansible.builtin.systemd_service:
         name: "{{ item }}"
@@ -138,8 +141,6 @@
         masked: true
         state: stopped
       with_items:
-      - pve-ha-lrm
-      - pve-ha-crm
-      - corosync
-  when:
-    - "pve_slim | bool"
+        - pve-ha-lrm
+        - pve-ha-crm
+        - corosync

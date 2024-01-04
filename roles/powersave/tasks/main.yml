@@ -1,4 +1,7 @@
 ---
 # tasks file for powersave
-- include_tasks: powertop.yml
-- include_tasks: powersave_governor.yml
+- name: Import powertop tasks for the powersave-role
+  ansible.builtin.import_tasks: powertop.yml
+
+- name: Import powersave-governor tasks for the powersave-role
+  ansible.builtin.import_tasks: powersave_governor.yml

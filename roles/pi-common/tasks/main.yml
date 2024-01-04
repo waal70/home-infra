@@ -1,10 +1,10 @@
 ---
 # tasks file for pi-common
 ## Start by expanding the filesystem (when possible)
-- name: Check if FS is expandable
-  ansible.builtin.shell: "raspi-config nonint get_can_expand"
+- name: Check whether FS is expandable
+  ansible.builtin.command: "raspi-config nonint get_can_expand"
   register: fs_filled
-  changed_when: False
+  changed_when: false
 
 - name: Print if FS is expandable or not
   ansible.builtin.debug:
@@ -12,110 +12,117 @@
   when: fs_filled.stdout == '0'
 
 - name: Expand Filesystem
-  ansible.builtin.shell: "raspi-config nonint do_expand_rootfs"
+  ansible.builtin.command: "raspi-config nonint do_expand_rootfs"
   when: fs_filled.stdout == '0'
   notify: Restart Raspberry
+  changed_when: false
 
-#A3 Memory Split
+# A3 Memory Split
 - name: Get current GPU memory split
-  ansible.builtin.shell: "raspi-config nonint get_config_var gpu_mem /boot/config.txt"
+  ansible.builtin.command: "raspi-config nonint get_config_var gpu_mem /boot/config.txt"
   register: gpu_mem
-  changed_when: False
+  changed_when: false
 
 - name: Print current GPU memory split
   ansible.builtin.debug:
     msg: "Current GPU memory split: {{ gpu_mem.stdout }}"
 
 - name: Set GPU memory split
-  ansible.builtin.shell: "raspi-config nonint do_memory_split {{ MEMSPLIT }}"
-  when: gpu_mem.stdout != MEMSPLIT
+  ansible.builtin.command: "raspi-config nonint do_memory_split {{ memsplit }}"
+  when: gpu_mem.stdout != memsplit
   notify: Restart Raspberry
+  changed_when: true
 
-#N3 Disable predictable network interface names
+# N3 Disable predictable network interface names
 - name: Get predictable network names status
-  ansible.builtin.shell: "raspi-config nonint get_net_names"
+  ansible.builtin.command: "raspi-config nonint get_net_names"
   register: pi_netnames
-  changed_when: False
+  changed_when: false
 
 - name: Print current predictable network names status (0=enabled, 1=disabled)
   ansible.builtin.debug:
     msg: "Current network names status: {{ pi_netnames.stdout }}"
 
 - name: Set predictable network names
-  ansible.builtin.shell: "raspi-config nonint do_net_names {{ DISABLE_NETNAMES }}"
-  when: pi_netnames.stdout != DISABLE_NETNAMES
+  ansible.builtin.command: "raspi-config nonint do_net_names {{ disable_netnames }}"
+  when: pi_netnames.stdout != disable_netnames
   notify: Restart Raspberry
+  changed_when: true
 
-#P2 SSH
+# P2 SSH
 - name: Check if SSH is disabled (1) or not (0)
-  ansible.builtin.shell: "raspi-config nonint get_ssh"
+  ansible.builtin.command: "raspi-config nonint get_ssh"
   register: ssh_status
-  changed_when: False
+  changed_when: false
 
 - name: Print SSH status
-  ansible.builtin.debug: 
+  ansible.builtin.debug:
     msg: "SSH status is: {{ ssh_status.stdout }}"
 
 - name: Set SSH
-  ansible.builtin.shell: "raspi-config nonint do_ssh {{ DISABLE_SSH }}"
-  when: ssh_status.stdout != DISABLE_SSH
+  ansible.builtin.command: "raspi-config nonint do_ssh {{ disable_ssh }}"
+  when: ssh_status.stdout != disable_ssh
   notify: Restart Raspberry
+  changed_when: true
 
-#P3 VNC
+# P3 VNC
 - name: Get VNC status
-  ansible.builtin.shell: "raspi-config nonint get_vnc"
+  ansible.builtin.command: "raspi-config nonint get_vnc"
   register: vnc_status
-  changed_when: False
+  changed_when: false
 
 - name: Print VNC status
   ansible.builtin.debug:
     msg: "VNC status is: {{ vnc_status.stdout }}"
 
 - name: Set VNC
-  ansible.builtin.shell: "raspi-config nonint do_vnc {{ DISABLE_VNC }}"
-  when: vnc_status.stdout != DISABLE_VNC
+  ansible.builtin.command: "raspi-config nonint do_vnc {{ disable_vnc }}"
+  when: vnc_status.stdout != disable_vnc
   notify: Restart Raspberry
+  changed_when: true
 
-#P4 SPI
+# P4 SPI
 - name: Get SPI status
-  ansible.builtin.shell: "raspi-config nonint get_spi"
+  ansible.builtin.command: "raspi-config nonint get_spi"
   register: spi_status
-  changed_when: False
+  changed_when: false
 
 - name: Print SPI status
   ansible.builtin.debug:
     msg: "SPI status is: {{ spi_status.stdout }}"
 
 - name: Enable SPI
-  ansible.builtin.shell: "raspi-config nonint do_spi {{ DISABLE_SPI }}"
-  when: spi_status.stdout != DISABLE_SPI
+  ansible.builtin.command: "raspi-config nonint do_spi {{ disable_spi }}"
+  when: spi_status.stdout != disable_spi
   notify: Restart Raspberry
+  changed_when: true
 
-#P5 I2C
+# P5 I2C
 - name: Get I2C status
-  ansible.builtin.shell: "raspi-config nonint get_i2c"
+  ansible.builtin.command: "raspi-config nonint get_i2c"
   register: i2c_status
-  changed_when: False
+  changed_when: false
 
 - name: Print I2C status
   ansible.builtin.debug:
     msg: "I2C status is: {{ i2c_status.stdout }}"
 
 - name: Enable I2C
-  ansible.builtin.shell: "raspi-config nonint do_i2c {{ DISABLE_I2C }}"
-  when: i2c_status.stdout != DISABLE_I2C
+  ansible.builtin.command: "raspi-config nonint do_i2c {{ disable_i2c }}"
+  when: i2c_status.stdout != disable_i2c
   notify: Restart Raspberry
+  changed_when: true
 
-#P6 Serial
+# P6 Serial
 - name: Get serial status
-  ansible.builtin.shell: "raspi-config nonint get_serial"
+  ansible.builtin.command: "raspi-config nonint get_serial"
   register: serial_status
-  changed_when: False
+  changed_when: false
 
 - name: Get serialHW status
-  ansible.builtin.shell: "raspi-config nonint get_serial_hw"
+  ansible.builtin.command: "raspi-config nonint get_serial_hw"
   register: serialhw_status
-  changed_when: False
+  changed_when: false
 
 - name: Print serial status
   ansible.builtin.debug:
@@ -126,36 +133,39 @@
     msg: "SerialHW status is: {{ serialhw_status.stdout }}"
 
 - name: Set serial
-  ansible.builtin.shell: "raspi-config nonint do_serial {{ DISABLE_SERIAL }}"
-  when: serial_status.stdout != DISABLE_SERIAL
+  ansible.builtin.command: "raspi-config nonint do_serial {{ disable_serial }}"
+  when: serial_status.stdout != disable_serial
   notify: Restart Raspberry
+  changed_when: true
 
-#P7 1-Wire
+# P7 1-Wire
 - name: Get Onewire status
-  ansible.builtin.shell: "raspi-config nonint get_onewire"
+  ansible.builtin.command: "raspi-config nonint get_onewire"
   register: onewire_status
-  changed_when: False
+  changed_when: false
 
 - name: Print Onewire status
   ansible.builtin.debug:
     msg: "Onewire status is: {{ onewire_status.stdout }}"
 
 - name: Set OneWire
-  ansible.builtin.shell: "raspi-config nonint do_onewire {{ DISABLE_1WIRE }}"
-  when: onewire_status.stdout != DISABLE_1WIRE
+  ansible.builtin.command: "raspi-config nonint do_onewire {{ disable_1wire }}"
+  when: onewire_status.stdout != disable_1wire
   notify: Restart Raspberry
+  changed_when: true
 
-#P8 Remote GPIO
+# P8 Remote GPIO
 - name: Get rGPIO status
-  ansible.builtin.shell: "raspi-config nonint get_rgpio"
+  ansible.builtin.command: "raspi-config nonint get_rgpio"
   register: rgpio_status
-  changed_when: False
+  changed_when: false
 
 - name: Print rGPIO status
   ansible.builtin.debug:
     msg: "rGPIO status is: {{ rgpio_status.stdout }}"
 
 - name: Set Remote GPIO
-  ansible.builtin.shell: "raspi-config nonint do_rgpio {{ DISABLE_GPIO }}"
-  when: rgpio_status.stdout != DISABLE_GPIO
+  ansible.builtin.command: "raspi-config nonint do_rgpio {{ disable_gpio }}"
+  when: rgpio_status.stdout != disable_gpio
   notify: Restart Raspberry
+  changed_when: true

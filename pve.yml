@@ -8,4 +8,3 @@
       when: pve_reset is undefined
     - role: pxe_prep
       when: pve_reset is defined
-

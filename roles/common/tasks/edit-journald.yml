@@ -1,6 +1,6 @@
 ---
 - name: Edit journald.conf
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/systemd/journald.conf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
@@ -12,5 +12,6 @@
   notify: Restart systemd-journald
 
 - name: Vacuum journalctl before
-  command: journalctl --vacuum-size=10M
-  become: true
+  ansible.builtin.command: journalctl --vacuum-size=10M
+  register: vacuumresult
+  changed_when: "'Vacuuming done' in vacuumresult.stderr"
