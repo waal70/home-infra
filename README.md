@@ -4,7 +4,8 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 
 ## Pre-requisites:
 * Ansible control node with ansible-core available
-* All controlled nodes assume a standard Debian installation that was configured using ps.cfg from ./debian-preseed
+* All controlled nodes assume a standard Debian installation that was configured using preseed.cfg from ./debian-preseed
+* Most notably, a public-private keypair for user "ansible"
 * Private git repository containing sensitive information (ssh-keys) named 'home' as a peer of 'home-infra'
 
 ## Sensitive info:
@@ -63,10 +64,11 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * See ./debian-preseed/tftp-HOWTO.md
 
 ## To run the playbook: try this:
-ansible-playbook -i inventory/hosts playbook.yml -kK
+./firstrun.sh
+ansible-playbook site.yml
 
-- Runs the playbook with the inventory file from the repo, asks for SSH and become passwords
-
+- Runs the playbook site.yml with the inventory file from the repo
+- Use --limit proxmox_servers to only apply to inventory group
 ## TO DO:
 * ~~FIX: Ansible master now requires an earlier ssh connection, in order to save fingerprint - should be not necessary~~
 * TODO: Networking is left on DHCP - change to static config
