@@ -1,5 +1,7 @@
 /files/docker_persistent_data/*
 !/files/docker_persistent_data/.gitkeep
+/__pycache__/
+/__pycache__/*
 /hosts
 /files/fonts/*
 .DS_Store
