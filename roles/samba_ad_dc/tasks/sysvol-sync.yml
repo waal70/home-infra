@@ -13,7 +13,7 @@
     state: present
 
 - name: Backup the idmap database file
-  ansible.builtin.command: "tdbbackup -s .bak /var/lib/samba/private/idmap.ldb"
+  ansible.builtin.command: tdbbackup -s .bak /var/lib/samba/private/idmap.ldb
   args:
     creates: /var/lib/samba/private/idmap.ldb.bak
   when: smb_role == "primary"
@@ -34,7 +34,7 @@
     dest: /var/lib/samba/private/idmap.ldb
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
   when: smb_role == "additional"
 
 - name: Now put in place the config for rsyncd
@@ -50,10 +50,10 @@
     dest: /var/lib/samba/private/rsyncd.secret
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
   when: smb_role == "primary"
 
-- name: "Enable rsync services for {{ ansible_hostname }}"
+- name: Enable rsync services for {{ ansible_hostname }}
   ansible.builtin.systemd_service:
     enabled: true
     masked: false
@@ -61,13 +61,13 @@
     name: rsync.service
   when: smb_role == "primary"
 
-- name: "Create the password file on additional {{ ansible_hostname }}"
+- name: Create the password file on additional {{ ansible_hostname }}
   ansible.builtin.copy:
     content: "{{ smb_rsyncd_pass }}"
     dest: /var/lib/samba/rsync-sysvol.secret
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
     force: true
   when: smb_role == "additional"
 
@@ -99,10 +99,11 @@
 
 - name: Set the rsync as a cron-job on the additional servers. Run at 5:30 AM and 17:30
   ansible.builtin.cron:
-    name: "SysVol sync"
+    name: SysVol sync
     minute: "30"
-    hour: "5,17"
-    job: "rsync -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address'] }}/SysVol/ /var/lib/samba/sysvol/" # noqa: yaml[line-length]
+    hour: 5,17
+    job: rsync -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address']
+      }}/SysVol/ /var/lib/samba/sysvol/ # noqa: yaml[line-length]
   when:
     - smb_role == "additional"
     - not rsync_dryrun.failed

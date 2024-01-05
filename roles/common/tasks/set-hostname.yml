@@ -6,7 +6,7 @@
 - name: Replace double home with hostname (if present)
   ansible.builtin.replace:
     path: /etc/hosts
-    regexp: '127\.0\.1\.1'
+    regexp: 127\.0\.1\.1
     replace: "{{ ansible_host }} {{ inventory_hostname }}"
 
 - name: Ensure at least one full hostname entry is present

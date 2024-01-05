@@ -4,11 +4,11 @@
   vars:
     params:
       files:
-        - '{{ ansible_distribution }}.yml'
-        - '{{ ansible_os_family }}.yml'
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
         - main.yml
       paths:
-        - 'vars'
+        - vars
 - name: Perform setup for Debian-based systems
   ansible.builtin.include_tasks: setup-Debian.yml
   when: ansible_os_family == 'Debian'
@@ -20,7 +20,7 @@
     allow_downgrade: true
   notify: restart docker
   ignore_errors: "{{ ansible_check_mode }}"
-  when: "ansible_version.full is version_compare('2.12', '>=') and ansible_os_family in ['RedHat', 'Debian']"
+  when: ansible_version.full is version_compare('2.12', '>=') and ansible_os_family in ['RedHat', 'Debian']
 
 - name: Install docker-compose-plugin (with downgrade option).
   ansible.builtin.package:
@@ -29,7 +29,7 @@
     allow_downgrade: true
   notify: Restart docker
   ignore_errors: "{{ ansible_check_mode }}"
-  when: "docker_install_compose_plugin | bool and ansible_version.full is version_compare('2.12', '>=') and ansible_os_family in ['RedHat', 'Debian']"
+  when: docker_install_compose_plugin | bool and ansible_version.full is version_compare('2.12', '>=') and ansible_os_family in ['RedHat', 'Debian']
 
 - name: Ensure /etc/docker/ directory exists.
   ansible.builtin.file:
@@ -65,7 +65,7 @@
   ansible.builtin.getent:
     database: group
     key: docker
-    split: ':'
+    split: ":"
   when: docker_users | length > 0
 
 - name: Check whether there are any users to add to the docker group.

@@ -1,4 +1,8 @@
+---
 # .ansible-lint
 exclude_paths:
- - .vscode/
- - .github/
+  - .vscode/
+  - .github/
+  - .ansible-lint
+skip_list:
+  - "403"

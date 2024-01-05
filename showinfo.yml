@@ -13,12 +13,12 @@
 
     - name: Correct root_partition when Raspberry pi found
       ansible.builtin.set_fact:
-        root_partition: "/dev/mmcblk0p2"
+        root_partition: /dev/mmcblk0p2
       when: root_partition_default == '/dev/root'
     - name: Collect facts
       ansible.builtin.setup:
         filter:
-          - '*'
+          - "*"
       register: hostinfo
 
     - name: Print info

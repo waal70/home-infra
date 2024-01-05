@@ -1,4 +1,4 @@
 ---
 # Example variables, customize as needed
 enable_journaling: false # Set to true to enable journaling, false to disable
-log2ram_size: "80M"
+log2ram_size: 80M

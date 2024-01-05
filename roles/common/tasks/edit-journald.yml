@@ -6,9 +6,9 @@
     line: "{{ item.line }}"
     state: "{{ item.state | default('present') }}"
   with_items:
-    - { regexp: '^#?Storage', line: 'Storage=volatile' }
-    - { regexp: '^#?ForwardToSyslog', line: 'ForwardToSyslog=no' }
-    - { regexp: '^#?SystemMaxUse', line: 'SystemMaxUse=50M' }
+    - { regexp: "^#?Storage", line: Storage=volatile }
+    - { regexp: "^#?ForwardToSyslog", line: ForwardToSyslog=no }
+    - { regexp: "^#?SystemMaxUse", line: SystemMaxUse=50M }
   notify: Restart systemd-journald
 
 - name: Vacuum journalctl before

@@ -3,7 +3,7 @@
   ansible.builtin.include_tasks: "{{ item }}"
   vars:
     files:
-      - "installation-{{ ansible_os_family }}.yml"
+      - installation-{{ ansible_os_family }}.yml
       - installation.yml
   loop: "{{ q('first_found', files, errors='ignore') }}"
   when: log2ram_state == "install"
@@ -50,8 +50,8 @@
   ansible.builtin.assert:
     that:
       - log2ram_installed | bool
-    fail_msg: "log2ram installation failed!"
-    success_msg: "log2ram installation was successful."
+    fail_msg: log2ram installation failed!
+    success_msg: log2ram installation was successful.
   when: log2ram_state == "install"
 
 - name: Uninstall log2ram.

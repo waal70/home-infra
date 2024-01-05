@@ -14,7 +14,7 @@
   ansible.builtin.deb822_repository:
     name: log2ram
     types: [deb]
-    uris: "http://packages.azlux.fr/debian/"
+    uris: http://packages.azlux.fr/debian/
     suites: "{{ ansible_distribution_release }}"
     components: main
     signed_by: https://azlux.fr/repo.gpg.key

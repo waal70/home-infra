@@ -40,7 +40,7 @@
     update_cache: true
     cache_valid_time: 3600
     upgrade: full
-  when: "pve_run_system_upgrades | bool"
+  when: pve_run_system_upgrades | bool
   retries: 2
   register: _system_upgrade
   until: _system_upgrade is succeeded
@@ -55,7 +55,7 @@
 
 - name: Reboot after pve-kernel install # noqa: no-handler
   ansible.builtin.reboot:
-    msg: "Mandatory reboot after pve-kernel install"
+    msg: Mandatory reboot after pve-kernel install
   when: default_kernel.changed
 
 - name: Identify packages required for Proxmox install
@@ -75,7 +75,7 @@
   ansible.builtin.apt:
     pkg:
       - linux-image-amd64
-      - 'linux-image-6.1*'
+      - linux-image-6.1*
     state: absent
     purge: true
 
@@ -90,8 +90,8 @@
     line: "{{ item.line }}"
     state: "{{ item.state | default('present') }}"
   with_items:
-    - { regexp: '^#?WRITE_TIMEOUT', line: 'WRITE_TIMEOUT=3600' }
-    - { regexp: '^#?JOURNAL_PATH', line: '#JOURNAL_PATH=/var/lib/rrdcached/journal/' }
+    - { regexp: "^#?WRITE_TIMEOUT", line: WRITE_TIMEOUT=3600 }
+    - { regexp: "^#?JOURNAL_PATH", line: "#JOURNAL_PATH=/var/lib/rrdcached/journal/" }
   notify: Restart rrdcached
 
 - name: Block to correct for no active subscription
@@ -103,24 +103,24 @@
         filename: pve-enterprise
         state: absent
       with_items:
-        - "deb https://enterprise.proxmox.com/debian {{ ansible_distribution_release }} pve-enterprise"
-        - "deb https://enterprise.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-enterprise"
+        - deb https://enterprise.proxmox.com/debian {{ ansible_distribution_release }} pve-enterprise
+        - deb https://enterprise.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-enterprise
 
     - name: Remove subscription check wrapper function in web UI
       ansible.builtin.lineinfile:
         path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
-        line: '        orig_cmd(); return;'
-        insertafter: '^\s+checked_command: function\(orig_cmd\) {$'
+        line: "        orig_cmd(); return;"
+        insertafter: "^\\s+checked_command: function\\(orig_cmd\\) {$"
         firstmatch: true
         backup: true
       when:
-        - "pve_remove_subscription_warning | bool"
+        - pve_remove_subscription_warning | bool
 
 - name: Ensure the interfaces file is updated, commenting out any IPv6 line
   ansible.builtin.replace:
     path: /etc/network/interfaces
-    regexp: '(^iface.*inet6)'
-    replace: '# \1'
+    regexp: (^iface.*inet6)
+    replace: "# \\1"
 
 - name: Import kernel updates tasks
   ansible.builtin.import_tasks: kernel_updates.yml
@@ -132,7 +132,7 @@
 
 # This block is there to slim down the install afterwards
 - name: Block to slim down the installation
-  when: "pve_slim | bool"
+  when: pve_slim | bool
   block:
     - name: Disable and mask services that are not necessary
       ansible.builtin.systemd_service:

@@ -4,4 +4,4 @@
   hosts: samba_ad_dc_servers
   become: true
   roles:
-     - samba_ad_dc
+    - samba_ad_dc

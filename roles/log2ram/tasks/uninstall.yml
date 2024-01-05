@@ -21,7 +21,7 @@
 
 - name: Run the uninstall script (Non-Debian systems).
   ansible.builtin.command:
-    cmd: "sh uninstall-log2ram.sh"
+    cmd: sh uninstall-log2ram.sh
     chdir: /usr/local/bin
     warn: false
   changed_when: false

@@ -6,15 +6,15 @@
 
 - name: Correct root_partition when Raspberry pi found
   ansible.builtin.set_fact:
-    root_partition: "/dev/mmcblk0p2"
+    root_partition: /dev/mmcblk0p2
   when: root_partition_default == '/dev/root'
 
 - name: Display currently found root partition
   ansible.builtin.debug:
-    msg: "For this system I will use {{ root_partition }} as the root partition"
+    msg: For this system I will use {{ root_partition }} as the root partition
 
 - name: Get current filesystem features
-  ansible.builtin.command: "debugfs -R features {{ root_partition }}"
+  ansible.builtin.command: debugfs -R features {{ root_partition }}
   register: results
   changed_when: results.rc != 0
 
@@ -30,14 +30,14 @@
     - name: Modify GRUB Configuration if rootflags not set
       ansible.builtin.command: grep -q 'GRUB_CMDLINE_LINUX=".*rootflags=noatime,nodiratime.*"' /etc/default/grub
       register: grub_config_check
-      failed_when: "grub_config_check.rc not in [ 0, 1 ]"
-      changed_when: false  # Do not mark as changed if the command fails to find the string
+      failed_when: grub_config_check.rc not in [ 0, 1 ]
+      changed_when: false # Do not mark as changed if the command fails to find the string
 
     - name: Modify GRUB Configuration because noatime,nodiratime not set
       ansible.builtin.replace:
         path: /etc/default/grub
-        regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
-        replace: 'GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"'
+        regexp: GRUB_CMDLINE_LINUX="(.*)"
+        replace: GRUB_CMDLINE_LINUX="\1 rootflags=noatime,nodiratime"
       when: not grub_config_check.rc == 0
 ## End block GRUB change
 

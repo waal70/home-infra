@@ -7,13 +7,13 @@
 #
 # Description: Install samba and *join* a domain. This file for non-primary domain controllers
 
-- name: "Transfer resolv.conf.j2 to /etc/resolv.conf"
+- name: Transfer resolv.conf.j2 to /etc/resolv.conf
   ansible.builtin.template:
     src: etc/resolv.conf.j2
     dest: /etc/resolv.conf
     mode: "0644"
 
-- name: "Join as additional domain controller because of smb_role"
+- name: Join as additional domain controller because of smb_role
   ansible.builtin.command: >
     samba-tool domain join {{ smb_realm }} --dns-backend=SAMBA_INTERNAL DC
      -U"{{ smb_workgroup }}\{{ smb_username }}" --password={{ smb_password }}
@@ -25,7 +25,7 @@
   notify: Restart Samba
   changed_when: true
 
-- name: "Always stop services before conf file wizardry"
+- name: Always stop services before conf file wizardry
   ansible.builtin.systemd_service:
     enabled: false
     state: stopped
@@ -37,13 +37,13 @@
     - winbind.service
   when: smb_dc_result.failed
 
-- name: "Transfer krb5.conf.j2 to /etc/krb5.conf"
+- name: Transfer krb5.conf.j2 to /etc/krb5.conf
   ansible.builtin.template:
     src: etc/krb5.conf.j2
     dest: /etc/krb5.conf
     mode: "0644"
 
-- name: "Always Enable Services"
+- name: Always Enable Services
   ansible.builtin.systemd_service:
     enabled: true
     masked: false
@@ -59,7 +59,7 @@
 #     msg: "Ansible rebooting after joining domain"
 #   when: ad_database.stat.exists == false
 
-- name: "Always restart samba-ad-dc.service and winbind"
+- name: Always restart samba-ad-dc.service and winbind
   ansible.builtin.systemd_service:
     name: "{{ item }}"
     state: restarted

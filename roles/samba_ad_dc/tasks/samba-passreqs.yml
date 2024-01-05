@@ -1,6 +1,6 @@
 ---
 # title: password requirements
-- name: "Set password requirements on new AD"
+- name: Set password requirements on new AD
   ansible.builtin.command: "{{ item }}"
   with_items:
     - samba-tool domain passwordsettings set --complexity=off

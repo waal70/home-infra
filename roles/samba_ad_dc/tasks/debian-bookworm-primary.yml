@@ -7,13 +7,13 @@
 #
 # Description: Install samba and provision a domain. This file for primary domain controllers
 
-- name: "Transfer resolv.conf.j2 to /etc/resolv.conf"
+- name: Transfer resolv.conf.j2 to /etc/resolv.conf
   ansible.builtin.template:
     src: etc/resolv.conf.j2
     dest: /etc/resolv.conf
     mode: "0644"
 
-- name: "Set {{ ansible_hostname }} as primary domain controller because of smb_role={{ smb_role }}" # noqa: name[template]
+- name: Set {{ ansible_hostname }} as primary domain controller because of smb_role={{ smb_role }} # noqa: name[template]
   ansible.builtin.command: >
     samba-tool domain provision --server-role=dc --use-rfc2307 --dns-backend=SAMBA_INTERNAL
      --site={{ smb_site }} --realm={{ smb_realm }} --domain={{ smb_workgroup }}
@@ -25,7 +25,7 @@
   notify: Restart Samba
   changed_when: true
 
-- name: "Disable Services"
+- name: Disable Services
   ansible.builtin.systemd:
     enabled: false
     state: stopped
@@ -38,7 +38,7 @@
   when:
     - smb_dc_result.failed
 
-- name: "Back-up the initial /etc/krb5.conf to /etc/krb5.conf.initial"
+- name: Back-up the initial /etc/krb5.conf to /etc/krb5.conf.initial
   ansible.builtin.copy:
     src: /etc/krb5.conf
     dest: /etc/krb5.conf.initial
@@ -48,7 +48,7 @@
   when:
     - smb_dc_result.failed
 
-- name: "Copy /var/lib/samba/private/krb5.conf to /etc/krb5.conf"
+- name: Copy /var/lib/samba/private/krb5.conf to /etc/krb5.conf
   ansible.builtin.copy:
     src: /var/lib/samba/private/krb5.conf
     remote_src: true
@@ -56,7 +56,7 @@
     mode: "0644"
     force: true
 
-- name: "Always Enable Services"
+- name: Always Enable Services
   ansible.builtin.systemd_service:
     enabled: true
     masked: false
@@ -67,19 +67,19 @@
     - nmbd.service
     - winbind.service
 
-- name: "Always restart samba-ad-dc.service"
+- name: Always restart samba-ad-dc.service
   ansible.builtin.systemd_service:
     name: samba-ad-dc.service
     state: reloaded
 
-- name: "Edit Fstab"
+- name: Edit Fstab
   ansible.builtin.replace:
     path: /etc/fstab
-    regexp: 'errors=remount-ro 0'
-    replace: 'user_xattr,acl,barrier=1,errors=remount-ro,relatime 0'
+    regexp: errors=remount-ro 0
+    replace: user_xattr,acl,barrier=1,errors=remount-ro,relatime 0
     backup: true
   when:
     - smb_dc_result.failed
 
-- name: "Ease up on the password requirements"
+- name: Ease up on the password requirements
   ansible.builtin.import_tasks: samba-passreqs.yml
