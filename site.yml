@@ -1,7 +1,7 @@
 ---
 # file: site.yml
+- import_playbook: pi.yml
 - import_playbook: common.yml
 - import_playbook: pve.yml
 - import_playbook: ad-dc.yml
-- import_playbook: pi.yml
 - import_playbook: debian-server.yml

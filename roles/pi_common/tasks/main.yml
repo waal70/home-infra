@@ -1,5 +1,11 @@
 ---
 # tasks file for pi-common
+- name: Ensure python3-debian is present on Raspberry
+  ansible.builtin.apt:
+    name: python3-debian
+    update_cache: true
+    state: present
+
 ## Start by expanding the filesystem (when possible)
 - name: Check whether FS is expandable
   ansible.builtin.command: raspi-config nonint get_can_expand
@@ -16,22 +22,6 @@
   when: fs_filled.stdout == '0'
   notify: Restart Raspberry
   changed_when: false
-
-# A3 Memory Split
-- name: Get current GPU memory split
-  ansible.builtin.command: raspi-config nonint get_config_var gpu_mem /boot/config.txt
-  register: gpu_mem
-  changed_when: false
-
-- name: Print current GPU memory split
-  ansible.builtin.debug:
-    msg: "Current GPU memory split: {{ gpu_mem.stdout }}"
-
-- name: Set GPU memory split
-  ansible.builtin.command: raspi-config nonint do_memory_split {{ memsplit }}
-  when: gpu_mem.stdout != memsplit
-  notify: Restart Raspberry
-  changed_when: true
 
 # N3 Disable predictable network interface names
 - name: Get predictable network names status
@@ -110,31 +100,6 @@
 - name: Enable I2C
   ansible.builtin.command: raspi-config nonint do_i2c {{ disable_i2c }}
   when: i2c_status.stdout != disable_i2c
-  notify: Restart Raspberry
-  changed_when: true
-
-# P6 Serial
-- name: Get serial status
-  ansible.builtin.command: raspi-config nonint get_serial
-  register: serial_status
-  changed_when: false
-
-- name: Get serialHW status
-  ansible.builtin.command: raspi-config nonint get_serial_hw
-  register: serialhw_status
-  changed_when: false
-
-- name: Print serial status
-  ansible.builtin.debug:
-    msg: "Serial status is: {{ serial_status.stdout }}"
-
-- name: Print serialHW status
-  ansible.builtin.debug:
-    msg: "SerialHW status is: {{ serialhw_status.stdout }}"
-
-- name: Set serial
-  ansible.builtin.command: raspi-config nonint do_serial {{ disable_serial }}
-  when: serial_status.stdout != disable_serial
   notify: Restart Raspberry
   changed_when: true
 
