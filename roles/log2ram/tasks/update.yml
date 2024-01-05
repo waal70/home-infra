@@ -1,5 +1,5 @@
 ---
-- name: Update log2ram on Debian systems. # noqa 403
+- name: Update log2ram on Debian systems. # noqa package-latest
   ansible.builtin.apt:
     name: log2ram
     state: latest
