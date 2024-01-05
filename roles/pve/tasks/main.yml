@@ -1,6 +1,9 @@
 # tasks file for role pve
 # 09-12-2023: André
 ---
+- name: Import inet6 tasks for the pve-role
+  ansible.builtin.import_tasks: inet6-manual.yml
+
 - name: Ensure gpg is installed
   ansible.builtin.apt:
     name: gpg
@@ -116,11 +119,8 @@
       when:
         - pve_remove_subscription_warning | bool
 
-- name: Ensure the interfaces file is updated, commenting out any IPv6 line
-  ansible.builtin.replace:
-    path: /etc/network/interfaces
-    regexp: (^iface.*inet6)
-    replace: "# \\1"
+- name: Make doubly sure no inet6 address will be obtained
+  ansible.builtin.import_tasks: inet6-manual.yml
 
 - name: Import kernel updates tasks
   ansible.builtin.import_tasks: kernel_updates.yml

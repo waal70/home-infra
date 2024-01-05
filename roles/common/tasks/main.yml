@@ -9,9 +9,6 @@
 - name: Import journald tasks for the common-role
   ansible.builtin.import_tasks: edit-journald.yml
 
-- name: Import inet6 tasks for the common-role
-  ansible.builtin.import_tasks: inet6-manual.yml
-
 - name: Import hostname tasks for the common-role
   ansible.builtin.import_tasks: set-hostname.yml
 

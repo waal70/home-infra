@@ -1,0 +1,33 @@
+---
+- name: Set inet6 auto to manual for proxmox-servers
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+  with_items:
+    - { name: net.ipv6.conf.all.autoconf, value: "0" }
+    - { name: net.ipv6.conf.default.autoconf, value: "0" }
+
+- name: Ensure the interfaces file is updated, commenting out any IPv6 line
+  ansible.builtin.replace:
+    path: /etc/network/interfaces
+    regexp: (^iface.*inet6.*)
+    replace: "# \\1"
+
+# Check how things are going. If they are not right, use this to correct:
+# - name: Set inet6 auto to auto for non-proxmox-servers
+#   ansible.posix.sysctl:
+#     name: "{{ item.name }}"
+#     value: "{{ item.value }}"
+#     sysctl_set: true
+#   with_items:
+#     - { name: net.ipv6.conf.all.autoconf, value: "1" }
+#     - { name: net.ipv6.conf.default.autoconf, value: "1" }
+#   when: "'proxmox_servers' not in group_names"
+
+# - name: Ensure the interfaces file is correct, uncommenting any IPv6 line for non-proxmox-servers
+#   ansible.builtin.replace:
+#     path: /etc/network/interfaces
+#     regexp: ^#(iface.*inet6.*)
+#     replace: "\\1"
+#   when: "'proxmox_servers' not in group_names"
