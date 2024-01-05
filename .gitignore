@@ -1,7 +1,5 @@
 /files/docker_persistent_data/*
 !/files/docker_persistent_data/.gitkeep
-/__pycache__/
-/__pycache__/*
 /hosts
 /files/fonts/*
 .DS_Store
@@ -13,3 +11,4 @@ secret.yml
 mountsraspi
 .fact_cache
 .vault_pass
+roles/pve/library/__pycache__/collect_kernel_info.cpython-311.pyc
