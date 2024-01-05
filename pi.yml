@@ -4,10 +4,10 @@
   hosts: raspberry
   become: true
   roles:
-    - pi-common
+    - pi_common
 
 - name: Add correct overlay to Raspberry pi
   hosts: hifiberry
   become: true
   roles:
-    - pi-hifiberry
+    - pi_hifiberry

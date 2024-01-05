@@ -1,6 +1,6 @@
 ---
 - name: Ensure old versions of Docker are not installed.
-  package:
+  ansible.builtin.package:
     name:
       - docker
       - docker.io
@@ -8,7 +8,7 @@
     state: absent
 
 - name: Ensure dependencies are installed.
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
       - ca-certificates
@@ -30,4 +30,3 @@
 - name: Update package cache after adding repo
   ansible.builtin.apt:
     update_cache: true
-
