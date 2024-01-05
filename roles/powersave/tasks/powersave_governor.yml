@@ -30,9 +30,22 @@
     owner: root
     group: root
     mode: "0644"
-  when: cpu_governors is not search("powersave")
+  when: (cpu_governors is not search("powersave")) and ('raspberry' not in group_names)
+
+- name: Set powersave governor to ondemand if this is a Raspberry Pi
+  ansible.builtin.template:
+    src: etc/default/cpufrequtils_raspi.j2
+    dest: /etc/default/cpufrequtils
+    owner: root
+    group: root
+    mode: "0644"
+  when: "'raspberry' in group_names"
 
 # when check includes likely virtualized machines that will have "Unable to determine current policy"
 - name: Reboot to set new governor, but only if changed
   ansible.builtin.reboot:
-  when: ((cpu_governors is not search("powersave")) and (cpu_governors is not search("Unable to determine")))
+  when: ((cpu_governors is not search("powersave")) and (cpu_governors is not search("Unable to determine")) and ('raspberry' not in group_names))
+
+- name: Reboot to set new governor, but only if changed - for Raspberries
+  ansible.builtin.reboot:
+  when: ((cpu_governors is not search("ondemand")) and ('raspberry' in group_names))

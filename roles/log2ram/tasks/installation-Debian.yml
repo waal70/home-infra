@@ -1,7 +1,7 @@
 ---
-- name: Update apt cache.
-  ansible.builtin.apt:
-    update_cache: true
+# - name: Update apt cache.
+#   ansible.builtin.apt:
+#     update_cache: true
 
 - name: Install required packages.
   ansible.builtin.apt:
@@ -21,12 +21,9 @@
     state: present
     enabled: true
 
-- name: Update apt cache after log2ram repository is enabled.
+- name: Update apt cache (and dist-upgrade) after log2ram repository is enabled.
   ansible.builtin.apt:
     update_cache: true
-
-- name: Upgrade packages after log2ram repository is enabled.
-  ansible.builtin.apt:
     upgrade: dist
 
 - name: Ensure rsync is installed if the 'log2ram_use_rsync' option is true.
