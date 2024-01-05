@@ -1,0 +1,8 @@
+---
+- name: Show info on specific host
+  hosts:
+    - raspberry
+  become: true
+  tasks:
+    - name: Unconditionally shut down the machine with all defaults
+      community.general.shutdown:

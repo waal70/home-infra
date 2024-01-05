@@ -21,9 +21,10 @@ test01 ansible_host=172.16.29.104
 pi5-01 ansible_host=172.16.11.183
 pi01 ansible_host=172.16.10.234
 pi02 ansible_host=172.16.11.235
+pi03 ansible_host=172.16.10.25
 
 [hifiberry]
-#hifipi ansible_host=172.16.11.227
+hifipi ansible_host=172.16.11.228
 
 [raspberry:children]
 hifiberry
