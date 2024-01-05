@@ -102,8 +102,7 @@
     name: SysVol sync
     minute: "30"
     hour: 5,17
-    job: rsync -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address']
-      }}/SysVol/ /var/lib/samba/sysvol/ # noqa: yaml[line-length]
+    job: rsync -XAavz --delete-after --password-file=/var/lib/samba/rsync-sysvol.secret rsync://sysvol-replication@{{ hostvars[groups['samba_primary'][0]]['ansible_default_ipv4']['address'] }}/SysVol/ /var/lib/samba/sysvol/ # noqa: yaml[line-length]
   when:
     - smb_role == "additional"
     - not rsync_dryrun.failed
