@@ -41,13 +41,3 @@ samba_ad_dc_servers
 raspberry
 debian_servers
 testsubjects
-
-[hifiberry:vars]
-dacoverlay=hifiberry-dacplus
-
-[allservers:vars]
-# Set the interactive_* vars if you require an interactive login to the ansible-target
-interactive_user=awaal
-interactive_home=/home/awaal
-
-

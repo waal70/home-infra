@@ -1,4 +1,6 @@
 ---
-# Example variables, customize as needed
+# group variables for all servers
 enable_journaling: false # Set to true to enable journaling, false to disable
 log2ram_size: 80M
+interactive_user: awaal
+interactive_home: /home/awaal
