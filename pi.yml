@@ -11,3 +11,9 @@
   become: true
   roles:
     - pi_hifiberry
+
+- name: Add correct overlay to PiCAN Raspberries
+  hosts: pican
+  become: true
+  roles:
+    - pi_can

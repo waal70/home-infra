@@ -18,28 +18,28 @@
   ansible.builtin.debug:
     var: cpu_governors
 
-- name: Ensure cpufrequtils is installed
+- name: Block for non-raspberry computers
+  when: ('raspberry' not in group_names)
+  block:
+    - name: Ensure cpufrequtils is installed
+      ansible.builtin.apt:
+        name: cpufrequtils
+        state: present
+
+    - name: Set powersave governor to powersave if currently other setting
+      ansible.builtin.template:
+        src: etc/default/cpufrequtils.j2
+        dest: /etc/default/cpufrequtils
+        owner: root
+        group: root
+        mode: "0644"
+      when: (cpu_governors is not search("powersave"))
+
+- name: For raspberry, make sure there is no cpufrequtils
   ansible.builtin.apt:
     name: cpufrequtils
-    state: present
-
-- name: Set powersave governor to powersave if currently other setting
-  ansible.builtin.template:
-    src: etc/default/cpufrequtils.j2
-    dest: /etc/default/cpufrequtils
-    owner: root
-    group: root
-    mode: "0644"
-  when: (cpu_governors is not search("powersave")) and ('raspberry' not in group_names)
-
-- name: Set powersave governor to ondemand if this is a Raspberry Pi
-  ansible.builtin.template:
-    src: etc/default/cpufrequtils_raspi.j2
-    dest: /etc/default/cpufrequtils
-    owner: root
-    group: root
-    mode: "0644"
-  when: "'raspberry' in group_names"
+    state: absent
+  when: ('raspberry' in group_names)
 
 # when check includes likely virtualized machines that will have "Unable to determine current policy"
 - name: Reboot to set new governor, but only if changed

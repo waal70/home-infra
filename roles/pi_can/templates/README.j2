@@ -1,0 +1,15 @@
+To bring the can interface up:
+
+sudo /sbin/ip link set can0 up type can bitrate 500000
+
+For internal testing:
+sudo /sbin/ip link set can0 up type can bitrate 500000 loopback on
+
+
+to generate (Volvo)messages onto this canbus every 1000 ms:
+
+cangen -g 1000 -e -I 01800008 -L 8 -D A700566F65722053 can0
+cangen -e -g 1000 -I i -L 8 -D A700566F65722053 -p 10 can0
+
+
+sudo apt-get install can-utils

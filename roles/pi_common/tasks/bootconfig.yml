@@ -1,0 +1,22 @@
+---
+# tasks file for pi-common - bootconfig.yml
+
+- name: Determine location of config-file
+  ansible.builtin.stat:
+    path: /boot/config.txt
+  register: prebookwormconfig
+
+- name: Set fact to correct boot config-file
+  ansible.builtin.set_fact:
+    pi_config: "{% if prebookwormconfig.stat.exists and not prebookwormconfig.stat.islnk %}/boot/config.txt{% else %}/boot/firmware/config.txt{% endif %}"
+
+- name: Ensure both wifi and bluetooth are disabled
+  ansible.builtin.lineinfile:
+    path: "{{ pi_config }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state | default('present') }}"
+    insertafter: "{{ item.after | default('EOF') }}"
+  with_items:
+    - { regexp: "^#*?dtoverlay.*=.*disable-bt", line: "dtoverlay=disable-bt", after: "^[all]" }
+    - { regexp: "^#*?dtoverlay.*=.*disable-wifi", line: "dtoverlay=disable-wifi", after: "^[all]" }

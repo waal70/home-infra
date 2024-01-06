@@ -12,16 +12,32 @@
   register: fs_filled
   changed_when: false
 
+- name: Find FS expandable flag file
+  ansible.builtin.stat:
+    path: "{{ fs_expand_file }}"
+  register: fs_expanded
+
 - name: Print if FS is expandable or not
   ansible.builtin.debug:
     msg: Filesystem is expandable! [{{ fs_filled.stdout }}]
   when: fs_filled.stdout == '0'
 
-- name: Expand Filesystem
+- name: Expand Filesystem, if not done before
   ansible.builtin.command: raspi-config nonint do_expand_rootfs
-  when: fs_filled.stdout == '0'
+  when: (fs_filled.stdout == '0') and not fs_expanded.stat.exists
   notify: Restart Raspberry
-  changed_when: false
+  changed_when: not fs_expanded.stat.exists
+
+- name: Ensure expand_fs flag file exists, if not already there
+  ansible.builtin.copy:
+    content: "{{ ansible_date_time.iso8601_micro }} -> timestamp of filesystem expansion"
+    dest: "{{ fs_expand_file }}"
+    force: false
+    group: sys
+    owner: root
+    mode: "0644"
+  when: not fs_expanded.stat.exists
+
 
 # N3 Disable predictable network interface names
 - name: Get predictable network names status
@@ -81,11 +97,17 @@
   ansible.builtin.debug:
     msg: "SPI status is: {{ spi_status.stdout }}"
 
-- name: Enable SPI
+- name: Set SPI
   ansible.builtin.command: raspi-config nonint do_spi {{ disable_spi }}
-  when: spi_status.stdout != disable_spi
+  when: (spi_status.stdout != disable_spi) and ('pican' not in group_names)
   notify: Restart Raspberry
   changed_when: true
+
+- name: Enable SPI for PiCAN2-raspberries
+  ansible.builtin.command: raspi-config nonint do_spi 0
+  when: ('pican' in group_names) and (spi_status.stdout != "0")
+  notify: Restart Raspberry
+  changed_when: ('pican' in group_names) and (spi_status.stdout != "0")
 
 # P5 I2C
 - name: Get I2C status
@@ -97,7 +119,7 @@
   ansible.builtin.debug:
     msg: "I2C status is: {{ i2c_status.stdout }}"
 
-- name: Enable I2C
+- name: Set I2C
   ansible.builtin.command: raspi-config nonint do_i2c {{ disable_i2c }}
   when: i2c_status.stdout != disable_i2c
   notify: Restart Raspberry
@@ -134,3 +156,6 @@
   when: rgpio_status.stdout != disable_gpio
   notify: Restart Raspberry
   changed_when: true
+
+- name: Import tasks to edit /boot/config.txt
+  ansible.builtin.import_tasks: bootconfig.yml
