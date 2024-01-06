@@ -1,6 +1,7 @@
 ---
 - name: Perform default config on all hosts
   hosts: all
+  strategy: free # noqa: run-once[play]
   become: true
   roles:
     - common

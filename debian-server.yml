@@ -5,6 +5,7 @@
     - debian_servers
     - testsubjects
   become: true
+  strategy: free # noqa: run-once[play]
   roles:
     - docker
     - portainer
