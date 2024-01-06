@@ -6,5 +6,3 @@ export SSH_ASKPASS_REQUIRE=force
 chmod 0600 ${PRIVATE_REPO}/ssh-keys/ansible-key
 ssh-agent bash
 ssh-add ${PRIVATE_REPO}/ssh-keys/ansible-key
-
-

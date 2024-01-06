@@ -1,0 +1,4 @@
+#!/bin/bash
+unset SSH_ASKPASS_REQUIRE
+unset SSH_ASKPASS
+unset PRIVATE_REPO
