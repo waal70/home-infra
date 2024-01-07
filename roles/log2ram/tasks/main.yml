@@ -22,9 +22,7 @@
 
 - name: Configure log2ram.
   ansible.builtin.include_tasks: configuration.yml
-  when:
-    - log2ram_installed | bool
-    - not log2ram_state == "remove"
+  when: not log2ram_state == "remove"
 
 - name: Ensure log2ram is started and enabled on boot.
   ansible.builtin.service:
