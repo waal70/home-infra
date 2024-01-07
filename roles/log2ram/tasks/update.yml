@@ -4,19 +4,3 @@
     name: log2ram
     state: latest
   when: ansible_os_family == "Debian"
-
-- name: Update log2ram on non-Debian systems.
-  when: not ansible_os_family == "Debian"
-  block:
-    - name: Ensure log2ram service is stopped (Non-Debian systems).
-      ansible.builtin.service:
-        name: log2ram
-        state: stopped
-
-    - name: Delete the old log2ram directory contents (Non-Debian systems).
-      ansible.builtin.file:
-        path: "{{ ansible_user_dir }}/.log2ram"
-        state: absent
-
-    - name: Proceed to installation (Non-Debian systems).
-      ansible.builtin.include_tasks: installation.yml
