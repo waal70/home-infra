@@ -1,0 +1,10 @@
+---
+# powersave Raspberry.yml
+- name: For raspberry, make sure there is no cpufrequtils and/or powertop
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+    purge: true
+  with_items:
+    - cpufrequtils
+    - powertop

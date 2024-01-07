@@ -1,0 +1,5 @@
+---
+# powersave unsupported-systemtype.yml
+- name: Print message stating systemtype is not supported
+  ansible.builtin.debug:
+    msg: "This systemtype is not supported for powersave settings ({{ ansible_local.cpu_info.systemtype }})"

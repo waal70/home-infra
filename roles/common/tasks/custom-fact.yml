@@ -7,7 +7,7 @@
 
 - name: Install custom CPU fact
   ansible.builtin.template:
-   src: etc/ansible/facts.d/cpu-info.fact
+   src: etc/ansible/facts.d/cpu_info.fact
    dest: /etc/ansible/facts.d
    owner: "{{ ansible_user_id }}"
    group: "{{ ansible_user_id }}"

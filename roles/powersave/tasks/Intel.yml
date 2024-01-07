@@ -1,4 +1,5 @@
 ---
+# powersave Intel.yml
 - name: Ensure powertop is installed
   ansible.builtin.apt:
     name: powertop
@@ -25,3 +26,17 @@
     state: reloaded
     name: powertop.service
   when: not ps.stat.exists
+
+- name: Ensure cpufrequtils is installed
+  ansible.builtin.apt:
+    name: cpufrequtils
+    state: present
+
+- name: Set powersave governor to powersave if currently other setting
+  ansible.builtin.template:
+    src: etc/default/cpufrequtils.j2
+    dest: /etc/default/cpufrequtils
+    owner: root
+    group: root
+    mode: "0644"
+    when: (cpu_governors is not search("powersave"))
