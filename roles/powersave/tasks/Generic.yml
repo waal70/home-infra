@@ -1,0 +1,5 @@
+---
+# powersave Generic.yml
+# Basically, copy settings from Intel.yml
+- name: Ensure the same settings as 'Intel' are applied
+  ansible.builtin.import_tasks: Intel.yml
