@@ -1,23 +1,8 @@
 ---
-- name: Install log2ram.
-  ansible.builtin.include_tasks: "{{ item }}"
-  vars:
-    files:
-      - installation-{{ ansible_os_family }}.yml
-      - installation.yml
-  loop: "{{ q('first_found', files, errors='ignore') }}"
-  when: log2ram_state == "install"
-
-- name: Check if log2ram is installed (Debian-based systems).
+- name: Check if log2ram was already installed (Debian-based systems).
   ansible.builtin.package_facts:
     manager: auto
   when: ansible_os_family == "Debian"
-
-- name: Check if log2ram is installed (Non-Debian systems).
-  ansible.builtin.stat:
-    path: /usr/local/bin/log2ram
-  register: log2ram_is_installed
-  when: not ansible_os_family == "Debian"
 
 - name: Set fact about installed packages in Debian.
   ansible.builtin.set_fact:
@@ -25,11 +10,15 @@
   when:
     - ansible_os_family == "Debian"
 
-- name: Set fact about installed packages in Non-Debian.
-  ansible.builtin.set_fact:
-    log2ram_installed: "{{ 'true' if log2ram_is_installed.stat['path'] is defined else 'false' }}"
+- name: Install log2ram.
+  ansible.builtin.include_tasks: "{{ item }}"
+  vars:
+    files:
+      - installation-{{ ansible_os_family }}.yml
+  loop: "{{ q('first_found', files, errors='ignore') }}"
   when:
-    - not ansible_os_family == "Debian"
+    - log2ram_state == "install"
+    - not (log2ram_installed | bool)
 
 - name: Configure log2ram.
   ansible.builtin.include_tasks: configuration.yml
