@@ -1,5 +1,8 @@
 ---
 # file: common/tasks/main.yml
+- name: Import custom fact setting
+  ansible.builtin.import_tasks: custom-fact.yml
+
 - name: Import color-shell tasks for the common-role
   ansible.builtin.import_tasks: color-shell.yml
 

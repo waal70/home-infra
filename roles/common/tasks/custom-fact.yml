@@ -1,0 +1,18 @@
+---
+- name: Create directory for ansible custom facts
+  ansible.builtin.file:
+   state: directory
+   recurse: true
+   path: /etc/ansible/facts.d
+
+- name: Install custom CPU fact
+  ansible.builtin.template:
+   src: etc/ansible/facts.d/cpu-info.fact
+   dest: /etc/ansible/facts.d
+   owner: "{{ ansible_user_id }}"
+   group: "{{ ansible_user_id }}"
+   mode: "0777"
+
+- name: Re-read facts after adding custom fact
+  ansible.builtin.setup:
+   filter: ansible_local
