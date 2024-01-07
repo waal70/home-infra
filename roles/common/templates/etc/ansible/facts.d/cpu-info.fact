@@ -1,9 +1,5 @@
 #!/bin/bash
 
-readarray -t array <<< "$(df -h)";
-var=$(echo "${array[1]}"| grep -aob '%' | grep -oE '[0-9]+');
-df_output="${array[3]:$var-3:4}";
-
 hostname=$(hostname);
 operating_system=$(hostnamectl | grep "Operating System" | cut -d ' ' -f3-);
 architecture=$(arch);
@@ -11,4 +7,11 @@ processor_model=$(cat /proc/cpuinfo | grep -E '^(model name|Model)\s*:' | sort -
 memory=$(free -h --si --total | grep -oP '^Total:\s+([\d,]+[.]*[\d]*)[ ]*([A-Za-z]+)' | awk '{print $2}');
 system_main_ip=$(hostname -I);
 
-printf '{"hostname":"%s","operating_system":"%s","architecture":"%s","processor_name":"%s","memory":"%s","system_main_ip":"%s"}' "$hostname" "$operating_system" "$architecture" "$processor_model" "$memory" "$system_main_ip"
+# Hacky way to check for multiple possibilities
+cat /proc/cpuinfo | grep -q 'Raspberry'; rc=$?
+systemtype=$(if [[ $rc -eq 0 ]]; then echo "Raspberry"; else echo "Generic"; fi)
+cat /proc/cpuinfo | grep -q 'Intel'; rc=$?
+systemtype=$(if [[ $rc -eq 0 ]]; then echo "Intel"; else echo "$systemtype"; fi)
+
+printf '{"systemtype":"%s","hostname":"%s","operating_system":"%s","architecture":"%s","processor_name":"%s","memory":"%s","system_main_ip":"%s"}'\
+ "$systemtype" "$hostname" "$operating_system" "$architecture" "$processor_model" "$memory" "$system_main_ip"
