@@ -21,7 +21,16 @@
       31376230323333396339343431616663326466333965633539623134323931373039626364313235
       65333630373935633064356233386438646435323630626465303964323836666265
     groups: sudo
+    create_home: true
+    skeleton: /etc/skel
     append: true
+
+- name: Set the key for the unprivileged user
+  ansible.posix.authorized_key:
+    user: "{{ interactive_user }}"
+    key: "{{ lookup('file', '../home/ssh-keys/{{ interactive_user }}/{{ interactive_user }}-key.pub') }}"
+    state: present
+    exclusive: true
 
 # Note the use of "ansible_remote_tmp" - to prevent WARNINGS because of becoming an unprivileged user
 - name: Force colors in .bashrc

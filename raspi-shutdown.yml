@@ -4,5 +4,18 @@
     - raspberry
   become: true
   tasks:
+    - name: Set the toggle to destroy user
+      ansible.builtin.set_fact:
+        remove_user: false
+
+    - name: Remove the interactive user if I say so :)
+      ansible.builtin.user:
+        name: "{{ interactive_user }}"
+        state: absent
+        force: true
+        remove: true
+      when: remove_user
+
     - name: Unconditionally shut down the machine with all defaults
       community.general.shutdown:
+      when: not remove_user
