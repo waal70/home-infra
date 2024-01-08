@@ -1,0 +1,8 @@
+---
+# file: update_ssh.yml
+- name: Update SSH keys for ansible user
+  hosts:
+    - all
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - update_ssh
