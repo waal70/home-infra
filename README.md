@@ -13,7 +13,7 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 
 * Configure your vault password by setting it in .vault_pass
 * Point to this file in your ansible.cfg, by setting "vault_password_file = .vault_pass" in the [defaults]-section
-* To keep it out of this repository, I have configured ansible.cfg to point to your home folder. Create the .vault_pass there.
+* To keep it out of this repository, I have configured ansible.cfg to point to a separate repository, also in your home folder. Create the .vault_pass there (i.e.: ../home)
 * Run the following commands from the directory where ansible.cfg is residing, or else it will not pick up the location of .vault_pass
 * Set your sensitive info by running: ansible-vault encrypt_string 'some_sensitive_value' --name 'variable_containing_sensitive_stuff'
 * In case of a password - the "some_sensitive_value" should already be hashed with mkpasswd -m sha-512
