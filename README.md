@@ -11,7 +11,6 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 
 ## Sensitive info
 
-* Configure your editor by exporting EDITOR=nano in your .bashrc
 * Configure your vault password by setting it in .vault_pass
 * Point to this file in your ansible.cfg, by setting "vault_password_file = .vault_pass" in the [defaults]-section
 * To keep it out of this repository, I have configured ansible.cfg to point to your home folder. Create the .vault_pass there.
