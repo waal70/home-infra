@@ -1,0 +1,36 @@
+---
+# tasks file for util_server
+# This util_server should have tftp, preseed.cfg
+# Then, it will take the latest netboot from the internet
+# And configure the relevant files for it
+# if no /var/www/html, then install a webserver (TODO) - for now, assume presence of webserver
+- name: Ensure tftpd-hpa is installed
+  ansible.builtin.apt:
+    name: tftpd-hpa
+    state: present
+
+- name: Ensure preseed.cfg is in the /var/www/html folder
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/debian-preseed/preseed.cfg"
+    dest: "/var/www/html"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Obtain and unarchive the current netboot image
+  ansible.builtin.unarchive:
+    src: https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz
+    remote_src: true
+    dest: /srv/tftp/
+  when: netboot_download
+
+- name: Place the specific config files into the correct folder
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: "0644"
+  with_items:
+    - src: srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg.j2
+      dst: /srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg
+    - src: srv/tftp/debian-installer/amd64/boot-screens/txt.cfg.j2
+      dst: /srv/tftp/debian-installer/amd64/boot-screens/txt.cfg

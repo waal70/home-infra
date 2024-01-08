@@ -1,0 +1,4 @@
+label install
+	menu label ^Install
+	kernel debian-installer/amd64/linux
+	append vga=788 auto=true priority=critical interface=auto preseed/url=http://{{ ansible_host }}/preseed.cfg initrd=debian-installer/amd64/initrd.gz --- quiet 

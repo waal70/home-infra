@@ -1,0 +1,12 @@
+# D-I config version 2.0
+# search path for the c32 support libraries (libcom32, libutil etc.)
+path debian-installer/amd64/boot-screens/
+prompt 0
+timeout 10
+totaltimeout 20
+ontimeout install
+say You are about to autoboot into Debian installation
+say netboot.tar.gz last refreshed on: {{ ansible_date_time.iso8601 }}
+include debian-installer/amd64/boot-screens/txt.cfg
+# default debian-installer/amd64/boot-screens/vesamenu.c32
+default install

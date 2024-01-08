@@ -1,0 +1,9 @@
+---
+# file: 05-util-server.yml
+- name: Setup utility server
+  hosts:
+    - util
+  become: true
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - util_server
