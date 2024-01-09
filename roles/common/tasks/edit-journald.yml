@@ -11,7 +11,8 @@
     - { regexp: "^#?SystemMaxUse", line: SystemMaxUse=50M }
   notify: Restart systemd-journald
 
+# A succesful vacuum does impact log size, but is not considered a change
 - name: Vacuum journalctl before
   ansible.builtin.command: journalctl --vacuum-size=10M
   register: vacuumresult
-  changed_when: "'Vacuuming done' in vacuumresult.stderr"
+  changed_when: false

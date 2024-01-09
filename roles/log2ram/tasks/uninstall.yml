@@ -15,3 +15,8 @@
     state: absent
     purge: true
   when: ansible_os_family == "Debian"
+
+- name: Remove log2ram repo.
+  ansible.builtin.deb822_repository:
+    name: log2ram
+    state: absent
