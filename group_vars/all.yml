@@ -2,6 +2,6 @@
 # group variables for all servers
 enable_journaling: false # Set to true to enable journaling, false to disable
 log2ram_size: 80M
-log2ram_state: remove # install, update, remove
+log2ram_state: install # install, update, remove
 interactive_user: awaal
 interactive_home: /home/awaal
