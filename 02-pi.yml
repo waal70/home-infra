@@ -14,7 +14,7 @@
     - pi_hifiberry
 
 - name: Add correct overlay to PiCAN Raspberries
-  hosts: pican
+  hosts: pican2
   become: true
   roles:
     - pi_can

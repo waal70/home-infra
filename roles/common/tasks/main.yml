@@ -1,5 +1,11 @@
 ---
 # file: common/tasks/main.yml
+- name: Ensure python3-debian is present on systems
+  ansible.builtin.apt:
+    name: python3-debian
+    update_cache: true
+    state: present
+
 - name: Import custom fact setting
   ansible.builtin.import_tasks: custom-fact.yml
 

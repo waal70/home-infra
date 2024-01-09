@@ -37,6 +37,12 @@
     name: log2ram
     state: present
 
+- name: Set installed to true after installationss packages in Debian.
+  ansible.builtin.set_fact:
+    log2ram_installed: true
+  when:
+    - ansible_os_family == "Debian"
+
 - name: Reboot system after log2ram is installed.
   ansible.builtin.reboot:
   when: log2ram_reboot_after_install | bool

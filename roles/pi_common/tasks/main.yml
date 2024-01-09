@@ -1,11 +1,5 @@
 ---
 # tasks file for pi-common
-- name: Ensure python3-debian is present on Raspberry
-  ansible.builtin.apt:
-    name: python3-debian
-    update_cache: true
-    state: present
-
 ## Start by expanding the filesystem (when possible)
 - name: Check whether FS is expandable
   ansible.builtin.command: raspi-config nonint get_can_expand
@@ -99,15 +93,15 @@
 
 - name: Set SPI
   ansible.builtin.command: raspi-config nonint do_spi {{ disable_spi }}
-  when: (spi_status.stdout != disable_spi) and ('pican' not in group_names)
+  when: (spi_status.stdout != disable_spi) and ('pican2' not in group_names)
   notify: Restart Raspberry
   changed_when: true
 
 - name: Enable SPI for PiCAN2-raspberries
   ansible.builtin.command: raspi-config nonint do_spi 0
-  when: ('pican' in group_names) and (spi_status.stdout != "0")
+  when: ('pican2' in group_names) and (spi_status.stdout != "0")
   notify: Restart Raspberry
-  changed_when: ('pican' in group_names) and (spi_status.stdout != "0")
+  changed_when: ('pican2' in group_names) and (spi_status.stdout != "0")
 
 # P5 I2C
 - name: Get I2C status
