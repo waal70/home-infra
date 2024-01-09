@@ -6,15 +6,3 @@
   become: true
   roles:
     - pi_common
-
-- name: Add correct overlay to Raspberry pi
-  hosts: hifiberry
-  become: true
-  roles:
-    - pi_hifiberry
-
-- name: Add correct overlay to PiCAN Raspberries
-  hosts: pican2
-  become: true
-  roles:
-    - pi_can

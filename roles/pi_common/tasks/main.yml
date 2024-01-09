@@ -73,10 +73,7 @@
 
 - name: Print VNC status
   ansible.builtin.debug:
-    msg: "VNC status is: {{ vnc_status.stdout }}"
-
-- name: Set VNC
-  ansible.builtin.command: raspi-config nonint do_vnc {{ disable_vnc }}
+    msg: "VNC statusmainommand: raspi-config nonint do_vnc {{ disable_vnc }}"
   when: vnc_status.stdout != disable_vnc
   notify: Restart Raspberry
   changed_when: true
@@ -153,3 +150,11 @@
 
 - name: Import tasks to edit /boot/config.txt
   ansible.builtin.import_tasks: bootconfig.yml
+
+- name: Import tasks to process overlay for hifiberry-dacplus
+  ansible.builtin.import_tasks: overlay_hifiberry.yml
+  when: "'hiffiberry' in group_names"
+
+- name: Import tasks to process overlay for PiCAN2-raspberries
+  ansible.builtin.import_tasks: overlay_pican.yml
+  when: "'pican2' in group_names"

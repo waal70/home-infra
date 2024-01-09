@@ -1,15 +1,6 @@
 ---
 # tasks file for pi_can
 
-- name: Determine location of config-file
-  ansible.builtin.stat:
-    path: /boot/config.txt
-  register: prebookwormconfig
-
-- name: Set fact to correct boot config-file
-  ansible.builtin.set_fact:
-    pi_config: "{% if prebookwormconfig.stat.exists and not prebookwormconfig.stat.islnk %}/boot/config.txt{% else %}/boot/firmware/config.txt{% endif %}"
-
 - name: Load the overlays for the PiCAN2-hat and enable SPI
   ansible.builtin.lineinfile:
     path: "{{ pi_config }}"
