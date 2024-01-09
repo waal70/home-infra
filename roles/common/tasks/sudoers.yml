@@ -3,5 +3,6 @@
   ansible.builtin.lineinfile:
     path: /etc/sudoers
     regexp: ^%sudo
-    line: "%sudo ALL=(ALL:ALL) NOPASSWD: ALL"
+#   line: "%sudo ALL=(ALL:ALL) NOPASSWD: ALL"
+    line: "%sudo ALL=(ALL:ALL) ALL"
     state: present
