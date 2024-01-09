@@ -7,13 +7,15 @@
     replace: "# \\1"
 
 - name: Add noaudio to vc4 overlay
-  ansible.builtin.lineinfile:
+  ansible.builtin.replace:
     path: "{{ pi_config }}"
-    regexp: ^dtoverlay=vc4-.*kms-v3d.*
-    line: dtoverlay=vc4-kms-v3d,noaudio
+    regexp: "^dtoverlay=vc4-.*kms-v3d.*"
+    replace: "dtoverlay=vc4-kms-v3d,noaudio"
 
 - name: Add hifiberry-dacplus to boot-config
   ansible.builtin.lineinfile:
     path: "{{ pi_config }}"
-    regexp: ^dtoverlay=hifiberry.*
+    regexp: "^dtoverlay=hifiberry.*"
     line: dtoverlay=hifiberry-dacplus
+    state: present
+    insertafter: '^[all]'

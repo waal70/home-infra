@@ -153,7 +153,7 @@
 
 - name: Import tasks to process overlay for hifiberry-dacplus
   ansible.builtin.import_tasks: overlay_hifiberry.yml
-  when: "'hiffiberry' in group_names"
+  when: "'hifiberry' in group_names"
 
 - name: Import tasks to process overlay for PiCAN2-raspberries
   ansible.builtin.import_tasks: overlay_pican.yml
