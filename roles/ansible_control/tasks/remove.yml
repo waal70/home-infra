@@ -1,0 +1,23 @@
+- name: Remove required ansible packages
+  ansible.builtin.apt:
+    name:
+      - ansible
+      - ansible-lint
+    state: absent
+    autoremove: true
+    purge: true
+
+- name: Remove ansible repository from this server
+  ansible.builtin.deb822_repository:
+    name: ansible
+    state: absent
+
+- name: Delete playbook-repository
+  ansible.builtin.file:
+    state: absent
+    path: "{{ interactive_home }}/{{ repo_playbook_dir }}"
+
+- name: Delete secrets-repository
+  ansible.builtin.file:
+    state: absent
+    path: "{{ interactive_home }}/{{ repo_secrets_dir }}"

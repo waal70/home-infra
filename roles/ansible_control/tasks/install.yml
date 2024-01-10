@@ -1,0 +1,55 @@
+---
+- name: Add ansible repository to this server
+  ansible.builtin.deb822_repository:
+    name: ansible
+    types: [deb]
+    uris: "{{ ansible_repository }}"
+    suites: "{{ ubuntu_codename }}" # bookworm, jammy
+    components: "{{ ansible_components }}" # main stable etc
+    signed_by: "{{ ansible_gpg_key_url }}"
+    state: present
+    enabled: true
+
+- name: Update package cache, perform dist-upgrade, autoclean, autoremove after adding repository
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: dist
+    autoremove: true
+    autoclean: true
+
+- name: Install required ansible packages
+  ansible.builtin.apt:
+    name:
+      - ansible
+      - ansible-lint
+    state: present
+
+- name: Checkout main playbook repository into home of interactive_user # noqa: latest[git]
+  ansible.builtin.git:
+    repo: "{{ git_repo_playbooks }}"
+    dest: "{{ interactive_home }}/{{ repo_playbook_dir }}"
+    accept_hostkey: true
+    clone: true
+
+- name: Remove previously accepted host keys # noqa: command-instead-of-shell ignore-errors
+  ansible.builtin.shell: "ssh-keygen -R {{ git_repo_secrets_server }}"
+  become_user: "{{ interactive_user }}"
+  ignore_errors: true
+  changed_when: false
+
+- name: Hacky way to accept the host key for the internal git clone
+  ansible.builtin.shell: "ssh-keyscan -p {{ git_repo_secrets_server_port }} -H {{ git_repo_secrets_server }} >> {{ interactive_home }}/.ssh/known_hosts"
+  become_user: "{{ interactive_user }}"
+  changed_when: false
+
+- name: Delete secrets-repository
+  ansible.builtin.file:
+    state: absent
+    path: "{{ interactive_home }}/{{ repo_secrets_dir }}"
+
+
+- name: Checkout secrets repository into home of interactive_user # noqa: latest[git]
+  ansible.builtin.command:
+    cmd: "sshpass -p <password> git clone {{ git_repo_secrets }} {{ interactive_home }}/{{ repo_secrets_dir }}"
+  become_user: "{{ interactive_user }}"
+  changed_when: true

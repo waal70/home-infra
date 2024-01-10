@@ -1,0 +1,9 @@
+---
+# tasks file for ansible_control
+- name: Include install tasks when relevant
+  ansible.builtin.import_tasks: install.yml
+  when: action_install
+
+- name: Include removal tasks when relevant
+  ansible.builtin.import_tasks: remove.yml
+  when: not action_install

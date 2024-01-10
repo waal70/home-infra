@@ -1,0 +1,15 @@
+---
+# defaults file for ansible_control
+ansible_repository: "http://ppa.launchpad.net/ansible/ansible/ubuntu"
+ubuntu_codename: "jammy"
+ansible_gpg_key_url: https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367
+ansible_components: "main"
+
+action_install: false
+
+git_repo_playbooks: "https://github.com/waal70/home-infra.git"
+repo_playbook_dir: "home-infra"
+git_repo_secrets_server: "172.16.1.2"
+git_repo_secrets_server_port: "8022"
+git_repo_secrets: "ssh://{{ git_repo_secrets_server }}:{{ git_repo_secrets_server_port }}/volume1/private-git/home.git"
+repo_secrets_dir: "home"

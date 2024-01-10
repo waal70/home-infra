@@ -5,7 +5,7 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
-    backup: true
+    backup: false
     mode: "0644"
   with_items:
     - regexp: ^SIZE
