@@ -1,46 +1,25 @@
 ---
 # util_server-role/tasks/pi-hole.yml
-- name: Ensure prerequisites are present for pihole installation
-  ansible.builtin.apt:
-    name:
-      - curl
-    state: present
+- name: Check wheter pi-hole is already installed
+  ansible.builtin.stat:
+    path: /etc/pihole/gravity.db
+  register: pihole_db
 
-- name: Create pihole group
-  ansible.builtin.group:
-    name: pihole
-    state: present
+- name: Feedback user on current pi-hole status
+  ansible.builtin.debug:
+    msg: "Pi-hole is already installed on this system"
+  when: pihole_db.stat.exists
 
-- name: Create pihole user
-  ansible.builtin.user:
-    name: pihole
-    group: pihole
-    create_home: false
-    shell: /usr/sbin/nologin
-    state: present
+- name: Include tasks to actually (re-)install pihole
+  ansible.builtin.import_tasks:
+    file: install-pihole.yml
+  when: install_pihole
 
-- name: Create the pihole config directory if it does not exist yet
-  ansible.builtin.file:
-    path: /etc/pihole
-    state: directory
-    owner: pihole
-    group: pihole
-    mode: "0755"
-
-- name: Prepare the setupVars in order to make unattended install
-  ansible.builtin.template:
-    src: etc/pihole/setupVars.conf.j2
-    dest: /etc/pihole/setupVars.conf
-    mode: "0644"
-
-- name: Install pi-hole by piping to bash (may be insecure) # noqa: command-instead-of-module
-  ansible.builtin.shell:
-    cmd: "curl -sSL https://install.pi-hole.net | bash /dev/stdin --unattended"
-  when: reinstall_pihole
-  changed_when: true
-
+# Do not start messing with the db if there is no db
 - name: Import tasks to set-up the correct adlists, and white- and blacklists
-  ansible.builtin.import_tasks: pihole-listmanage.yml
+  ansible.builtin.import_tasks:
+    file: pihole-listmanage.yml
+  when: install_pihole or pihole_db.stat.exists
 
 - name: Create the dnsmasq config directory if it does not exist yet
   ansible.builtin.file:

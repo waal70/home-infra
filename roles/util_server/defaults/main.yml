@@ -1,11 +1,13 @@
 ---
-netboot_download: false
-reinstall_pihole: false
+# A normal config for the following three variables is false, true, false:
+#  maintaining the tftp netboot config, refreshing pihole, but not re-installing fully
+netboot_download: false # controls downloading a new netboot.tar.gz
+do_pihole: true # will refresh adlists and domainlists
+install_pihole: false # switch to (re-)install pihole
+
 iface_dummy: "eth53"
 iface_dummy_private_ipv4: "10.1.1.4"
 iface_dummy_private_ipv6: "2a10:3781:3623:d0::1/64"
-
-refresh_pihole: true
 
 adlists: "{{ lookup('file', 'myadlist.json') | from_json }}"
 

@@ -1,0 +1,40 @@
+---
+# util_server-role/tasks/install-pihole.yml
+- name: Ensure prerequisites are present for pihole installation
+  ansible.builtin.apt:
+    name:
+      - curl
+    state: present
+
+- name: Create pihole group
+  ansible.builtin.group:
+    name: pihole
+    state: present
+
+- name: Create pihole user
+  ansible.builtin.user:
+    name: pihole
+    group: pihole
+    create_home: false
+    shell: /usr/sbin/nologin
+    state: present
+
+- name: Create the pihole config directory if it does not exist yet
+  ansible.builtin.file:
+    path: /etc/pihole
+    state: directory
+    owner: pihole
+    group: pihole
+    mode: "0755"
+
+- name: Prepare the setupVars in order to make unattended install
+  ansible.builtin.template:
+    src: etc/pihole/setupVars.conf.j2
+    dest: /etc/pihole/setupVars.conf
+    mode: "0644"
+
+- name: Install pi-hole by piping to bash (may be insecure) # noqa: command-instead-of-module
+  ansible.builtin.shell:
+    cmd: "curl -sSL https://install.pi-hole.net | bash /dev/stdin --unattended"
+  when: install_pihole
+  changed_when: true

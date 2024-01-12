@@ -10,7 +10,7 @@ ams-deb-01 ansible_host=172.16.10.88
 
 [util]
 #adpi0 ansible_host=10.0.0.4
-adpi0 ansible_host=172.16.29.29
+adpi0 ansible_host=172.16.10.147
 
 [testsubjects]
 test01 ansible_host=172.16.29.104

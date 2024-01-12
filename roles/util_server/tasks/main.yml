@@ -58,4 +58,4 @@
 
 - name: Include pi-hole installation and configuration tasks
   ansible.builtin.import_tasks: pi-hole.yml
-  when: refresh_pihole
+  when: do_pihole

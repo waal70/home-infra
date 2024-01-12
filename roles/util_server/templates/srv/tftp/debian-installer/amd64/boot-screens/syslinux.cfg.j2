@@ -5,6 +5,7 @@ prompt 0
 timeout 10
 totaltimeout 20
 ontimeout install
+nohalt 1
 say You are about to autoboot into Debian installation
 say netboot.tar.gz last refreshed on: {{ ansible_date_time.iso8601 }}
 include debian-installer/amd64/boot-screens/txt.cfg
