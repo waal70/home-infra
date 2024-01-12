@@ -1,0 +1,20 @@
+[
+    {
+        "id": 58,
+        "type": 2,
+        "domain": "(\\.|^)dl\\.delivery\\.mp\\.microsoft\\.com$",
+        "enabled": 1,
+        "date_added": 1589815074,
+        "date_modified": 1649099737,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 68,
+        "type": 2,
+        "domain": "(\\.|^)download\\.windowsupdate\\.com$",
+        "enabled": 1,
+        "date_added": 1591356827,
+        "date_modified": 1649099737,
+        "comment": "Ansible pre-configured"
+    }
+]

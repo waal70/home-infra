@@ -1,0 +1,25 @@
+---
+- name: Now pihole is installed, manipulate the adlists, starting by clearing the current entries
+  ansible.builtin.command:
+    cmd: 'pihole-FTL sqlite3 /etc/pihole/gravity.db "DELETE FROM gravity; DELETE FROM adlist; DELETE FROM domainlist"'
+  changed_when: true
+
+- name: Loop through all adlists, adding them to the database
+  ansible.builtin.command:
+    cmd: >
+      pihole-FTL sqlite3 /etc/pihole/gravity.db "INSERT INTO adlist (id, address, enabled, date_added, date_modified, number)
+       VALUES ({{ item.id }}, '{{ item.address }}', {{ item.enabled }}, {{ item.date_added }}, {{ item.date_modified }}, {{ item.number }});"
+  loop: "{{ adlists }}"
+  changed_when: true
+  notify: Update gravity
+
+- name: Loop through all whitelists and add them to the database
+  ansible.builtin.include_tasks:
+    file: process-domain.yml
+  loop:
+    - "{{ wl_exact }}"
+    - "{{ wl_regex }}"
+    - "{{ bl_exact }}"
+    - "{{ bl_regex }}"
+  loop_control:
+    loop_var: process_lists

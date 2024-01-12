@@ -1,2 +1,42 @@
 ---
 netboot_download: false
+reinstall_pihole: false
+iface_dummy: "eth53"
+iface_dummy_private_ipv4: "10.1.1.4"
+iface_dummy_private_ipv6: "2a10:3781:3623:d0::1/64"
+
+refresh_pihole: true
+
+adlists: "{{ lookup('file', 'myadlist.json') | from_json }}"
+
+wl_exact: "{{ lookup('file', 'whitelist-exact.json') | from_json }}"
+wl_regex: "{{ lookup('file', 'whitelist-regex.json') | from_json }}"
+bl_exact: "{{ lookup('file', 'blacklist-exact.json') | from_json }}"
+bl_regex: "{{ lookup('file', 'blacklist-regex.json') | from_json }}"
+
+# For reference: the adlist table looks like:
+# CREATE TABLE adlist
+#  (
+# 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+# 	address TEXT UNIQUE NOT NULL,
+# 	enabled BOOLEAN NOT NULL DEFAULT 1,
+# 	date_added INTEGER NOT NULL DEFAULT (cast(strftime('%s', 'now') as int)),
+# 	date_modified INTEGER NOT NULL DEFAULT (cast(strftime('%s', 'now') as int)),
+# 	comment TEXT,
+# 	date_updated INTEGER,
+# 	number INTEGER NOT NULL DEFAULT 0,
+# 	invalid_domains INTEGER NOT NULL DEFAULT 0,
+# 	status INTEGER NOT NULL DEFAULT 0
+# );
+
+# CREATE TABLE domainlist
+# (
+# 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+# 	type INTEGER NOT NULL DEFAULT 0,
+# 	domain TEXT NOT NULL,
+# 	enabled BOOLEAN NOT NULL DEFAULT 1,
+# 	date_added INTEGER NOT NULL DEFAULT (cast(strftime('%s', 'now') as int)),
+# 	date_modified INTEGER NOT NULL DEFAULT (cast(strftime('%s', 'now') as int)),
+# 	comment TEXT,
+# 	UNIQUE(domain, type)
+# );

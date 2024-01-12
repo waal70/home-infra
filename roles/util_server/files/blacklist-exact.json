@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "type": 1,
+        "domain": "api.github.com",
+        "enabled": 1,
+        "date_added": 1589207526,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 2,
+        "type": 1,
+        "domain": "adservice.google.nl",
+        "enabled": 1,
+        "date_added": 1589207526,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 3,
+        "type": 1,
+        "domain": "bcap15.brightcloud.com",
+        "enabled": 1,
+        "date_added": 1589207526,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 79,
+        "type": 1,
+        "domain": "evtubescms.phncdn.com",
+        "enabled": 0,
+        "date_added": 1615142323,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 82,
+        "type": 1,
+        "domain": "evtubescms.phncdn.com.lds.rncdn7.com",
+        "enabled": 1,
+        "date_added": 1615142998,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 84,
+        "type": 1,
+        "domain": "browser.sentry-cdn.com",
+        "enabled": 1,
+        "date_added": 1653512448,
+        "date_modified": 1653512448,
+        "comment": "Ansible pre-configured"
+    }
+]

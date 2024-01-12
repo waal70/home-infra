@@ -9,6 +9,12 @@
     name: tftpd-hpa
     state: present
 
+- name: Ensure /var/www/html exists
+  ansible.builtin.file:
+    path: /var/www/html
+    state: directory
+    mode: "0755"
+
 - name: Ensure preseed.cfg is in the /var/www/html folder
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/debian-preseed/preseed.cfg"
@@ -34,3 +40,22 @@
       dst: /srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg
     - src: srv/tftp/debian-installer/amd64/boot-screens/txt.cfg.j2
       dst: /srv/tftp/debian-installer/amd64/boot-screens/txt.cfg
+
+- name: Configure the dummy ethernet interface in order to bind pi-hole to item.dst
+  ansible.builtin.template:
+    src: etc/network/interfaces.d/iface-dummy-dns.conf.j2
+    dest: /etc/network/interfaces.d/iface-dummy-dns.conf
+    mode: "0644"
+  register: eth_dummy
+
+# Restart of networking needs to take place immediately because
+#  the existence of the dummy interface is a pre-req for pi-hole
+- name: Restart networking if we just created the dummy interface # noqa: no-handler
+  ansible.builtin.systemd_service:
+    name: "networking.service"
+    state: restarted
+  when: eth_dummy.changed
+
+- name: Include pi-hole installation and configuration tasks
+  ansible.builtin.import_tasks: pi-hole.yml
+  when: refresh_pihole

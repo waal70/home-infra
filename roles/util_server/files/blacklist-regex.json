@@ -1,0 +1,38 @@
+[
+    {
+        "id": 45,
+        "type": 3,
+        "domain": "(^|\\.)uitzendinggemist\\.net$",
+        "enabled": 1,
+        "date_added": 1589207527,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 46,
+        "type": 3,
+        "domain": "(^|\\.)netflix-nederland\\.nl$",
+        "enabled": 1,
+        "date_added": 1589207527,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 80,
+        "type": 3,
+        "domain": "(\\.|^)julrdr\\.com$",
+        "enabled": 1,
+        "date_added": 1615142491,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 81,
+        "type": 3,
+        "domain": "(\\.|^)camschat\\.net$",
+        "enabled": 1,
+        "date_added": 1615142675,
+        "date_modified": 1649099736,
+        "comment": "Ansible pre-configured"
+    }
+]
