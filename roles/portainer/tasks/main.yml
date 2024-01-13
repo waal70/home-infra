@@ -16,6 +16,7 @@
     return_content: true
     body_format: json
     body: '{"Username": "{{ admin_user }}", "Password": "{{ admin_password }}"}'
+    validate_certs: false
   register: auth_token
   when: admin_user and admin_password is defined
 
