@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: portainer
     state: absent
-    purge_networks: true
+    networks: []
     force_kill: true
   when: remove_existing_container
 

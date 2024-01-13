@@ -3,10 +3,10 @@ pve01 ansible_host=172.16.11.108
 #e3:2d is pve01
 pve02 ansible_host=172.16.10.142
 #59:19 is pve02
-pve03 ansible_host=172.16.10.113
 
 [debian_servers]
-ams-deb-01 ansible_host=172.16.10.88
+#ams-deb-01 ansible_host=172.16.10.88
+ams-deb-01 ansible_host=172.16.100.2
 
 [util]
 adpi0 ansible_host=10.0.0.4

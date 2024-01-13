@@ -3,9 +3,9 @@
 configure_settings: false
 configure_registry: false
 remove_persistent_data: false
-remove_existing_container: false
+remove_existing_container: true
 persistent_data_path: /opt/portainer:/data
-container_image: portainer/portainer:{{ version }}
+container_image: portainer/portainer-ce:{{ version }}
 container_name: portainer
 container_labels: {}
 container_network:
@@ -23,9 +23,9 @@ allow_bindmounts_users: true
 allow_privileged_users: true
 
 # Networking
-host_port: 9000
+host_port: 9443
 container_ports:
-  - 9000:9000
+  - 9443:9443
 
 # Admin User
 admin_user: admin

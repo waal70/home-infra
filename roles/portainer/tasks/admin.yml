@@ -11,3 +11,4 @@
     body_format: json
     body: '{ "Username":"{{ admin_user }}", "Password":"{{ admin_password }}"}'
     status_code: 200, 409
+    validate_certs: false

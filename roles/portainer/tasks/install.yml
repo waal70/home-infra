@@ -23,7 +23,7 @@
 
 - name: Set fact for network address
   ansible.builtin.set_fact:
-    portainer_endpoint: http://{{ portainer_docker.container.NetworkSettings.IPAddress }}:{{ host_port }}/api
+    portainer_endpoint: https://{{ portainer_docker.container.NetworkSettings.IPAddress }}:{{ host_port }}/api
 
 - name: Print info to the user
   ansible.builtin.debug:
@@ -36,8 +36,9 @@
 
 - name: Wait for Portainer web interface to get available
   ansible.builtin.uri:
-    url: http://{{ portainer_docker.container.NetworkSettings.IPAddress }}:{{ host_port }}
+    url: https://{{ portainer_docker.container.NetworkSettings.IPAddress }}:{{ host_port }}
     method: GET
+    validate_certs: false
   register: wait_portainer_result
   until: wait_portainer_result is succeeded
   retries: 10
