@@ -25,6 +25,9 @@
   when: (endpoints is not none) and ('jumpservers' not in group_names)
 
 # Is this the place to add the default jumpserver stacks?
+# - name: Incude tasks to add stacks to Portainer
+#  ansible.builtin.include_role: portainer_stack
+#  when: ('jumpservers' not in group_names)
 
 - name: Include optional settings tasks
   ansible.builtin.include_tasks: settings.yml
