@@ -1,0 +1,11 @@
+---
+# file: 08-jumpserver.yml
+- name: Setup jumpserver in DMZ
+  hosts:
+    - jumpservers
+  become: true
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - common
+    - log2ram
+    - docker

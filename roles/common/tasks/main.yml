@@ -6,6 +6,9 @@
     update_cache: true
     state: present
 
+- name: Import tasks to ensure creation of unprivileged user
+  ansible.builtin.import_tasks: unpriv-user.yml
+
 - name: Import custom fact setting
   ansible.builtin.import_tasks: custom-fact.yml
 
@@ -23,3 +26,6 @@
 
 - name: Import sudoers tasks for the common-role
   ansible.builtin.import_tasks: sudoers.yml
+
+- name: Perform SSH daemon hardening
+  ansible.builtin.import_tasks: ssh-config.yml

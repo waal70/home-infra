@@ -1,4 +1,0 @@
----
-- name: Reboot machine after all these changes
-  ansible.builtin.reboot:
-    msg: Rebooting machine in 5 seconds

@@ -6,7 +6,11 @@ pve02 ansible_host=172.16.10.142
 
 [debian_servers]
 #ams-deb-01 ansible_host=172.16.10.88
-ams-deb-01 ansible_host=172.16.100.2
+#ams-deb-01 ansible_host=172.16.100.2
+
+[jumpservers]
+#ams-dmz-deb-01 ansible_host=172.16.100.2
+ams-dmz-deb-test ansible_host=172.16.11.186
 
 [util]
 adpi0 ansible_host=10.0.0.4

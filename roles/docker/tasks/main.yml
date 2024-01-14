@@ -69,3 +69,16 @@
 - name: Include tasks to handle additional users
   ansible.builtin.include_tasks: docker-users.yml
   when: at_least_one_user_to_modify is defined
+
+- name: Deploy Portainer Agent when this is detached server
+  community.docker.docker_container:
+    name: "portainer_agent"
+    image: "portainer/agent:2.19.4"
+    state: started
+    detach: true
+    restart_policy: always
+    published_ports: "9001:9001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+  when: ('jumpservers' in group_names)
