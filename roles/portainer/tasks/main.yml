@@ -24,6 +24,8 @@
   ansible.builtin.include_tasks: endpoints.yml
   when: (endpoints is not none) and ('jumpservers' not in group_names)
 
+# Is this the place to add the default jumpserver stacks?
+
 - name: Include optional settings tasks
   ansible.builtin.include_tasks: settings.yml
   when: configure_settings

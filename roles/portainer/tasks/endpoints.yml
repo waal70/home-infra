@@ -38,11 +38,11 @@
   register: response
   tags: [skip_ansible_lint]
 
-- name: "Debug response"
-  ansible.builtin.debug:
-    msg: "Endpoint {{ item.item.name }}, Response: {{ item.stdout | default('{}') | from_json }}"
-  with_items:
-    - "{{ response.results }}"
+# - name: "Debug response"
+#   ansible.builtin.debug:
+#     msg: "Endpoint {{ item.item.name }}, Response: {{ item.stdout | default('{}') | from_json }}"
+#   with_items:
+#     - "{{ response.results }}"
 
 - name: Verifying calls
   ansible.builtin.fail:

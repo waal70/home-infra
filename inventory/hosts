@@ -10,7 +10,7 @@ ams-dmz-jump ansible_host=172.16.10.124
 
 [debian_servers]
 #debian servers have docker + portainer main. Will connect to jumpserver:9001
-ams-deb-01 ansible_host=172.16.11.96
+ams-deb-01 ansible_host=172.16.11.97
 #ams-deb-01 ansible_host=172.16.100.2
 
 [util]
