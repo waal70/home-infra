@@ -12,6 +12,7 @@
 - name: Save endpoints as fact
   ansible.builtin.set_fact:
     portainer_known_endpoints: "{{ portainer_known_endpoints_raw.json | map(attribute='Name') | list }}"
+    portainer_remote_endpoint_type: "{{ portainer_known_endpoints_raw.json }}"
 
 - name: "Show known endpoints"
   ansible.builtin.debug:
@@ -23,20 +24,26 @@
       - curl
     state: present
 
-# Added -k to not verify SSL certificates
-- name: Define Endpoints
-  ansible.builtin.shell: |
-    curl --silent --show-error -k -o - {{ portainer_endpoint }}/endpoints \
-      -H "Authorization: Bearer {{ (auth_token.content|from_json).jwt }}" \
-      -F "Name={{ item.name }}" \
-      -F "URL={{ item.url }}" \
-      -F "EndpointCreationType=2" \
-      -F "TLS=true" -F "TLSSkipVerify=true" -F "TLSSkipClientVerify=true"
+- name: "Authenticate with Portainer API for {{ stack_name }}"
+  ansible.builtin.uri:
+    url: "{{ portainer_endpoint }}/endpoints"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ (auth_token.content | from_json).jwt }}"
+    body_format: form-multipart
+    validate_certs: false
+    body:
+      Name: "{{ item.name }}"
+      URL: "{{ item.url }}"
+      EndpointCreationType: "2"
+      TLS: "true"
+      TLSSkipClientVerify: "true"
+      TLSSkipVerify: "true"
+  register: response
   with_items:
     - "{{ endpoints | list }}"
   when: item.name not in portainer_known_endpoints
-  register: response
-  tags: [skip_ansible_lint]
+
 
 # - name: "Debug response"
 #   ansible.builtin.debug:

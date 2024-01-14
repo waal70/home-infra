@@ -1,9 +1,9 @@
 - name: Create portainer stacks
   ansible.builtin.include_tasks: create_stack.yml
   vars:
-    portainer_host: "{{ portainer_api_url }}"
-    admin_user: "{{ portainer_admin_user }}"
-    admin_password: "{{ portainer_admin_password }}"
+    portainer_api: "{{ portainer_endpoint }}"
+    portainer_admin_user: "{{ admin_user }}"
+    portainer_admin_password: "{{ admin_password }}"
     endpoint_id: "{{ portainer_endpoint_id }}"
     stack_name: "{{ item.name }}"
     stack_compose: "{{ lookup('file', item.file) }}"

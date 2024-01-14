@@ -33,5 +33,5 @@ admin_user: admin
 
 # Endpoints (of Portainer Agents)
 endpoints:
-  - { name: local, url: "" }
-  - { name: jumpserver, url: tcp://172.16.10.124:9001 }
+  - { name: "local", url: "" }
+  - { name: "jumpserver", url: "tcp://172.16.10.175:9001" }
