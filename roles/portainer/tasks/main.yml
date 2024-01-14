@@ -20,10 +20,10 @@
   register: auth_token
   when: admin_user and admin_password is defined
 
+- name: Include tasks to add Portainer Agents for main node only
+  ansible.builtin.include_tasks: endpoints.yml
+  when: (endpoints is not none) and ('jumpservers' not in group_names)
+
 - name: Include optional settings tasks
   ansible.builtin.include_tasks: settings.yml
   when: configure_settings
-
-- name: Include optional registry tasks
-  ansible.builtin.include_tasks: registry.yml
-  when: configure_registry

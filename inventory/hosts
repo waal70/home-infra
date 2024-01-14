@@ -4,13 +4,14 @@ pve01 ansible_host=172.16.11.108
 pve02 ansible_host=172.16.10.142
 #59:19 is pve02
 
-[debian_servers]
-#ams-deb-01 ansible_host=172.16.10.88
-#ams-deb-01 ansible_host=172.16.100.2
-
 [jumpservers]
-#ams-dmz-deb-01 ansible_host=172.16.100.2
-ams-dmz-deb-test ansible_host=172.16.11.186
+#jumpservers only have docker + portainer agent
+ams-dmz-jump ansible_host=172.16.10.124
+
+[debian_servers]
+#debian servers have docker + portainer main. Will connect to jumpserver:9001
+ams-deb-01 ansible_host=172.16.11.96
+#ams-deb-01 ansible_host=172.16.100.2
 
 [util]
 adpi0 ansible_host=10.0.0.4

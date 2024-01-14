@@ -31,30 +31,7 @@ container_ports:
 admin_user: admin
 # admin_password: password admin password delegated to portainer-vars.yml in vault
 
-# Endpoints
+# Endpoints (of Portainer Agents)
 endpoints:
   - { name: local, url: "" }
-  - { name: remote1, url: tcp://1.2.3.4:2375 }
-  - { name: remote2, url: tcp://5.6.7.8:2375 }
-
-# LDAP
-ldap_account: uid=account_name,ou=Users,o=org,dc=mycompany,dc=com
-ldap_account_password: password
-ldap_url: ldap.mycompany.com
-ldap_port: 636
-tls_enabled: true
-tls_skipverify: true
-start_tls: true
-ldap_base_dn: ou=Users,o=org,dc=mycompany,dc=com
-ldap_filter: (objectClass=inetOrgPerson)
-ldap_username_attribute: uid
-
-# Registry
-registry_name: nexus-oss
-registry_url: 1.2.3.4
-registry_port: 5001
-registry_auth: false
-# 1 (Quay.io), 2 (Azure container registry) or 3 (custom registry)
-registry_type: 3
-registry_username: username
-registry_password: password
+  - { name: jumpserver, url: tcp://172.16.10.124:9001 }
