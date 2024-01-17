@@ -6,6 +6,7 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 
 * Ansible control node with ansible-core available
 * All controlled nodes assume a standard Debian installation that was configured using preseed.cfg from ./debian-preseed
+* The ansible control node can be configured using the role "ansible_control"
 * Most notably, a public-private keypair for user "ansible"
 * Private git repository containing sensitive information (ssh-keys) named 'home' as a peer of 'home-infra'
 
@@ -62,23 +63,27 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 
 ## To use preseed
 
+* Dedicate a server to the "util_server" role, which will take of all this stuff
+* Change your DHCP service to provide the correct details in PXE boot stage.
+* If you wish to follow along manually:
 * Publish ./debian-preseed/preseed.cfg on a webserver
-* On the installer, go to the HELP option
-* At the boot: prompt, type: auto url=<http://webserver/preseed.cfg>" there, replacing webserver with the address to your webserver that is hosting ps.cfg
-* If your client has internet connectivity, you could even refer it to: <https://raw.githubusercontent.com/waal70/home-infra/main/debian-preseed/preseed.cfg>
-* Hint for myself: adpi0 has a preseed.cfg at the root :)
+* Boot a target node with a Debian Install boot volume (i.e. a USB key)
+* Choose "HELP" on the installer menu
+* At the boot: prompt, type: auto url=<http://webserver/preseed.cfg>" there, replacing webserver with the address to your webserver that is hosting the preseed-file
+* The preseed file will take care of the installer questions and leave you with a waal70 approved base image
 
 ## PXE-boot
 
 * See ./debian-preseed/tftp-HOWTO.md
+* See the details in the util_server role
 
 ## To run the playbook: try this
 
-./firstrun.sh
-ansible-playbook site.yml
+./firstrun.sh (to load the ssh-agent with the appropriate keys)
+ansible-playbook site.yml (to kick off the full monty script)
 
-* Runs the playbook site.yml with the inventory file from the repo
-* Use --limit proxmox_servers to only apply to inventory group
+Choose --limit inventory_name to limit the execution to certain hosts.
+Choose the numbered yaml-files to only select a portion of the roles.
 
 ## TO DO
 
