@@ -30,6 +30,62 @@
   ansible.builtin.set_fact:
     livelist: "{{ response.json | default({'data': {}}) | community.general.json_query('data[*].{mac: mac,ansible_host: ip,hostname: hostname, oui: oui}') }}"
 
-- name: Debug intermediate
+# - name: Debug
+#   ansible.builtin.debug:
+#     msg: "{{ livelist }}"
+
+- name: Reduce the list of live clients to only those that have an entry in the inventory
+  ansible.builtin.set_fact:
+    livelist_known: "{{ (livelist_known | default([])) + [item] }}"
+  with_items: "{{ livelist }}"
+  when: item.mac in maclist
+
+# - name: Debug rrrresult
+#   ansible.builtin.debug:
+#     msg: "{{ livelist_known }}"
+
+- name: Create intermediary lists
+  ansible.builtin.set_fact:
+    ip: "{{ livelist_known | map(attribute='ansible_host') | list }}"
+    mac: "{{ livelist_known | map(attribute='mac') | list }}"
+    il_groups: "{{ maclist | from_json | items2dict(key_name='mac', value_name='group') }}"
+    names: "{{ maclist | from_json | items2dict(key_name='mac', value_name='name') }}"
+
+- name: Debug intermediary
   ansible.builtin.debug:
-    msg: "{{ dict(livelist) | combine(maclist, recursive=True)  }}"
+    msg: "ip: {{ ip }} \n mac:{{ mac }} \n {{ il_groups }} \n {{ names }}"
+
+- name: Continue processing
+  ansible.builtin.set_fact:
+    il_group: "{{ mac | map('extract', il_groups) | list }}"
+    il_name: "{{ mac | map('extract', names) | list }}"
+
+- name: Debug tertiary
+  ansible.builtin.debug:
+    msg: "{{ il_group }} {{ il_name }}"
+
+- name: Create dictionaries
+  ansible.builtin.set_fact:
+    il_group_dict: "{{ dict(mac | zip(il_group)) }}"
+    il_name_dict: "{{ dict(mac | zip(il_name)) }}"
+
+- name: Debug quartenary
+  ansible.builtin.debug:
+    msg: "{{ il_group_dict }} {{ il_name_dict }}"
+
+- name: Convert the dicts into lists
+  ansible.builtin.set_fact:
+    il_group_list: "{{ il_group_dict | dict2items(key_name='ansible_host', value_name='il_group') }}"
+    il_name_list: "{{ il_name_dict | dict2items(key_name='ansible_host', value_name='il_name') }}"
+
+- name: Debug pentanary
+  ansible.builtin.debug:
+    msg: "{{ il_group_list }} {{ il_name_list }}"
+
+- name: Create last step
+  ansible.builtin.set_fact:
+    result_final: "{{ [livelist_known, il_group_list, il_name_list] | community.general.lists_mergeby('mac') }}"
+
+- name: Debug final
+  ansible.builtin.debug:
+    msg: "{{ result_final }}"
