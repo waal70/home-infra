@@ -1,0 +1,4 @@
+---
+# defaults file for unifi_info
+controller_url: <your controller url here>
+check_cert: false

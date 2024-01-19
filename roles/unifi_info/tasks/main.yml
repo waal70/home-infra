@@ -1,0 +1,36 @@
+---
+# tasks file for unifi_info
+# The API is not officially documented. This module is based upon:
+# https://ubntwiki.com/products/software/unifi-controller/api
+
+- name: Generate authentication token
+  ansible.builtin.uri:
+    url: "{{ controller_url }}"
+    method: POST
+    return_content: true
+    body_format: json
+    body:
+      username: "<username>"
+      password: "<password>"
+      remember: "true"
+    validate_certs: false
+
+  register: auth_token
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ auth_token.cookies_string }}"
+
+- name: Get info on default site
+  ansible.builtin.uri:
+    url: "{{ controller_url }}/s/default/stat/sta"
+    method: GET
+    headers:
+      Cookie: "{{ auth_token.cookies_string }}"
+    return_content: true
+    validate_certs: false
+  register: response2
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ response2.json.data | to_json | json_query('name') }}"
