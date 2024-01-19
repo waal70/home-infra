@@ -70,10 +70,10 @@
   ansible.builtin.include_tasks: docker-users.yml
   when: at_least_one_user_to_modify is defined
 
-- name: Deploy Portainer Agent when this is detached server
+- name: Deploy Portainer Agent when this is a jumpserver
   community.docker.docker_container:
     name: "portainer_agent"
-    image: "portainer/agent:2.19.4"
+    image: "portainer/agent:{{ portainer_agent_version }}"
     state: started
     detach: true
     restart_policy: always
