@@ -1,4 +1,15 @@
 ---
 # defaults file for unifi_info
-controller_url: <your controller url here>
+# This should contain the root for the controller, i.e. https://unifi, which is also the default
+controller_url: "{{ vault_controller_url | default('https://unifi', true) }}"
+# Use these two to determine a possible prefix that is required for your unifi controller.
+# E.g. the UDM assumes a /proxy/network prefix
+# Most controllers will just use "/api"
+controller_api: "{{ controller_url }}/proxy/network/api"
+# The controller_login can also be /api/login, depending on your unifi controller
+controller_login: "{{ controller_url }}/api/auth/login"
+controller_username: "{{ vault_controller_username }}"
+controller_password: "{{ vault_controller_password }}"
+# This refers to a possibly multi-site managed system. If only one, this should be "default"
+controller_site: "default"
 check_cert: false

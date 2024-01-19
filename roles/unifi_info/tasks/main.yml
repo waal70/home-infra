@@ -5,32 +5,31 @@
 
 - name: Generate authentication token
   ansible.builtin.uri:
-    url: "{{ controller_url }}"
+    url: "{{ controller_login }}"
     method: POST
     return_content: true
     body_format: json
     body:
-      username: "<username>"
-      password: "<password>"
+      username: "{{ controller_username }}"
+      password: "{{ controller_password }}"
       remember: "true"
     validate_certs: false
-
   register: auth_token
 
-- name: Debug
-  ansible.builtin.debug:
-    msg: "{{ auth_token.cookies_string }}"
-
-- name: Get info on default site
+- name: Get info on active stations (ie. connected client devices, currently holding an IP-address)
   ansible.builtin.uri:
-    url: "{{ controller_url }}/s/default/stat/sta"
+    url: "{{ controller_api }}/s/{{ controller_site }}/stat/sta"
     method: GET
     headers:
       Cookie: "{{ auth_token.cookies_string }}"
     return_content: true
     validate_certs: false
-  register: response2
+  register: response
 
-- name: Debug
+- name: Create variable to hold the list of active client devices
+  ansible.builtin.set_fact:
+    livelist: "{{ response.json | default({'data': {}}) | community.general.json_query('data[*].{mac: mac,ansible_host: ip,hostname: hostname, oui: oui}') }}"
+
+- name: Debug intermediate
   ansible.builtin.debug:
-    msg: "{{ response2.json.data | to_json | json_query('name') }}"
+    msg: "{{ dict(livelist) | combine(maclist, recursive=True)  }}"

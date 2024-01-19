@@ -1,0 +1,12 @@
+  [
+    {
+      "group": "proxmox_servers",
+      "name": "pve01",
+      "mac": "24:1b:7a:1d:e5:be"
+    },
+    {
+      "group": "proxmox_servers",
+      "name": "pve02",
+      "mac": "68:a4:0e:05:22:b5"
+    }
+  ]
