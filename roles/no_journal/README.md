@@ -14,4 +14,3 @@ Role Variables
 --------------
 
 None
-
