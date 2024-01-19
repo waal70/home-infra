@@ -4,17 +4,25 @@
 # Then, it will take the latest netboot from the internet
 # And configure the relevant files for it
 # if no /var/www/html, then install a webserver (TODO) - for now, assume presence of webserver
+
+# tftpd-hpa is the Trivial FTP server for Debian. It creates a default
+# config and directory structure, which is fine for this purpose
 - name: Ensure tftpd-hpa is installed
   ansible.builtin.apt:
     name: tftpd-hpa
     state: present
 
+# I am assuming pi-hole is active on this machine as well, which depends on this
+# directory to host its admin interface. We'll piggyback our preseed.cfg onto it
 - name: Ensure /var/www/html exists
   ansible.builtin.file:
     path: /var/www/html
     state: directory
     mode: "0755"
 
+# Note that the path (/) is relied upon by scripts. If you wish to host in a
+# sub-folder, change this task and the previous task to reflect
+# Also, change the txt.cfg file to correctly reflect this in /preseed/url
 - name: Ensure preseed.cfg is in the /var/www/html folder
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/debian-preseed/preseed.cfg"
@@ -23,13 +31,14 @@
     group: root
     mode: "0644"
 
-- name: Obtain and unarchive the current netboot image
+- name: Obtain and unarchive the current netboot image. Configure netboot_url in vars or defaults
   ansible.builtin.unarchive:
-    src: https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz
+    src: "{{ netboot_url }}"
     remote_src: true
     dest: /srv/tftp/
   when: netboot_download
 
+# These with_items come from the netboot tarball and cannot be configured - leave them as-is
 - name: Place the specific config files into the correct folder
   ansible.builtin.template:
     src: "{{ item.src }}"
@@ -41,6 +50,8 @@
     - src: srv/tftp/debian-installer/amd64/boot-screens/txt.cfg.j2
       dst: /srv/tftp/debian-installer/amd64/boot-screens/txt.cfg
 
+# Path is relied upon, the name of the .conf-file is arbitrary.
+# Choose a name that makes sense to you
 - name: Configure the dummy ethernet interface in order to bind pi-hole to item.dst
   ansible.builtin.template:
     src: etc/network/interfaces.d/iface-dummy-dns.conf.j2

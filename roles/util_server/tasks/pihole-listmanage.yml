@@ -1,9 +1,13 @@
 ---
-- name: Now pihole is installed, manipulate its db-based config, starting by clearing the current entries
+# role util_server/pihole-listmanage.yml
+
+# Note that the order of DELETE is relevant, because of foreign key relations
+- name: Manipulate the gravity database, first purging any possible current lists
   ansible.builtin.command:
     cmd: 'pihole-FTL sqlite3 /etc/pihole/gravity.db "DELETE FROM gravity; DELETE FROM adlist; DELETE FROM domainlist"'
   changed_when: true
 
+# adlist is the table that contains the references to the block-lists
 - name: Loop through all adlists, adding them to the database
   ansible.builtin.command:
     cmd: >
@@ -15,9 +19,9 @@
   changed_when: true
   notify: Update gravity
 
-- name: Loop through all whitelists and add them to the database
+- name: Loop through all exception lists (whitelist and blacklist) and add them to the database
   ansible.builtin.include_tasks:
-    file: process-domain.yml
+    file: process-lists.yml
   loop:
     - "{{ wl_exact }}"
     - "{{ wl_regex }}"

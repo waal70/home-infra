@@ -1,42 +1,48 @@
 ---
 # util_server-role/tasks/pi-hole.yml
-- name: Check wheter pi-hole is already installed
+- name: Check wheter pi-hole is already installed, by checking presence of gravity database
   ansible.builtin.stat:
     path: /etc/pihole/gravity.db
   register: pihole_db
 
-- name: Feedback user on current pi-hole status
+- name: Feedback on presence of gravity db and extrapolated pi-hole status
   ansible.builtin.debug:
-    msg: "Pi-hole is already installed on this system"
+    msg: "Pi-hole is present on this system"
   when: pihole_db.stat.exists
 
+# Even when gravity.db is found, we still may wish to re-install
 - name: Include tasks to actually (re-)install pihole
   ansible.builtin.import_tasks:
     file: install-pihole.yml
   when: install_pihole
 
-# Do not start messing with the db if there is no db
-- name: Import tasks to set-up the correct adlists, and white- and blacklists
+# Do not mess with the db if there is no db (should not occur at this point in the script)
+- name: Import tasks to update the gravity database with adlists, and white- and blacklists
   ansible.builtin.import_tasks:
     file: pihole-listmanage.yml
   when: install_pihole or pihole_db.stat.exists
 
+# This directory should already be there
 - name: Create the dnsmasq config directory if it does not exist yet
   ansible.builtin.file:
     path: /etc/dnsmasq.d
     state: directory
     mode: "0755"
 
+# This is where we tell the DNS service to attach to the dummy interface
 - name: Place the custom configuration into the dnsmasq.d directory
   ansible.builtin.template:
     src: etc/dnsmasq.d/99-pihole.conf.j2
     dest: /etc/dnsmasq.d/99-pihole.conf
     mode: "0644"
 
+# In pi-hole web interface, this is known as the 'local DNS'
+# As this may contain sensitive info, the src is the private repository
+# You can include a custom.list in ./files as well, just put custom.list in the src: parameter
 - name: Place the file with custom DNS entries into pihole configuration folder
   ansible.builtin.copy:
     dest: /etc/pihole/custom.list
-    src: custom.list
+    src: "{{ role_path }}/../../home/inventory/custom.list"
     mode: "0644"
     owner: pihole
     group: pihole
