@@ -28,7 +28,22 @@
 
 - name: Transform the response into a format containing hardware address, ip address, hostname and manufacturer
   ansible.builtin.set_fact:
-    livelist: "{{ response.json | default({'data': {}}) | community.general.json_query('data[*].{mac: mac,ansible_host: ip,hostname: hostname, oui: oui}') }}"
+    livelist: "{{ response.json | default({'data': {}}) |
+       community.general.json_query('data[*].{mac: mac, ansible_host: not_null(ip, last_ip), dhcp_hostname: hostname, oui: oui}') }}"
+
+# livelist will have this form:
+#         {
+#             "ansible_host": "172.16.29.202",
+#             "hostname": "Woonkamer",
+#             "mac": "dc:56:e7:3d:eb:fd",
+#             "oui": "Apple"
+#         },
+#         {
+#             "ansible_host": "172.16.99.221",
+#             "hostname": "",
+#             "mac": "8a:e8:6e:4a:23:93",
+#             "oui": ""
+#         },
 
 - name: Further reduce the transformed list of live clients to only those that have an entry in the inventory
   ansible.builtin.set_fact:
@@ -62,15 +77,28 @@
 - name: Transform into Ansible list format
   ansible.builtin.set_fact:
     # now transform the dicts into ansible lists:
-    il_group_list: "{{ il_group_dict | dict2items(key_name='group', value_name='group') }}"
-    il_name_list: "{{ il_name_dict | dict2items(key_name='ansible_host', value_name='name') }}"
+    il_group_list: "{{ il_group_dict | dict2items(key_name='mac', value_name='group') }}"
+    il_name_list: "{{ il_name_dict | dict2items(key_name='mac', value_name='name') }}"
 
 - name: Create the final result
   ansible.builtin.set_fact:
     # merge the two in order to create the final result
-    result_final: "{{ [livelist_known, il_group_list, il_name_list] | community.general.lists_mergeby('mac') }}"
-    # result_final: "{{ livelist_known | zip(il_group_list) | zip(il_name_list) | map('flatten') | map('combine') | list }}"
+    # the two yield the same result. One uses community.general.lists_mergeby, which you may or may not like
+    # result_final: "{{ [livelist_known, il_group_list, il_name_list] | community.general.lists_mergeby('mac') }}"
+    result_final: "{{ livelist_known | zip(il_group_list) | zip(il_name_list) | map('flatten') | map('combine') | list }}"
 
-- name: Debug final
+- name: Debug
   ansible.builtin.debug:
-    msg: "{{ result_final }}"
+    msg:
+      - "ip: {{ ip }}"
+      - "mac: {{ mac }}"
+      - "il_groups: {{ il_groups }}"
+      - "il_names: {{ il_names }}"
+      - "il_group: {{ il_group }}"
+      - "il_name: {{ il_name }}"
+      - "il_group_dict: {{ il_group_dict }}"
+      - "il_name_dict: {{ il_name_dict }}"
+      - "il_group_list: {{ il_group_list }}"
+      - "il_name_list: {{ il_name_list }}"
+      - "==================================================="
+      - "{{ result_final }}"

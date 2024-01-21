@@ -2,11 +2,12 @@
     {
       "group": "proxmox_servers",
       "name": "pve01",
-      "mac": "24:1b:7a:1d:e5:be"
+      "gratuitouskey": "woopwoop",
+      "mac": "b8:27:eb:d6:0c:d2"
     },
     {
-      "group": "proxmox_servers",
-      "name": "pve02",
-      "mac": "68:a4:0e:05:22:b5"
+      "group": "jumpservers",
+      "name": "ams-deb-dmz-01",
+      "mac": "dc:56:e7:3d:eb:fd"
     }
   ]
