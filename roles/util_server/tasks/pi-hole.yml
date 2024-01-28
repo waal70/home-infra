@@ -42,7 +42,7 @@
 - name: Place the file with custom DNS entries into pihole configuration folder
   ansible.builtin.copy:
     dest: /etc/pihole/custom.list
-    src: "{{ role_path }}/../../home/inventory/custom.list"
+    src: "{{ role_path }}/../../../home/inventory/client.list"
     mode: "0644"
     owner: pihole
     group: pihole

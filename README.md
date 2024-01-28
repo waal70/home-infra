@@ -9,6 +9,7 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * The ansible control node can be configured using the role "ansible_control"
 * Most notably, a public-private keypair for user "ansible"
 * Private git repository containing sensitive information (ssh-keys) named 'home' as a peer of 'home-infra'
+* This repository should have ansible-vault, inventory and ssh-keys subdirectories
 
 ## Sensitive info
 
@@ -23,6 +24,47 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * Expect to type the private key's passphrase a lot, unless you use ssh-agent (automated in first-run):
 * ssh-agent bash
 * ssh-add full-path-to-private-key
+
+## Inventory
+
+Either specify a regular inventory file (such as the included /inventory/hosts). Include the ansible_host in the entry,
+so that a typical entry may look as follows:
+
+    [proxmox_servers]
+    pve01 ansible_host=172.16.11.108
+
+The repository also includes a dynamic inventory, which works as follows:
+in the /inventory/hosts_by_mac.json file, you will specify an entry as follows:
+    [
+        {
+        "group": "jumpservers",
+        "name": "pi04",
+        "mac": "b8:27:eb:d6:0c:d2"
+        "otherkeysareignored": "woopwoop",
+    },
+    ]
+
+The markup speaks for itself, I hope.
+There are two types of special entries, the first details a group of groups, allowing nesting:
+
+    {
+        "group": "groupofgroups",
+        "children": [
+        "proxmox_servers",
+        "other_group"
+        ]
+    }
+
+The second details an entry for which you already have the IP-address (because it is maybe outside Unifi scope).
+It has all the default groups, but MANDATORILY also a "hostname" entry and a "ansible_host" entry with the IP.
+Later I will try and fix the doubling of hostname and name, but for now, this is what it is...
+    {
+        "group": "util",
+        "hostname": "adpi0",
+        "name": "adpi0",
+        "mac": "e4:5f:01:82:c0:16",
+        "ansible_host": "10.0.0.4"
+    }
 
 ## Services included
 

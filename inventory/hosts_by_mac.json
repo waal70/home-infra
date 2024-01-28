@@ -1,22 +1,39 @@
- [
- {
-      "group": "jumpservers",
-      "name": "pi04",
-      "gratuitouskey": "woopwoop",
-      "mac": "b8:27:eb:d6:0c:d2"
-    },
-    {
-      "group": "proxmox_servers",
-      "name": "ams-deb-dmz-01",
-      "mac": "dc:56:e7:3d:eb:fd"
-    },
-    {
-      "group": "other_group",
-      "name": "looper",
-      "mac": "80:1f:12:99:bc:75"
-    },
-    {
-      "group": "groupofgroups",
-      "children": ["proxmox_servers", "other_group"]
-    }
+[
+  {
+    "group": "jumpservers",
+    "name": "pi04",
+    "gratuitouskey": "woopwoop",
+    "mac": "b8:27:eb:d6:0c:d2"
+  },
+  {
+    "group": "proxmox_servers",
+    "name": "ams-deb-dmz-01",
+    "mac": "dc:56:e7:3d:eb:fd"
+  },
+  {
+    "group": "util",
+    "hostname": "adpi0",
+    "name": "adpi0",
+    "mac": "e4:5f:01:82:c0:16",
+    "ansible_host": "10.0.0.4"
+  },
+  {
+    "group": "other_group",
+    "name": "looper",
+    "mac": "80:1f:12:99:bc:75"
+  },
+  {
+    "group": "randomgroup",
+    "hostname": "fuckyou",
+    "name": "fuckyou",
+    "mac": "80:1f:12:99:bc:75",
+    "ansible_host": "192.168.1.10"
+  },
+  {
+    "group": "groupofgroups",
+    "children": [
+      "proxmox_servers",
+      "other_group"
+    ]
+  }
 ]

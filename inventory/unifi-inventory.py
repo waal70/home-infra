@@ -117,6 +117,16 @@ class UnifiInventory(object):
                 comb_dict = {'group': group, 'hostname': name}
                 item = item | comb_dict
                 livelist_known.append(item)
+        # now loop through all macs entries that have an "ansible_host"
+        # SKIP the ones that were already processed
+        ah_entries = jmespath.search('[?ansible_host]', macs)
+        for entry in ah_entries:
+            if entry.get("mac") not in livelist:
+                livelist_known.append(entry)
+            group_ah = entry.get("group")
+            if group_ah not in unique_groups:
+                    unique_groups.append(group_ah)
+        
         # now add to unique groups the group from macs that has no mac, but only children
         unique_groups.append(jmespath.search('[?children].group', macs))
         Display().debug(jmespath.search('[?children].{group: group, children: children}', macs))
