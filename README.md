@@ -58,6 +58,7 @@ There are two types of special entries, the first details a group of groups, all
 The second details an entry for which you already have the IP-address (because it is maybe outside Unifi scope).
 It has all the default groups, but MANDATORILY also a "hostname" entry and a "ansible_host" entry with the IP.
 Later I will try and fix the doubling of hostname and name, but for now, this is what it is...
+
     {
         "group": "util",
         "hostname": "adpi0",
