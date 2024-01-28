@@ -1,6 +1,7 @@
 # home-infra
 
 An Ansible playbook that sets up multiple Debian servers with Proxmox and some hardening.
+It includes dynamic inventory for environments in the UniFi ecosystem, but you can also use non-dynamic inventory
 
 ## Pre-requisites
 
@@ -39,8 +40,10 @@ so that a typical entry may look as follows:
     [proxmox_servers]
     pve01 ansible_host=172.16.11.108
 
-The repository also includes a dynamic inventory, which works as follows:
-in the /inventory/hosts_by_mac.json file, you will specify an entry as follows:
+The repository also includes a dynamic inventory, which currently is based on a Unifi environment.
+It will query the Unifi-controller for a list of currently active clients. It compares this list
+against a known list of mac-addresses, that you wish to configure with Ansible.
+These mac-addresses are in the /inventory/hosts_by_mac.json file, you will need to specify an entry as follows:
 
     [
         {
