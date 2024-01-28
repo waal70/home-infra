@@ -5,11 +5,10 @@ It includes dynamic inventory for environments in the UniFi ecosystem, but you c
 
 ## Pre-requisites
 
-* Ansible control node with ansible-core available
+* Ansible control node with ansible-core available (for some nice chicken-egg there is the role "ansible_control" included)
 * All controlled nodes assume a standard Debian installation that was configured using preseed.cfg from ./debian-preseed
-* The ansible control node can be configured using the role "ansible_control"
-* Most notably, a public-private keypair for user "ansible"
-* Private git repository containing sensitive information (ssh-keys) named 'home' as a peer of 'home-infra'
+* Most notably, you will need a public-private keypair for user "ansible" and store this in the...
+* ...private git repository containing sensitive information (ssh-keys) named 'home' as a peer of 'home-infra'
 * This repository should have ansible-vault, inventory and ssh-keys subdirectories
 
 ## Sensitive info
@@ -40,7 +39,7 @@ so that a typical entry may look as follows:
     [proxmox_servers]
     pve01 ansible_host=172.16.11.108
 
-The repository also includes a dynamic inventory, which currently is based on a Unifi environment.
+The repository also includes a dynamic inventory, which currently is based on a UniFi environment.
 It will query the Unifi-controller for a list of currently active clients. It compares this list
 against a known list of mac-addresses, that you wish to configure with Ansible.
 These mac-addresses are in the /inventory/hosts_by_mac.json file, you will need to specify an entry as follows:
