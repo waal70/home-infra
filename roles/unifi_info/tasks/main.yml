@@ -100,5 +100,19 @@
       - "il_name_dict: {{ il_name_dict }}"
       - "il_group_list: {{ il_group_list }}"
       - "il_name_list: {{ il_name_list }}"
-      - "==================================================="
+      - "============================FINAL RESULT================================"
       - "{{ result_final }}"
+      - "{{ auth_token.cookies_string }}"
+
+# { "_meta": {
+#      "hostvars": {
+#          "adpi0": {
+#               "ansible_host": "ip-address"
+#                   }
+#                 }
+#             },
+#   "groupname": {
+#        hosts: ["adpi0", "adpi1"]
+
+#  }
+#

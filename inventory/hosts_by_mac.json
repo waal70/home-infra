@@ -1,0 +1,22 @@
+ [
+ {
+      "group": "proxmox_servers",
+      "name": "pve01",
+      "gratuitouskey": "woopwoop",
+      "mac": "b8:27:eb:d6:0c:d2"
+    },
+    {
+      "group": "proxmox_servers",
+      "name": "ams-deb-dmz-01",
+      "mac": "dc:56:e7:3d:eb:fd"
+    },
+    {
+      "group": "other_group",
+      "name": "looper",
+      "mac": "80:1f:12:99:bc:75"
+    },
+    {
+      "group": "andre",
+      "children": ["proxmox_servers", "other_group"]
+    }
+]
