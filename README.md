@@ -19,11 +19,13 @@ An Ansible playbook that sets up multiple Debian servers with Proxmox and some h
 * Run all commands from the directory where ansible.cfg is residing, or else it will not pick up the location of .vault_pass
 * Set your sensitive info by running: ansible-vault encrypt_string 'some_sensitive_value' --name 'variable_containing_sensitive_stuff'
 * In case of a password - the "some_sensitive_value" should already be hashed with mkpasswd -m sha-512
-* E.g.:
+
+E.g.:
 
     ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'
 
     The resulting string will be able to be used in your .yaml
+
 * This playbook expects to run as user 'ansible' that has a key-pair. The public key is provided in the preseed-stage
 * Expect to type the private key's passphrase a lot, unless you use ssh-agent (automated in first-run):
 * ssh-agent bash
