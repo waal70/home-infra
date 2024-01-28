@@ -3,6 +3,8 @@
 '''
 Custom inventory, accepting Unifi controller and comparing it to a list of
  configured mac addresses
+ Please note it expects a unifi-inventory.conf in the same folder
+ It expects also hosts-by-mac.json - where you configure hosts by mac-address
 '''
 
 import argparse
@@ -10,6 +12,9 @@ import json
 import configparser
 import requests
 import jmespath
+import os
+
+from ansible.utils.display import Display
 # This to suppress the InsecureRequestWarnings
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -22,46 +27,66 @@ def jprint(obj):
 class UnifiInventory(object):
 
     def __init__(self):
+        self.username = ''
+        self.password = ''
         self.inventory = {}
         self.read_cli_args()
+        current_working_directory = os.getcwd()
+        Display().debug("CURRENT working directory is: " + current_working_directory)
 
         self.parse_config()
         # Called with `--list`.
         if self.args.list:
-            self.inventory = self.example_inventory()
+            self.inventory = self.produce_inventory()
         # Called with `--host [hostname]`.
         elif self.args.host:
             # Not implemented, since we return _meta info `--list`.
-            self.inventory = self.empty_inventory()
+            self.inventory = self.produce_inventory()
         # If no groups or vars are present, return empty inventory.
         else:
-            self.read_configured_mac_addresses()
-            self.login()
-            self.query_unifi_controller()
-            self.produce_inventory()
+            self.inventory=self.produce_inventory()
 
-        print(json.dumps(self.inventory));
-    
-  
+        #print(json.dumps(self.inventory))
+        jprint(self.inventory)
+      
     def parse_config(self):
         global config
         config = configparser.RawConfigParser()   
-        configFilePath = r'unifi-inventory.conf'
+        configFilePath = r'./inventory/unifi-inventory.conf'
         config.read(configFilePath);
 
     def read_configured_mac_addresses(self):
-        macfile = open("hosts_by_mac.json", "r")
+        macfile = open("./inventory/hosts_by_mac.json", "r")
         global str_macfile
         str_macfile = macfile.read()
         global macs
         macs = json.loads(str_macfile)
         macfile.close()
+    
+    def get_credentials(self):
+        from ansible import constants as C
+        from ansible.cli import CLI
+        from ansible.parsing.dataloader import DataLoader
+
+        cfgfile = "./roles/unifi_info/vars/main.yml"
+        loader = DataLoader()
+        vault_secrets = CLI.setup_vault_secrets(loader=loader,
+            vault_ids=C.DEFAULT_VAULT_IDENTITY_LIST)
+        loader.set_vault_secrets(vault_secrets)
+        data = loader.load_from_file(cfgfile)
+        self.username = data["vault_controller_username"]
+        self.password = data["vault_controller_password"]
+        Display().debug("Succesfully retrieved username/password-combo for user " + self.username)
 
     def login(self):
+ 
         global headers
+        if self.username=='': 
+            self.get_credentials()
+
         body =  {
-            'username': 'user',
-            'password': 'password',
+            'username': self.username.encode(encoding='utf-8'),
+            'password': self.password.encode(encoding='utf-8'),
             'remember': 'true'
         }
         response = requests.post(config.get('unifi', 'controller_login'), data=body,verify=False)
@@ -71,7 +96,7 @@ class UnifiInventory(object):
 
     def query_unifi_controller(self):
         uri = config.get('unifi', 'controller_api') + '/s/' + config.get('unifi', 'controller_site') + '/stat/sta'
-        print('Going to query URL: ' + uri)
+        Display().debug('Going to query URL: ' + uri)
         response = requests.get(uri, headers=headers, verify=False)
         livelist = jmespath.search('data[*].{mac: mac, ansible_host: not_null(ip, last_ip), dhcp_hostname: hostname, oui: oui}', response.json())
         # Initialize the list that will contain all data on live clients that will be ansible'd
@@ -94,22 +119,31 @@ class UnifiInventory(object):
                 livelist_known.append(item)
         # now add to unique groups the group from macs that has no mac, but only children
         unique_groups.append(jmespath.search('[?children].group', macs))
-        print(jmespath.search('[?children].{group: group, children: children}', macs))
+        Display().debug(jmespath.search('[?children].{group: group, children: children}', macs))
 
                 
     def produce_inventory(self):
+        self.read_configured_mac_addresses()
+        self.login()
+        self.query_unifi_controller()
         # loop through the unique group names and add the relevant servers to it
         groupresult = {}
         for group in unique_groups:
-            # create list of IPs under this group, unless this is a children group
-            ips = [m["ansible_host"] for m in livelist_known if m.get("group") == group]
-            if ips != []:
-                groupresult = groupresult | {group: {'hosts': ips}}
+            # create list of logical hostnames under this group, unless this is a children group
+            # get from the livelist_known those entries that exist under 'group':
+            hostnames = [m["hostname"] for m in livelist_known if m.get("group") == group]
+            # if there are none, it is probably a meta-group (a group of groups)
+            if hostnames != []:
+                # append the relevant hosts to an entry for this group:
+                groupresult = groupresult | {group: {'hosts': hostnames}}
             else:
-                print ('[?group==\''+ str(group[0]) +'\'].children[]')
+                # group of groups branch
+                subgroup = { group[0] : {'children': []} }
                 children = jmespath.search('[?group==\''+ str(group[0]) +'\'].children[]', macs)
-                print(children)
-                groupresult = groupresult | {group: {'children': children } }             
+                subgroup[group[0]]["children"] += children
+                Display().debug('[?group==\''+ str(group[0]) +'\'].children[]')
+                
+                groupresult = groupresult | subgroup
 
         # now create the _meta entry:
         metaresult = {
@@ -124,7 +158,10 @@ class UnifiInventory(object):
             entry[server["hostname"]].update({"ansible_host": server["ansible_host"]})
             metaresult["_meta"]["hostvars"].update(entry)
         
-        jprint(metaresult)
+        Display().debug(metaresult)
+
+        # Add the metaresult and groupresult together:
+        return metaresult | groupresult
                 
         #         "_meta": {
         # "hostvars": {

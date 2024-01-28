@@ -12,3 +12,4 @@ mountsraspi
 .fact_cache
 .vault_pass
 roles/pve/library/__pycache__/collect_kernel_info.cpython-311.pyc
+roles/util_server/files/mca-dump.json

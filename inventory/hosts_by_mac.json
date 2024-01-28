@@ -1,7 +1,7 @@
  [
  {
-      "group": "proxmox_servers",
-      "name": "pve01",
+      "group": "jumpservers",
+      "name": "pi04",
       "gratuitouskey": "woopwoop",
       "mac": "b8:27:eb:d6:0c:d2"
     },
@@ -16,7 +16,7 @@
       "mac": "80:1f:12:99:bc:75"
     },
     {
-      "group": "andre",
+      "group": "groupofgroups",
       "children": ["proxmox_servers", "other_group"]
     }
 ]
