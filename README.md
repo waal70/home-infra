@@ -24,7 +24,7 @@ E.g.:
 
     ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'
 
-    The resulting string will be able to be used in your .yaml
+The resulting string will be able to be used in your .yaml
 
 * This playbook expects to run as user 'ansible' that has a key-pair. The public key is provided in the preseed-stage
 * Expect to type the private key's passphrase a lot, unless you use ssh-agent (automated in first-run):
