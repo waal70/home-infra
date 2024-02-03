@@ -7,24 +7,36 @@ Custom inventory, accepting Unifi controller and comparing it to a list of
  It expects also hosts-by-mac.json - where you configure hosts by mac-address
 '''
 
+import os
 import argparse
 import json
 import configparser
 import requests
 import jmespath
-import os
+
+from ansible import constants as C
+from ansible.cli import CLI
+from ansible.parsing.dataloader import DataLoader
 
 from ansible.utils.display import Display
 # This to suppress the InsecureRequestWarnings
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+config = configparser.RawConfigParser()
+macs: any
+headers: str
+str_macfile: str
+livelist_known = []
+unique_groups = []
 
 def jprint(obj):
+    """Function pretty printing JSON string."""
     # create a formatted string of the Python JSON object
     text = json.dumps(obj, sort_keys=True, indent=4)
     print(text)
 
 class UnifiInventory(object):
+    """Class to gather Unifi controller client info and combine it into an Ansible inventory."""
 
     def __init__(self):
         self.username = ''
@@ -48,30 +60,28 @@ class UnifiInventory(object):
 
         #print(json.dumps(self.inventory))
         jprint(self.inventory)
-      
+
     def parse_config(self):
-        global config
-        config = configparser.RawConfigParser()   
-        configFilePath = r'./inventory/unifi-inventory.conf'
-        config.read(configFilePath);
+        """Function that reads and parses config-file."""
+        config_filepath = r'./inventory/unifi_inventory.conf'
+        config.read(config_filepath)
 
     def read_configured_mac_addresses(self):
-        macfile = open("./inventory/hosts_by_mac.json", "r")
-        global str_macfile
+        """Function that reads a file containing pre-configured hardware addresses."""
+        macfile = open("./inventory/hosts_by_mac.json", "r", encoding="utf-8")
+        global str_macfile # pylint: disable=global-statement
         str_macfile = macfile.read()
-        global macs
+        global macs # pylint: disable=global-statement
         macs = json.loads(str_macfile)
         macfile.close()
-    
+
     def get_credentials(self):
-        from ansible import constants as C
-        from ansible.cli import CLI
-        from ansible.parsing.dataloader import DataLoader
+        """Function that obtains secrets for username/password from Ansible Vault."""
 
         cfgfile = "./roles/unifi_info/vars/main.yml"
         loader = DataLoader()
         vault_secrets = CLI.setup_vault_secrets(loader=loader,
-            vault_ids=C.DEFAULT_VAULT_IDENTITY_LIST)
+            vault_ids=C.DEFAULT_VAULT_IDENTITY_LIST) # pylint: disable=no-member
         loader.set_vault_secrets(vault_secrets)
         data = loader.load_from_file(cfgfile)
         self.username = data["vault_controller_username"]
@@ -79,9 +89,9 @@ class UnifiInventory(object):
         Display().debug("Succesfully retrieved username/password-combo for user " + self.username)
 
     def login(self):
- 
-        global headers
-        if self.username=='': 
+        """Function that obtains a TOKEN from Unifi controller."""
+        global headers # pylint: disable=global-statement
+        if self.username=='':
             self.get_credentials()
 
         body =  {
@@ -89,21 +99,25 @@ class UnifiInventory(object):
             'password': self.password.encode(encoding='utf-8'),
             'remember': 'true'
         }
-        response = requests.post(config.get('unifi', 'controller_login'), data=body,verify=False)
+        response = requests.post(config.get('unifi', 'controller_login'),
+                                 data=body,verify=False, timeout=10)
         headers = {
             'Cookie': 'TOKEN=' + response.cookies.get("TOKEN")
         }
 
     def query_unifi_controller(self):
-        uri = config.get('unifi', 'controller_api') + '/s/' + config.get('unifi', 'controller_site') + '/stat/sta'
+        """Function that queries the unifi controller to get a list of active clients."""
+        uri = (config.get('unifi', 'controller_api') +
+               '/s/' + config.get('unifi', 'controller_site') + '/stat/sta')
         Display().debug('Going to query URL: ' + uri)
-        response = requests.get(uri, headers=headers, verify=False)
-        livelist = jmespath.search('data[*].{mac: mac, ansible_host: not_null(ip, last_ip), dhcp_hostname: hostname, oui: oui}', response.json())
+        response = requests.get(uri, headers=headers, verify=False, timeout=10)
+        livelist = jmespath.search('''data[*].
+                                   {mac: mac, ansible_host: not_null(ip, last_ip), 
+                                   dhcp_hostname: hostname, oui: oui}''',
+                                   response.json())
         # Initialize the list that will contain all data on live clients that will be ansible'd
-        global livelist_known
-        livelist_known = []
-        global unique_groups
-        unique_groups = []
+        global livelist_known # pylint: disable=global-variable-not-assigned
+        global unique_groups # pylint: disable=global-variable-not-assigned
 
         for item in livelist:
             if item.get("mac") in str_macfile:
@@ -125,14 +139,15 @@ class UnifiInventory(object):
                 livelist_known.append(entry)
             group_ah = entry.get("group")
             if group_ah not in unique_groups:
-                    unique_groups.append(group_ah)
-        
+                unique_groups.append(group_ah)
+
         # now add to unique groups the group from macs that has no mac, but only children
         unique_groups.append(jmespath.search('[?children].group', macs))
         Display().debug(jmespath.search('[?children].{group: group, children: children}', macs))
 
-                
+
     def produce_inventory(self):
+        """Function that produces the Ansible inventory."""
         self.read_configured_mac_addresses()
         self.login()
         self.query_unifi_controller()
@@ -152,7 +167,6 @@ class UnifiInventory(object):
                 children = jmespath.search('[?group==\''+ str(group[0]) +'\'].children[]', macs)
                 subgroup[group[0]]["children"] += children
                 Display().debug('[?group==\''+ str(group[0]) +'\'].children[]')
-                
                 groupresult = groupresult | subgroup
 
         # now create the _meta entry:
@@ -167,12 +181,12 @@ class UnifiInventory(object):
             entry = {server["hostname"]:{}}
             entry[server["hostname"]].update({"ansible_host": server["ansible_host"]})
             metaresult["_meta"]["hostvars"].update(entry)
-        
+
         Display().debug(metaresult)
 
         # Add the metaresult and groupresult together:
         return metaresult | groupresult
-                
+
         #         "_meta": {
         # "hostvars": {
         #     "adpi0": {
@@ -181,6 +195,7 @@ class UnifiInventory(object):
         #         "interactive_home": "/home/awaal",
     # Example inventory for testing.
     def example_inventory(self):
+        """Function that produces an example Ansible inventory. DEV only!"""
         return {
             'group': {
                 'hosts': ['192.168.56.71', '192.168.56.72'],
@@ -207,10 +222,12 @@ class UnifiInventory(object):
 
     # Empty inventory for testing.
     def empty_inventory(self):
+        """Function that produces an empty Ansible inventory. DEV only!"""
         return {'_meta': {'hostvars': {}}}
 
     # Read the command line args passed to the script.
     def read_cli_args(self):
+        """Function that reads the command line args passed to the script."""
         parser = argparse.ArgumentParser()
         parser.add_argument('--list', action = 'store_true')
         parser.add_argument('--host', action = 'store')
