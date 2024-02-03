@@ -1,8 +1,23 @@
 [
   {
-    "group": "raspberry_single",
+    "group": "raspberry_single2",
     "name": "pi04",
     "mac": "b8:27:eb:d6:0c:d2"
+  },
+  {
+    "group": "raspberry_single",
+    "name": "pi01",
+    "mac": "b8:27:eb:38:d0:eb"
+  },
+  {
+    "group": "raspberry_single",
+    "name": "pi02",
+    "mac": "b8:27:eb:27:3d:82"
+  },
+  {
+    "group": "jumpservers",
+    "name": "ams-dmz-jump",
+    "mac": "00:30:18:06:e6:b8"
   },
   {
     "group": "proxmox_servers",
