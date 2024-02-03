@@ -148,6 +148,23 @@
   notify: Restart Raspberry
   changed_when: true
 
+- name: Set has_bootloader depending on cpu-version
+  ansible.builtin.set_fact:
+    has_bootloader: true
+  when: "'Raspberry Pi 5' in ansible_local['cpu_info']['processor_name'] or 'Raspberry Pi 4' in ansible_local['cpu_info']['processor_name']"
+
+- name: Get bootloader status for Raspberry Pi 4 and 5
+  ansible.builtin.command: rpi-eeprom-update
+  register: eeprom_poke
+  when: has_bootloader is defined
+  changed_when: false
+
+- name: Update bootloader when necessary
+  ansible.builtin.command: rpi-eeprom-update -a
+  when: "has_bootloader is defined and 'BOOTLOADER: update available' in eeprom_poke.stdout"
+  changed_when: true
+  notify: Restart Raspberry
+
 - name: Import tasks to edit /boot/config.txt
   ansible.builtin.import_tasks: bootconfig.yml
 

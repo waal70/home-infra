@@ -1,14 +1,28 @@
 [
   {
-    "group": "jumpservers",
+    "group": "raspberry_single",
     "name": "pi04",
-    "gratuitouskey": "woopwoop",
     "mac": "b8:27:eb:d6:0c:d2"
   },
   {
     "group": "proxmox_servers",
     "name": "ams-deb-dmz-01",
     "mac": "dc:56:e7:3d:eb:fd"
+  },
+  {
+    "group": "pican2",
+    "name": "pican",
+    "mac": "b8:27:eb:39:a6:b3"
+  },
+  {
+    "group": "raspberry_single",
+    "name": "pi5-01",
+    "mac": "d8:3a:dd:db:5a:be"
+  },
+  {
+    "group": "hifiberry",
+    "name": "hifipi",
+    "mac": "b8:27:eb:4b:ce:56"
   },
   {
     "group": "util",
@@ -30,10 +44,11 @@
     "ansible_host": "192.168.1.10"
   },
   {
-    "group": "groupofgroups",
+    "group": "raspberry",
     "children": [
-      "proxmox_servers",
-      "other_group"
+      "hifiberry",
+      "pican2",
+      "raspberry_single"
     ]
   }
 ]
