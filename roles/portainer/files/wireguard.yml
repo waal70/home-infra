@@ -4,8 +4,8 @@ services:
     image: weejewel/wg-easy
     container_name: wireguard
     environment:
-      - WG_HOST={{ wireguard_host }}
-      - PASSWORD={{ wireguard_password }}
+      - WG_HOST=wireguard
+      - PASSWORD=changeme
       - WG_DEVICE=eno1
       - WG_DEFAULT_ADDRESS=10.10.10.x
     volumes:

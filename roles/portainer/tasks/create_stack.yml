@@ -1,29 +1,30 @@
 ---
-# - name: "Authenticate with Portainer API for {{ stack_name }}"
-#   ansible.builtin.uri:
-#     url: "{{ portainer_endpoint }}/auth"
-#     method: POST
-#     headers:
-#       Content-Type: "application/json"
-#     body_format: json
-#     body:
-#       username: "{{ admin_user }}"
-#       password: "{{ admin_password }}"
-#   register: auth_response
-#   changed_when: false
-#   ignore_errors: true
+- name: "Authenticate with Portainer API for {{ stack_name }}"
+  ansible.builtin.uri:
+    url: "{{ portainer_endpoint }}/auth"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      username: "{{ admin_user }}"
+      password: "{{ admin_password }}"
+    validate_certs: false
+  register: auth_response
+  changed_when: false
+  ignore_errors: true
 
 
-# - name: "Check authentication response for {{ stack_name }}"
-#   ansible.builtin.fail:
-#     msg: "Failed to authenticate with Portainer API"
-#   when: "auth_response.status != 200"
+- name: "Check authentication response for {{ stack_name }}"
+  ansible.builtin.fail:
+    msg: "Failed to authenticate with Portainer API"
+  when: "auth_response.status != 200"
 
 
-# - name: "Get JWT token from authentication response for {{ stack_name }}"
-#   ansible.builtin.set_fact:
-#     jwt_token: "{{ auth_response.json.jwt }}"
-#   when: auth_response.status == 200
+- name: "Get JWT token from authentication response for {{ stack_name }}"
+  ansible.builtin.set_fact:
+    jwt_token: "{{ auth_response.json.jwt }}"
+  when: auth_response.status == 200
 
 
 - name: "Get stack information from Portainer for {{ stack_name }}"
@@ -31,7 +32,8 @@
     url: "{{ portainer_endpoint }}/stacks"
     method: GET
     headers:
-      Authorization: "Bearer {{ auth_token }}"
+      Authorization: "Bearer {{ jwt_token }}"
+    validate_certs: false
   register: get_stack_response
   when: auth_token is defined
 
@@ -49,20 +51,19 @@
 
 - name: "Setup folder for appdata for {{ stack_name }}"
   ansible.builtin.file:
-    path: "/home/{{ username }}/appdata/{{ stack_name }}"
+    path: "/home/{{ interactive_user }}/appdata/{{ stack_name }}"
     state: directory
-    owner: "{{ username }}"
-    group: "{{ username }}"
+    owner: "{{ interactive_user }}"
+    group: "{{ interactive_user }}"
     mode: '0755'
   when: auth_token is defined and stack_not_exists
-  ignore_errors: true
 
 - name: "Setup sub folders for {{ stack_name }}"
   ansible.builtin.file:
-    path: "/home/{{ username }}/appdata/{{ stack_name }}/{{ sub_directory }}"
+    path: "/home/{{ interactive_user }}/appdata/{{ stack_name }}/{{ sub_directory }}"
     state: directory
-    owner: "{{ username }}"
-    group: "{{ username }}"
+    owner: "{{ interactive_user }}"
+    group: "{{ interactive_user }}"
     mode: '0755'
   loop: "{{ directories }}"
   loop_control:
@@ -71,7 +72,7 @@
 
 - name: "Create a stack in Portainer by the name of {{ stack_name }}"
   ansible.builtin.uri:
-    url: "{{ portainer_endpoint }}/stacks/create/standalone/string?endpointId={{ endpoint_id }}"
+    url: "{{ portainer_endpoint }}/stacks/create/standalone/string?endpointId=1"
     method: POST
     headers:
       Content-Type: "application/json"
@@ -81,6 +82,8 @@
       name: "{{ stack_name }}"
       fromAppTemplate: false
       StackFileContent: "{{ stack_compose }}"
+    validate_certs: false
+    timeout: 300 # Some stack creation can be quite time-consuming
   register: create_stack_response
   when: jwt_token is defined and stack_not_exists
 

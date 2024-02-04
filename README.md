@@ -144,3 +144,4 @@ Choose the numbered yaml-files to only select a portion of the roles.
 * TODO: server_hardening role is not used now
 * ~~FIX: setting ^has_journal is hit and miss - does not seem to work all the time - fix this!~~
 * Change repository adding by using the new 822 ansible task
+* TODO: install default dockers on jumpserver

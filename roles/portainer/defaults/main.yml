@@ -33,5 +33,5 @@ admin_user: admin
 
 # Endpoints (of Portainer Agents)
 endpoints:
-  - { name: "local", url: "" }
-  - { name: "jumpserver", url: "tcp://172.16.10.175:9001" }
+  - { name: "local", url: "unix:///var/run/docker.sock" }
+  - { name: "ams-dmz-jump", url: "tcp://172.16.100.2:9001" }

@@ -15,6 +15,11 @@
     "mac": "b8:27:eb:27:3d:82"
   },
   {
+    "group": "debian_servers",
+    "name": "ams-deb-01",
+    "mac": "08:00:27:52:63:bc"
+  },
+  {
     "group": "jumpservers",
     "name": "ams-dmz-jump",
     "mac": "00:30:18:06:e6:b8"
@@ -45,18 +50,6 @@
     "name": "adpi0",
     "mac": "e4:5f:01:82:c0:16",
     "ansible_host": "10.0.0.4"
-  },
-  {
-    "group": "other_group",
-    "name": "looper",
-    "mac": "80:1f:12:99:bc:75"
-  },
-  {
-    "group": "randomgroup",
-    "hostname": "fuckyou",
-    "name": "fuckyou",
-    "mac": "80:1f:12:99:bc:75",
-    "ansible_host": "192.168.1.10"
   },
   {
     "group": "raspberry",

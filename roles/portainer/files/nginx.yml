@@ -8,6 +8,7 @@ services:
       - '80:80' # Public HTTP Port
       - '443:443' # Public HTTPS Port
       - '81:81' # Admin Web Port
+      # default login nginx-pm: admin@example.com / changeme
       # Add any other Stream port you want to expose
       # - '21:21' # FTP
     environment:

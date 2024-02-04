@@ -1,0 +1,3 @@
+---
+# Increase log2ram size for util servers
+log2ram_size: 150M
