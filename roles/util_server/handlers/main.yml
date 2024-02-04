@@ -1,4 +1,4 @@
 ---
 - name: Update gravity
   ansible.builtin.command:
-    cmd: pihole -g
+    cmd: pihole -g &
