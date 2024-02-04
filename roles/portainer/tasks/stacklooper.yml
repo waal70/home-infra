@@ -15,8 +15,11 @@
     # - name: cloudflare
     #   file: cloudflare.yml
 
-    - name: wireguard
-      file: wireguard.yml
+    # - name: wireguard
+    #   file: wireguard.yml
+
+    - name: guacamole
+      file: guacamole.yml
 
     - name: nginx
       file: nginx.yml
