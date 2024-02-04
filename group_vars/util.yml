@@ -1,3 +1,4 @@
 ---
 # Increase log2ram size for util servers
 log2ram_size: 150M
+log2ram_log_disk_size: 200M

@@ -1,0 +1,10 @@
+---
+# file: 99-nuke.yml
+- name: Nuke the boot sector for a specific server
+  hosts:
+  # this means: specify on commandline, for instance: ansible-playbook 99-nuke.yml -e 'nuke=ams-dmz-jump'
+    - "{{ nuke | default('null') }}"
+  become: true
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - pxe_prep
