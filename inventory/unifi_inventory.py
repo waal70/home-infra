@@ -162,12 +162,14 @@ class UnifiInventory(object):
                 # append the relevant hosts to an entry for this group:
                 groupresult = groupresult | {group: {'hosts': hostnames}}
             else:
-                # group of groups branch
-                subgroup = { group[0] : {'children': []} }
-                children = jmespath.search('[?group==\''+ str(group[0]) +'\'].children[]', macs)
-                subgroup[group[0]]["children"] += children
-                Display().debug('[?group==\''+ str(group[0]) +'\'].children[]')
-                groupresult = groupresult | subgroup
+                # group of groups branch. Assume there maybe more than one, so loop
+                # Change: Andre 04-2024
+                for curgroup in group:
+                    subgroup = { curgroup : {'children': []} }
+                    children = jmespath.search('[?group==\''+ str(curgroup) +'\'].children[]', macs)
+                    subgroup[curgroup]["children"] += children
+                    Display().debug('[?group==\''+ str(curgroup) +'\'].children[]')
+                    groupresult = groupresult | subgroup
 
         # now create the _meta entry:
         metaresult = {

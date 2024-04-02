@@ -1,6 +1,6 @@
 [
   {
-    "group": "raspberry_single2",
+    "group": "ansiblecontrol",
     "name": "pi04",
     "mac": "b8:27:eb:d6:0c:d2"
   },
@@ -26,8 +26,13 @@
   },
   {
     "group": "proxmox_servers",
-    "name": "ams-deb-dmz-01",
-    "mac": "dc:56:e7:3d:eb:fd"
+    "name": "pve01",
+    "mac": "b8:85:84:a5:e3:2d"
+  },
+  {
+    "group": "proxmox_servers",
+    "name": "pve02",
+    "mac": "b8:85:84:9d:59:19"
   },
   {
     "group": "pican2",
@@ -57,6 +62,17 @@
       "hifiberry",
       "pican2",
       "raspberry_single"
+    ]
+  },
+  {
+    "group": "debianlinux",
+    "children": [
+      "raspberry",
+      "util",
+      "jumpservers",
+      "debian_servers",
+      "ansiblecontrol",
+      "proxmox_servers"
     ]
   }
 ]
