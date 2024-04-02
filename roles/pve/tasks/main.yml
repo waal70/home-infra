@@ -29,10 +29,11 @@
     name: os-prober
     state: absent
 
-- name: Run apt full-upgrade on repository changes
+# Andre 04-2024: update cache in order to find the proxmox packages
+- name: Run apt full-upgrade on repository changes - always
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: 3600
+    # cache_valid_time: 3600 Andre 04-2024
     upgrade: full
   retries: 2
   register: _full_upgrade
@@ -98,7 +99,7 @@
   notify: Restart rrdcached
 
 - name: Block to correct for no active subscription
-  when: "'pve-no-subscription' in pve_repository_line"
+  when: "'pve-no-subscription' in pve_components" # bugfix 04-2024: repository_line no longer exists
   block:
     - name: Remove automatically installed PVE Enterprise repo configuration
       ansible.builtin.apt_repository:
