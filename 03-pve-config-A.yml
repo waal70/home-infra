@@ -1,0 +1,57 @@
+---
+# file: pve-config-A.yml
+- name: Configure proxmox servers to my liking
+  hosts: proxmox_servers
+  become: true
+
+# This playbook follows the excellent API description at:
+# https://pve.proxmox.com/pve-docs/api-viewer/index.html
+
+# Key Ansible variables for this book:
+# inventory_hostname : contains nodename for pve
+# ansible_default_ipv4.address : contains the current IPv4 address this host is on
+# ansible_default_ipv4.gateway : gateway address
+# ansible_default_ipv4.netmask : netmask
+
+# ansible_facts[?(@.module == 'r8169')]
+  tasks:
+    - name: Set flag value, to toggle later on
+      ansible.builtin.set_fact:
+        greenlight: false
+
+# This requires some discipline. A bridge, when present, should be named vmbr*
+    - name: Determine existence of a bridge interface
+      ansible.builtin.set_fact:
+        greenlight: false
+      when: "'vmbr1' in ansible_interfaces"
+
+    - name: Print specific variables
+      ansible.builtin.debug:
+        var: to_debug
+      vars:
+        to_debug:
+          interfaces: "{{ ansible_interfaces }}"
+          greenlight: "{{ greenlight }}"
+          indiv_port: "{{ ansible_default_ipv4.interface }}"
+          servi_port: "{{ ansible_facts | json_query('[?@.module == `r8169`]') }}"
+    - name: Block to set network interfaces
+      when: greenlight
+      block:
+      # The admin interface is the device that has the mac from inventory
+        - name: Create vmbr1 for the administrative interface
+          ansible.builtin.command:
+            argv:
+              - pvesh
+              - create
+              - /nodes/{{ inventory_hostname }}/network
+              - --iface=vmbr1
+              - --type=bridge
+              - --address={{ ansible_default_ipv4.address }}
+              - --gateway={{ ansible_default_ipv4.gateway }}
+              - --netmask={{ ansible_default_ipv4.netmask }}
+              - --bridge_ports={{ ansible_default_ipv4.interface }}
+              - --comments=Administrative interface
+              - --autostart=true
+          changed_when: true
+
+
