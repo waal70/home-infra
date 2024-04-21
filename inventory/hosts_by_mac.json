@@ -40,6 +40,11 @@
     "mac": "b8:27:eb:39:a6:b3"
   },
   {
+    "group": "nas",
+    "name": "ssdnas",
+    "mac": "66:4e:19:a6:8c:25"
+  },
+  {
     "group": "raspberry_single",
     "name": "pi5-01",
     "mac": "d8:3a:dd:db:5a:be"
