@@ -16,5 +16,5 @@
 
     - name: Print state of proxmox-ve for the user to confirm
       ansible.builtin.debug:
-        msg: Version {{ ansible_facts.packages['proxmox-ve'].version }} of proxmox-ve installed
+        msg: Version {{ ansible_facts.packages['proxmox-ve'] }} of proxmox-ve installed
       when: "'proxmox-ve' in ansible_facts.packages"
