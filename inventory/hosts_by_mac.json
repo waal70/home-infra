@@ -15,7 +15,7 @@
     "mac": "b8:27:eb:27:3d:82"
   },
   {
-    "group": "debian_servers",
+    "group": "portainer-master",
     "name": "ams-deb-01",
     "mac": "08:00:27:52:63:bc"
   },
@@ -75,7 +75,7 @@
       "raspberry",
       "util",
       "jumpservers",
-      "debian_servers",
+      "portainer-master",
       "ansiblecontrol",
       "proxmox_servers"
     ]

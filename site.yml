@@ -4,7 +4,7 @@
 - import_playbook: 02-pi.yml
 - import_playbook: 03-pve.yml
 - import_playbook: 04-ad-dc.yml
-- import_playbook: 05-debian-server.yml
+- import_playbook: 05-portainer-master.yml
 - import_playbook: 06-util-server.yml
 - import_playbook: 07-ansible-control-node.yml
 - import_playbook: 08-jumpserver.yml

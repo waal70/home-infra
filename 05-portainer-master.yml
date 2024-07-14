@@ -1,8 +1,8 @@
 ---
 # file: debian-server.yml
-- name: Setup debian_servers
+- name: Setup main Portainer server. This is required when using a jumpserver
   hosts:
-    - debian_servers
+    - portainer-master
   become: true
   # strategy: free # noqa: run-once[play]
   roles:
