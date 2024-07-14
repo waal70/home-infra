@@ -24,6 +24,10 @@
 # /opt/guacamole/bin/initdb.sh --postgresql
 # Copy the generated script and run it in the guacamole_postgres instance:
 # psql -U guacamole_user -d guacamole_db
+#
+# Guacamole is on :32768/guacamole, not /.
+# Default username/password is guacadmin/guacadmin
+#
 #####################################################################################
 
 version: '2.0'

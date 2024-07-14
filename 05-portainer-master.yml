@@ -7,6 +7,6 @@
   # strategy: free # noqa: run-once[play]
   roles:
     - role: common
-    - role: log2ram
+    - { role: log2ram, log2ram_reboot_after_install: true }
     - role: docker
     - role: portainer

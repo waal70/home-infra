@@ -19,11 +19,26 @@
   ansible.builtin.debug:
     msg: "{{ portainer_known_endpoint_ids }}"
 
-- name: "Ensure curl is present on the system"
-  ansible.builtin.apt:
-    name:
-      - curl
-    state: present
+- name: "Show type endpoints"
+  ansible.builtin.debug:
+    msg: "{{ endpoints | type_debug }}"
+
+- name: "Register first endpoint with Portainer"
+  ansible.builtin.uri:
+    url: "{{ portainer_endpoint }}/endpoints"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ (auth_token.content | from_json).jwt }}"
+    body_format: form-multipart
+    validate_certs: false
+    body:
+      Name: "{{ item.name }}"
+      PublicURL: "{{ inventory_hostname }}"
+      EndpointCreationType: "1"
+  register: response
+  with_items:
+    - "{{ endpoints | list | first }}"
+  when: item.name not in portainer_known_endpoints
 
 - name: "Register endpoint with Portainer in case of remote endpoint {{ stack_name }}"
   ansible.builtin.uri:
@@ -42,8 +57,10 @@
       TLSSkipVerify: "true"
   register: response
   with_items:
-    - "{{ endpoints | list }}"
-  when: item.name not in portainer_known_endpoints
+    - "{{ endpoints | list | last }}"
+  when:
+    - item.name not in portainer_known_endpoints
+    - endpoints | length > 1
 
 - name: Verifying calls
   ansible.builtin.fail:
