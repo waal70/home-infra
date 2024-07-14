@@ -1,14 +1,13 @@
-- name: Create portainer stacks
+- name: Create portainer stacks for the main instance
   ansible.builtin.include_tasks: create_stack.yml
   vars:
     portainer_api: "{{ portainer_endpoint }}"
     portainer_admin_user: "{{ admin_user }}"
     portainer_admin_password: "{{ admin_password }}"
-    endpoint_id: "{{ portainer_endpoint_id }}"
+    endpoint_id: "{{ portainer_known_endpoint_ids | first }}"
     stack_name: "{{ item.name }}"
     stack_compose: "{{ lookup('file', item.file) }}"
     directories: "{{ item.dirs }}"
-
 
   with_items:
 
@@ -30,3 +29,27 @@
 
     - name: homepage
       file: homepage.yml
+
+- name: Create portainer stacks for the secondary instance
+  ansible.builtin.include_tasks: create_stack.yml
+  vars:
+    portainer_api: "{{ portainer_endpoint }}"
+    portainer_admin_user: "{{ admin_user }}"
+    portainer_admin_password: "{{ admin_password }}"
+    endpoint_id: "{{ portainer_known_endpoint_ids[1] }}"
+    stack_name: "{{ item.name }}"
+    stack_compose: "{{ lookup('file', item.file) }}"
+    directories: "{{ item.dirs }}"
+
+  with_items:
+
+    # - name: cloudflare
+    #   file: cloudflare.yml
+
+    # - name: wireguard
+    #   file: wireguard.yml
+
+    - name: homepage
+      file: homepage.yml
+  when:
+    portainer_known_endpoints | length != 1

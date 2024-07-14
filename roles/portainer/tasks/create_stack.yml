@@ -72,7 +72,7 @@
 
 - name: "Create a stack in Portainer by the name of {{ stack_name }}"
   ansible.builtin.uri:
-    url: "{{ portainer_endpoint }}/stacks/create/standalone/string?endpointId=1"
+    url: "{{ portainer_endpoint }}/stacks/create/standalone/string?endpointId={{ endpoint_id }}"
     method: POST
     headers:
       Content-Type: "application/json"

@@ -12,11 +12,12 @@
 - name: Save endpoints as fact
   ansible.builtin.set_fact:
     portainer_known_endpoints: "{{ portainer_known_endpoints_raw.json | map(attribute='Name') | list }}"
+    portainer_known_endpoint_ids: "{{ portainer_known_endpoints_raw.json | map(attribute='Id') | list }}"
     portainer_remote_endpoint_type: "{{ portainer_known_endpoints_raw.json }}"
 
 - name: "Show known endpoints"
   ansible.builtin.debug:
-    msg: "{{ portainer_known_endpoints }}"
+    msg: "{{ portainer_known_endpoint_ids }}"
 
 - name: "Ensure curl is present on the system"
   ansible.builtin.apt:
@@ -24,7 +25,7 @@
       - curl
     state: present
 
-- name: "Authenticate with Portainer API for {{ stack_name }}"
+- name: "Register endpoint with Portainer in case of remote endpoint {{ stack_name }}"
   ansible.builtin.uri:
     url: "{{ portainer_endpoint }}/endpoints"
     method: POST
@@ -43,13 +44,6 @@
   with_items:
     - "{{ endpoints | list }}"
   when: item.name not in portainer_known_endpoints
-
-
-# - name: "Debug response"
-#   ansible.builtin.debug:
-#     msg: "Endpoint {{ item.item.name }}, Response: {{ item.stdout | default('{}') | from_json }}"
-#   with_items:
-#     - "{{ response.results }}"
 
 - name: Verifying calls
   ansible.builtin.fail:

@@ -14,7 +14,8 @@ container_recreate: false
 auth_method: 1
 
 # Portainer version
-version: latest
+# Note that 'latest' will get you 2.19.x - the tag seems to be behind
+version: 2.20.3
 
 # Misc settings
 company_logo_url: url_to_company_logo
@@ -33,5 +34,5 @@ admin_user: admin
 
 # Endpoints (of Portainer Agents)
 endpoints:
-  - { name: "local", url: "unix:///var/run/docker.sock" }
-  # - { name: "ams-dmz-jump", url: "tcp://172.16.100.4:9001" }
+  - { name: "local", url: "", id: "1" }
+# - { name: "ams-dmz-jump", url: "tcp://172.16.100.4:9001" }
