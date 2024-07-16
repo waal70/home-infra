@@ -37,7 +37,7 @@
       EndpointCreationType: "1"
   register: response
   with_items:
-    - "{{ endpoints | list | first }}"
+    - "{{ endpoints | first }}"
   when: item.name not in portainer_known_endpoints
 
 - name: "Register endpoint with Portainer in case of remote endpoint {{ stack_name }}"
@@ -57,10 +57,26 @@
       TLSSkipVerify: "true"
   register: response
   with_items:
-    - "{{ endpoints | list | last }}"
+    - "{{ endpoints | last }}"
   when:
     - item.name not in portainer_known_endpoints
     - endpoints | length > 1
+
+- name: Refresh Endpoints
+  ansible.builtin.uri:
+    url: "{{ portainer_endpoint }}/endpoints"
+    method: GET
+    return_content: true
+    validate_certs: false
+    headers:
+      Authorization: Bearer {{ (auth_token.content | from_json).jwt }}
+  register: portainer_known_endpoints_raw
+
+- name: Refresh endpoints to facts
+  ansible.builtin.set_fact:
+    portainer_known_endpoints: "{{ portainer_known_endpoints_raw.json | map(attribute='Name') | list }}"
+    portainer_known_endpoint_ids: "{{ portainer_known_endpoints_raw.json | map(attribute='Id') | list }}"
+    portainer_remote_endpoint_type: "{{ portainer_known_endpoints_raw.json }}"
 
 - name: Verifying calls
   ansible.builtin.fail:

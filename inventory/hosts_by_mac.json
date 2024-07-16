@@ -17,7 +17,8 @@
   {
     "group": "portainer-master",
     "name": "ams-deb-01",
-    "mac": "08:00:27:52:63:bc"
+    "mac": "e4:5f:01:87:ca:3f",
+    "_comment": "08:00:27:52:63:bc"
   },
   {
     "group": "jumpservers",
@@ -62,8 +63,9 @@
   },
   {
     "group": "samba_ad_dc_additional",
-    "name": "pi03",
-    "mac": "e4:5f:01:87:ca:3f",
+    "name": "pi03-pause",
+    "mac": "00:00:00:00:00:00",
+    "_comment": "pi03 mac is e4:5f:01:87:ca:3f",
     "ad_role_additional": "this is a pi4"
   },
   {
