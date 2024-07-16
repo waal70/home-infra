@@ -15,6 +15,13 @@
     "mac": "b8:27:eb:27:3d:82"
   },
   {
+    "group": "raspberry_single",
+    "name": "pi03",
+    "mac": "e4:5f:01:87:ca:3f",
+    "meta": "this is a pi4"
+  },
+
+  {
     "group": "portainer-master",
     "name": "ams-deb-01",
     "mac": "08:00:27:52:63:bc"
