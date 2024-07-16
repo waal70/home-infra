@@ -1,7 +1,13 @@
 ---
 # file: ad-dc.yml
-- name: Setup Samba based ad-dc over standard Debian bookworm
-  hosts: samba_ad_dc_servers
+- name: Setup Samba based ad-dc over standard Debian bookworm, for the primary AD
+  hosts: samba_ad_dc_primary
   become: true
   roles:
-    - samba_ad_dc
+    - { role: samba_ad_dc, smb_role: 'primary' }
+
+- name: Setup Samba based ad-dc over standard Debian bookworm, for the additional AD's
+  hosts: samba_ad_dc_additional
+  become: true
+  roles:
+    - { role: samba_ad_dc, smb_role: 'additional' }

@@ -28,13 +28,15 @@ smb_role: additional
 smb_workgroup: TEST
 smb_realm: TEST.ANDRECATHERINE.NET
 smb_dns_servers: "{{ ansible_default_ipv4.address }}"
-smb_dns_forwarder: 10.0.0.3 185.93.175.43
+smb_dns_forwarder: 10.0.0.1 185.93.175.43
 smb_username: Administrator
 smb_password: "{{ vault_smb_password }}"
 smb_site: Amsterdam
 smb_rsyncd_pass: "{{ vault_smb_password }}"
 
-smb_primary_dns: "{{ hostvars[groups['samba_ad_dc_servers'][0]]['ansible_host'] }}"
+smb_primary_dns: "{{ hostvars[groups['samba_ad_dc_primary'][0]]['ansible_host'] }}"
 # If only provisioning main domain: secondary may be undefined, so in that case, do this:
-smb_secondary_dns: 185.93.175.42
+smb_secondary_dns: "{{ hostvars[groups['samba_ad_dc_additional'][0]]['ansible_host'] }}"
+# Use the following line when you have no additional dc's defined
+# smb_secondary_dns: 185.93.175.43
 # yamllint enable rule:colons

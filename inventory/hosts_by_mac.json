@@ -15,13 +15,6 @@
     "mac": "b8:27:eb:27:3d:82"
   },
   {
-    "group": "raspberry_single",
-    "name": "pi03",
-    "mac": "e4:5f:01:87:ca:3f",
-    "meta": "this is a pi4"
-  },
-
-  {
     "group": "portainer-master",
     "name": "ams-deb-01",
     "mac": "08:00:27:52:63:bc"
@@ -62,6 +55,18 @@
     "mac": "b8:27:eb:4b:ce:56"
   },
   {
+    "group": "samba_ad_dc_primary",
+    "name": "adpi0",
+    "mac": "fa:ke:no:su:ee:99",
+    "ad_role_primary": "10.0.0.4"
+  },
+  {
+    "group": "samba_ad_dc_additional",
+    "name": "pi03",
+    "mac": "e4:5f:01:87:ca:3f",
+    "ad_role_additional": "this is a pi4"
+  },
+  {
     "group": "util",
     "hostname": "adpi0",
     "name": "adpi0",
@@ -77,6 +82,13 @@
     ]
   },
   {
+    "group": "samba_ad_dc_servers",
+    "children": [
+      "samba_ad_dc_primary",
+      "samba_ad_dc_additional"
+    ]
+  },
+  {
     "group": "debianlinux",
     "children": [
       "raspberry",
@@ -84,6 +96,7 @@
       "jumpservers",
       "portainer-master",
       "ansiblecontrol",
+      "samba_ad_dc_servers",
       "proxmox_servers"
     ]
   }
