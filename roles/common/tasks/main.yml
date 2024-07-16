@@ -27,5 +27,8 @@
 - name: Import sudoers tasks for the common-role
   ansible.builtin.import_tasks: sudoers.yml
 
+- name: Set the custom message of the day (motd)
+  ansible.builtin.import_tasks: motd.yml
+
 - name: Perform SSH daemon hardening
   ansible.builtin.import_tasks: ssh-config.yml

@@ -1,0 +1,24 @@
+---
+- name: Prepare a custom motd, but do not affect 'proxmox_servers'
+  when: "'proxmox_servers' not in group_names"
+  block:
+    - name: Set a custom motd for all Debian-based systems # noqa: deprecated-bare-vars
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "/etc/update-motd.d/{{ item.path }}"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+        mode: "0777"
+      with_community.general.filetree:
+        - templates/etc/update-motd.d/
+      when: item.state == "file"
+
+    - name: Check for existence of motd
+      ansible.builtin.stat:
+        path: /etc/motd
+      register: motd_file
+
+    - name: Backup current motd
+      ansible.builtin.command: mv /etc/motd /etc/motd.bak
+      when: motd_file.stat.exists
+      changed_when: motd_file.stat.exists
