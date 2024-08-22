@@ -16,5 +16,14 @@
         "date_added": 1591356827,
         "date_modified": 1649099737,
         "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 89,
+        "type": 2,
+        "domain": "(\\.|^)instagram\\.com$",
+        "enabled": 1,
+        "date_added": 1724336724,
+        "date_modified": 1724336741,
+        "comment": "Ansible pre-configured - INSTA"
     }
 ]

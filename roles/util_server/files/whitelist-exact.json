@@ -375,7 +375,7 @@
         "enabled": 1,
         "date_added": 1589815513,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 60,
@@ -384,7 +384,7 @@
         "enabled": 1,
         "date_added": 1589815539,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 62,
@@ -393,7 +393,7 @@
         "enabled": 1,
         "date_added": 1589825689,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 63,
@@ -402,7 +402,7 @@
         "enabled": 1,
         "date_added": 1589825798,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 65,
@@ -420,7 +420,7 @@
         "enabled": 1,
         "date_added": 1589830229,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 67,
@@ -429,7 +429,7 @@
         "enabled": 1,
         "date_added": 1591356527,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 69,
@@ -456,7 +456,7 @@
         "enabled": 1,
         "date_added": 1609197615,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 72,
@@ -465,7 +465,7 @@
         "enabled": 1,
         "date_added": 1609197711,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 73,
@@ -474,7 +474,7 @@
         "enabled": 1,
         "date_added": 1609197757,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 74,
@@ -483,7 +483,7 @@
         "enabled": 1,
         "date_added": 1609197787,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 75,
@@ -492,7 +492,7 @@
         "enabled": 1,
         "date_added": 1609197972,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 76,
@@ -501,7 +501,7 @@
         "enabled": 1,
         "date_added": 1609275109,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 77,
@@ -510,7 +510,7 @@
         "enabled": 1,
         "date_added": 1612826617,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 83,
@@ -519,7 +519,7 @@
         "enabled": 1,
         "date_added": 1639861459,
         "date_modified": 1649099737,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
     },
     {
         "id": 85,
@@ -528,6 +528,33 @@
         "enabled": 1,
         "date_added": 1662887609,
         "date_modified": 1662887609,
-        "comment":  "Ansible pre-configured"
+        "comment": "Ansible pre-configured"
+    },
+    {
+        "id": 91,
+        "type": 0,
+        "domain": "instagram.com",
+        "enabled": 1,
+        "date_added": 1724337148,
+        "date_modified": 1724337148,
+        "comment": "Ansible pre-configured - INSTA"
+    },
+    {
+        "id": 92,
+        "type": 0,
+        "domain": "www.instagram.com",
+        "enabled": 1,
+        "date_added": 1724337205,
+        "date_modified": 1724337205,
+        "comment": "Ansible pre-configured - INSTA"
+    },
+    {
+        "id": 93,
+        "type": 0,
+        "domain": "i.instagram.com",
+        "enabled": 1,
+        "date_added": 1724337622,
+        "date_modified": 1724337622,
+        "comment": "Ansible pre-configured - INSTA"
     }
 ]
