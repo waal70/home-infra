@@ -418,5 +418,17 @@
         "number": 0,
         "invalid_domains": 0,
         "status": 1
+    },
+    {
+        "id": 105,
+        "address": "https:\/\/nsfw.oisd.nl",
+        "enabled": 1,
+        "date_added": 1724343338,
+        "date_modified": 1724343338,
+        "comment": "Ansible pre-configured",
+        "date_updated": 1724343386,
+        "number": 0,
+        "invalid_domains": 0,
+        "status": 1
     }
 ]

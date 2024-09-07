@@ -536,7 +536,7 @@
         "domain": "instagram.com",
         "enabled": 1,
         "date_added": 1724337148,
-        "date_modified": 1724337148,
+        "date_modified": 1724343564,
         "comment": "Ansible pre-configured - INSTA"
     },
     {
@@ -556,5 +556,23 @@
         "date_added": 1724337622,
         "date_modified": 1724337622,
         "comment": "Ansible pre-configured - INSTA"
+    },
+    {
+        "id": 94,
+        "type": 0,
+        "domain": "www.skoften.net",
+        "enabled": 1,
+        "date_added": 1725540013,
+        "date_modified": 1725540013,
+        "comment": "Ansible pre-configured - SKOFTEN"
+    },
+    {
+        "id": 95,
+        "type": 0,
+        "domain": "files.skoften.net",
+        "enabled": 1,
+        "date_added": 1725540079,
+        "date_modified": 1725540079,
+        "comment": "Ansible pre-configured - SKOFTEN"
     }
 ]
