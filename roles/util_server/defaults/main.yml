@@ -1,9 +1,11 @@
 ---
 # A normal config for the following three variables is false, true, false:
 #  maintaining the tftp netboot config, refreshing pihole, but not re-installing fully
-netboot_download: true # controls downloading a new netboot.tar.gz
+# netboot_download: true # controls downloading a new netboot.tar.gz
+# Downloading a netboot image now depends on the age of the current image
+netboot_max_age: "28d"
 netboot_url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz"
-do_pihole: true # will refresh adlists and domainlists
+do_pihole: false # will refresh adlists and domainlists
 install_pihole: false # switch to (re-)install pihole
 
 iface_dummy: "eth53"
