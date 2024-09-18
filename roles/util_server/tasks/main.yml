@@ -3,16 +3,18 @@
 # This util_server should have tftp, preseed.cfg
 # Then, it will take the latest netboot from the internet
 # And configure the relevant files for it
-# if no /var/www/html, then install a webserver (TODO) - for now, assume presence of webserver
 
-# tftpd-hpa is the Trivial FTP server for Debian. It creates a default
-# config and directory structure, which is fine for this purpose
-- name: Ensure tftpd-hpa is installed
-  ansible.builtin.apt:
-    name: tftpd-hpa
-    state: present
+- name: Ensure existence of dummy ethernet interface
+  ansible.builtin.import_tasks: install-dummy-interface.yml
 
-# I am assuming pi-hole is active on this machine as well, which depends on this
+- name: Include pi-hole installation and configuration tasks
+  ansible.builtin.import_tasks: pi-hole.yml
+  when: do_pihole
+
+- name: Ensure TFTPD is present on the system
+  ansible.builtin.import_tasks: install-tftpd.yml
+
+# I am assuming pi-hole is now active on this machine, which depends on this
 # directory to host its admin interface. We'll piggyback our preseed.cfg onto it
 - name: Ensure /var/www/html exists
   ansible.builtin.file:
@@ -30,43 +32,3 @@
     owner: root
     group: root
     mode: "0644"
-
-- name: Obtain and unarchive the current netboot image. Configure netboot_url in vars or defaults
-  ansible.builtin.unarchive:
-    src: "{{ netboot_url }}"
-    remote_src: true
-    dest: /srv/tftp/
-  when: netboot_download
-
-# These with_items come from the netboot tarball and cannot be configured - leave them as-is
-- name: Place the specific config files into the correct folder
-  ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dst }}"
-    mode: "0644"
-  with_items:
-    - src: srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg.j2
-      dst: /srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg
-    - src: srv/tftp/debian-installer/amd64/boot-screens/txt.cfg.j2
-      dst: /srv/tftp/debian-installer/amd64/boot-screens/txt.cfg
-
-# Path is relied upon, the name of the .conf-file is arbitrary.
-# Choose a name that makes sense to you
-- name: Configure the dummy ethernet interface in order to bind pi-hole to item.dst
-  ansible.builtin.template:
-    src: etc/network/interfaces.d/iface-dummy-dns.conf.j2
-    dest: /etc/network/interfaces.d/iface-dummy-dns.conf
-    mode: "0644"
-  register: eth_dummy
-
-# Restart of networking needs to take place immediately because
-#  the existence of the dummy interface is a pre-req for pi-hole
-- name: Restart networking if we just created the dummy interface # noqa: no-handler
-  ansible.builtin.systemd_service:
-    name: "networking.service"
-    state: restarted
-  when: eth_dummy.changed
-
-- name: Include pi-hole installation and configuration tasks
-  ansible.builtin.import_tasks: pi-hole.yml
-  when: do_pihole

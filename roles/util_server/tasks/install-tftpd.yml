@@ -1,0 +1,27 @@
+---
+# tasks file to install tftpd-hpa
+# tftpd-hpa is the Trivial FTP server for Debian. It creates a default
+# config and directory structure, which is fine for this purpose
+- name: Ensure tftpd-hpa is installed
+  ansible.builtin.apt:
+    name: tftpd-hpa
+    state: present
+
+- name: Obtain and unarchive the current netboot image. Configure netboot_url in vars or defaults
+  ansible.builtin.unarchive:
+    src: "{{ netboot_url }}"
+    remote_src: true
+    dest: /srv/tftp/
+  when: netboot_download
+
+# These with_items come from the netboot tarball and cannot be configured - leave them as-is
+- name: Place the specific config files into the correct folder
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: "0644"
+  with_items:
+    - src: srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg.j2
+      dst: /srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg
+    - src: srv/tftp/debian-installer/amd64/boot-screens/txt.cfg.j2
+      dst: /srv/tftp/debian-installer/amd64/boot-screens/txt.cfg
