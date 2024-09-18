@@ -1,9 +1,0 @@
----
-# file: 50-portainer-master-dockers.yml
-- name: Setup main Portainer with Docker images
-  hosts:
-    - portainer-master
-  become: true
-  # strategy: free # noqa: run-once[play]
-  roles:
-    - { role: portainer, dothis: 'populate_master' }

@@ -5,6 +5,8 @@
   become: true
   roles:
     - common
-    - no_journal
     - log2ram
-    - powersave
+    - role: no_journal
+      when: not enable_journaling | bool
+    - role: powersave
+      when: enable_powersave | bool

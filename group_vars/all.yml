@@ -1,6 +1,7 @@
 ---
 # group variables for all servers
 enable_journaling: false # Set to true to enable journaling, false to disable
+enable_powersave: true
 log2ram_size: 80M
 log2ram_state: install # install, update, remove
 

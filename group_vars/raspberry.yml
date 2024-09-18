@@ -1,0 +1,3 @@
+---
+# group variables for raspberry pi's
+enable_powersave: false
