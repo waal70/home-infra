@@ -1,0 +1,21 @@
+---
+# file: portainer/handlers/guac_handler.yml
+# contains post-creation activities for the guacamole stack
+# Uses /docker-entrypoint-initdb.d to initialize guacamole db
+- name: Block to only execute upon fresh creation
+  when: stack_not_exists
+  block:
+    - name: Set the ProjectPath of the just created stack to a variable
+      ansible.builtin.set_fact:
+        pp_folder: "{{ create_stack_response.json | community.general.json_query('ProjectPath') }}" # noqa: jinja[invalid]
+
+    - name: Run the command that will create the initdb script
+      community.docker.docker_container_exec:
+        container: guacamole_compose
+        command: /bin/bash -c "/opt/guacamole/bin/initdb.sh --postgresql > /docker-entrypoint-initdb.d/initdb.sql"
+        user: root
+      register: result
+
+    - name: Print stdout
+      ansible.builtin.debug:
+        var: result.stdout

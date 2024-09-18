@@ -8,6 +8,7 @@
     stack_name: "{{ item.name }}"
     stack_compose: "{{ lookup('file', item.file) }}"
     directories: "{{ item.dirs }}"
+    post_create_handler: "{{ item.post_handler | default('') }}"
 
   with_items:
 
@@ -19,6 +20,7 @@
 
     - name: guacamole
       file: guacamole.yml
+      post_handler: "../handlers/guac_handler.yml"
 
     - name: nginx
       file: nginx.yml

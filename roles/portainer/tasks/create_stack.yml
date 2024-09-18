@@ -91,3 +91,9 @@
   ansible.builtin.fail:
     msg: "Failed to create stack in Portainer"
   when: stack_not_exists and create_stack_response.status != 200
+
+- name: Block for post stack creation
+  when: post_create_handler != ''
+  block:
+    - name: "Register post-creation activities"
+      ansible.builtin.import_tasks: "{{ post_create_handler or '../handlers/dummy_handler.yml' }}"

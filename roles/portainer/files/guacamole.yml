@@ -25,9 +25,10 @@
 # Copy the generated script and run it in the guacamole_postgres instance:
 # psql -U guacamole_user -d guacamole_db
 #
+# If you run this from home-infra Ansible: this will be automatically done for you!
+#
 # Guacamole is on :32768/guacamole, not /.
 # Default username/password is guacadmin/guacadmin
-#
 #####################################################################################
 
 version: '2.0'
@@ -89,3 +90,5 @@ services:
 ## enable next line when using nginx
 ##    - 8080/tcp
     restart: always
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d:z

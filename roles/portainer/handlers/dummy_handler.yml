@@ -1,0 +1,7 @@
+---
+# file: portainer/handlers/dummy_handler.yml
+# contains no activities. Is here to catch cases no valid post-creation yaml was defined
+- name: Notify the user
+  ansible.builtin.debug:
+    msg:
+      - "This compose file requires no further actions"
