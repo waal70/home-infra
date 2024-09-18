@@ -27,4 +27,4 @@ None
 License
 -------
 
-BSD
+MIT
