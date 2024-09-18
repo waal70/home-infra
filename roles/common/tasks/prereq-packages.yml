@@ -8,7 +8,7 @@
 - name: Update all packages if needed
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: 3600
+    cache_valid_time: 86400
     upgrade: full
     autoclean: true
     autoremove: true
@@ -17,6 +17,6 @@
 - name: Install pre-requisite packages
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: 3600
+    cache_valid_time: 86400
     name: "{{ _common_install_packages }}"
     state: latest
