@@ -1,10 +1,7 @@
 ---
 # file: common/tasks/main.yml
-- name: Ensure python3-debian is present on systems
-  ansible.builtin.apt:
-    name: python3-debian
-    update_cache: true
-    state: present
+- name: Ensure required packages are present on systems
+  ansible.builtin.import_tasks: prereq-packages.yml
 
 - name: Import tasks to ensure creation of unprivileged user
   ansible.builtin.import_tasks: unpriv-user.yml
@@ -15,8 +12,11 @@
 - name: Import color-shell tasks for the common-role
   ansible.builtin.import_tasks: color-shell.yml
 
-- name: Import firmware tasks for the common-role
-  ansible.builtin.import_tasks: firmware.yml
+- name: Firmware block for Dell servers
+  when: "'Dell' in ansible_board_vendor"
+  block:
+    - name: Import firmware tasks for Dell-based servers
+      ansible.builtin.import_tasks: dell-firmware.yml
 
 - name: Import journald tasks for the common-role
   ansible.builtin.import_tasks: edit-journald.yml

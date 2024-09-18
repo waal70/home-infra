@@ -4,15 +4,15 @@
 - name: Import inet6 tasks for the pve-role
   ansible.builtin.import_tasks: inet6-manual.yml
 
-- name: Ensure gpg is installed
-  ansible.builtin.apt:
-    name: gpg
-    state: present
+# - name: Ensure gpg is installed
+#   ansible.builtin.apt:
+#     name: gpg
+#     state: present
 
-- name: Ensure wget is installed
-  ansible.builtin.apt:
-    name: wget
-    state: present
+# - name: Ensure wget is installed
+#   ansible.builtin.apt:
+#     name: wget
+#     state: present
 
 # Andre 01-2024: add the proxmox repository using the new command
 - name: Add Proxmox' repository

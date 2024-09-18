@@ -1,0 +1,13 @@
+---
+- name: Stage packages that are pre-requisites
+  ansible.builtin.set_fact:
+    _common_install_packages:
+      - python3-debian
+      - sudo
+
+- name: Install pre-requisite packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    name: "{{ _common_install_packages }}"
+    state: latest

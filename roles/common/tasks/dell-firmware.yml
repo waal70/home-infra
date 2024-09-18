@@ -1,0 +1,8 @@
+---
+- name: Install Dell firmware
+  ansible.builtin.apt:
+    pkg:
+      - firmware-realtek
+      - firmware-misc-nonfree
+    state: present
+  when: "'proxmox_servers' not in group_names"
