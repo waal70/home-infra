@@ -10,12 +10,18 @@
     skeleton: /etc/skel
     append: true
 
-- name: Set the key for the unprivileged user
+- name: Set the primary key for the unprivileged user, removing any others
   ansible.posix.authorized_key:
     user: "{{ interactive_user }}"
-    key: "{{ lookup('file', '../home/ssh-keys/{{ interactive_user }}/{{ interactive_user }}-key.pub') }}"
+    key: "{{ lookup('file', '../home/ssh-keys/{{ interactive_user }}/{{ interactive_user }}-yubi-1.pub') }}"
     state: present
     exclusive: true
+
+- name: Set the secondary key for the unprivileged user
+  ansible.posix.authorized_key:
+    user: "{{ interactive_user }}"
+    key: "{{ lookup('file', '../home/ssh-keys/{{ interactive_user }}/{{ interactive_user }}-yubi-2.pub') }}"
+    state: present
 
 - name: Install required package to become unprivileged users
   ansible.builtin.apt:

@@ -8,6 +8,7 @@
   with_items:
     - { regexp: "^#?PermitRootLogin", line: "PermitRootLogin no" }
     - { regexp: "^#?PubkeyAuthentication", line: "PubkeyAuthentication yes" }
+    - { regexp: "^#?PubkeyAuthOptions", line: "PubkeyAuthOptions verify-required" } # to enable hardware token
     - { regexp: "^#?PasswordAuthentication", line: "PasswordAuthentication no" }
     - { regexp: "^#?KbdInteractiveAuthentication", line: "KbdInteractiveAuthentication no" }
     - { regexp: "^#?UsePAM", line: "UsePAM yes" } # If no, ansible (passwordless) will not be able to perform SSH
