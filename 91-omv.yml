@@ -1,0 +1,10 @@
+---
+# file: 91-omv.yml
+- name: Apply OpenMediaVault
+  hosts:
+  # this means: specify on commandline, for instance: ansible-playbook 99-nuke.yml -e 'nuke=ams-dmz-jump'
+    - ssdnas
+  become: true
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - debian_omv

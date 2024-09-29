@@ -1,0 +1,6 @@
+---
+# defaults file for debian_omv
+# version of OpenMediaVault
+omv_version: sandworm
+omv_first_install: true
+omv_arch: arm64
