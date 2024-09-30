@@ -1,10 +1,47 @@
 ---
 # file: 91-omv.yml
-- name: Apply OpenMediaVault
+# As this is the bootstrap script, it should be run WITHOUT firstrun.sh!!
+- name: Bootstrap Friendly-Elec
   hosts:
   # this means: specify on commandline, for instance: ansible-playbook 99-nuke.yml -e 'nuke=ams-dmz-jump'
     - ssdnas
-  become: true
-#  strategy: free # noqa: run-once[play]
-  roles:
-    - debian_omv
+  remote_user: root
+  vars:
+    ansible_password: fa
+
+  tasks:
+    - name: Read remote_user from ansible.cfg
+      ansible.builtin.set_fact:
+        cfg_rem_user: "{{ lookup('ansible.builtin.ini', 'remote_user section=defaults file=ansible.cfg') }}"
+
+    - name: Remove the pi user
+      ansible.builtin.user:
+        name: pi
+        state: absent
+        remove: true
+
+    - name: Create the ansible user
+      ansible.builtin.user:
+        name: "{{ cfg_rem_user }}"
+        create_home: true
+        skeleton: /etc/skel
+        groups: sudo
+        shell: /bin/bash
+
+    - name: Set the primary key for the unprivileged user, removing any others
+      ansible.posix.authorized_key:
+        user: "{{ cfg_rem_user }}"
+        key: "{{ lookup('file', '../home/ssh-keys/{{ cfg_rem_user }}/{{ cfg_rem_user }}-key.pub') }}"
+        state: present
+        exclusive: true
+    
+    - name: Set passwordless sudo for the unprivileged user
+      ansible.builtin.shell: |
+        touch /etc/sudoers.d/ansible
+        /bin/sh -c "echo 'ansible ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ansible"
+        chmod 440 /etc/sudoers.d/ansible
+
+    - name: Change the root password
+      ansible.builtin.user:
+        name: root
+        password: '!'
