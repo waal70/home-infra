@@ -34,12 +34,13 @@
         key: "{{ lookup('file', '../home/ssh-keys/{{ cfg_rem_user }}/{{ cfg_rem_user }}-key.pub') }}"
         state: present
         exclusive: true
-    
+
     - name: Set passwordless sudo for the unprivileged user
       ansible.builtin.shell: |
         touch /etc/sudoers.d/ansible
         /bin/sh -c "echo 'ansible ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ansible"
         chmod 440 /etc/sudoers.d/ansible
+      changed_when: true
 
     - name: Change the root password
       ansible.builtin.user:
