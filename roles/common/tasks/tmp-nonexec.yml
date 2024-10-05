@@ -1,0 +1,58 @@
+---
+# These tasks will set nonexec on /tmp
+# But only if /tmp is not already nonexec
+# Follows: https://waal70blog.wordpress.com/2014/08/08/debian-server-hardening-make-tmp-non-executable/
+- name: Get existence of tmpfs file, which resides in /var
+  ansible.builtin.stat:
+    path: /var/tmpfs
+  register: sttmp
+
+- name: Block to create, mount and bind tmpfs
+  when: not sttmp.stat.exists
+  block:
+    - name: Create file to hold tmp
+      community.general.filesize:
+        path: /var/tmpfs
+        size: 1G
+        owner: root
+        group: root
+
+    - name: Initialize a ext3 filesystem in this file
+      community.general.filesystem:
+        dev: /var/tmpfs
+        fstype: ext3
+        opts: "-j"
+        state: present
+
+    - name: Move old tmp out of the way
+      ansible.builtin.command:
+        cmd: mv /tmp /old_tmp
+      failed_when: "{{ sttmp.stat.exists }}"
+      changed_when: true
+
+    - name: Make the new file a permanent mount in fstab
+      ansible.posix.mount:
+        path: /tmp
+        src: /var/tmpfs
+        opts: "loop,nosuid,noexec,rw"
+        state: mounted
+        fstype: ext3
+
+    - name: Move the old stuff back into the new mountpoint
+      ansible.builtin.command:
+        cmd: mv /old_tmp/* /tmp/
+      failed_when: "{{ sttmp.stat.exists }}"
+      changed_when: true
+
+    - name: Ensure no more /old_tmp
+      ansible.builtin.file:
+        path: /old_tmp
+        state: absent
+
+    - name: Make tmp world writeable
+      ansible.builtin.file:
+        path: /tmp
+        state: directory
+        owner: root
+        group: root
+        mode: '1777'

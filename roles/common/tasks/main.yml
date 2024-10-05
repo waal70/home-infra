@@ -3,6 +3,9 @@
 - name: Ensure required packages are present on systems
   ansible.builtin.import_tasks: prereq-packages.yml
 
+- name: Make /tmp non-executable
+  ansible.builtin.import_tasks: tmp-nonexec.yml
+
 - name: Import tasks to ensure creation of unprivileged user
   ansible.builtin.import_tasks: unpriv-user.yml
 
