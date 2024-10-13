@@ -1,5 +1,9 @@
 ---
 # tasks file for ansible_control
+- name: Include vaulted password file
+  ansible.builtin.include_vars:
+    file: ../home/ansible-vault/ansible-control-vars.yml
+
 - name: Include install tasks when relevant
   ansible.builtin.import_tasks: install.yml
   when: action_install

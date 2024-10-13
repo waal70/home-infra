@@ -50,6 +50,6 @@
 
 - name: Checkout secrets repository into home of interactive_user # noqa: latest[git]
   ansible.builtin.command:
-    cmd: "sshpass -p <password> git clone {{ git_repo_secrets }} {{ interactive_home }}/{{ repo_secrets_dir }}"
+    cmd: "sshpass -p {{ ac_admin_password }} git clone {{ git_repo_secrets }} {{ interactive_home }}/{{ repo_secrets_dir }}"
   become_user: "{{ interactive_user }}"
   changed_when: true
