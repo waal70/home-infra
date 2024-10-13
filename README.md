@@ -148,3 +148,4 @@ Choose the numbered yaml-files to only select a portion of the roles.
 * TODO: install default dockers on jumpserver
 * TODO: get the linter to work
 * TODO: make linter run automatically
+* TODO: only on PR?
