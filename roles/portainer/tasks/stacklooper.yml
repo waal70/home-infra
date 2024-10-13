@@ -42,6 +42,7 @@
     stack_name: "{{ item.name }}"
     stack_compose: "{{ lookup('file', item.file) }}"
     directories: "{{ item.dirs }}"
+    post_create_handler: "{{ item.post_handler | default('') }}"
 
   with_items:
 
