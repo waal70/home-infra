@@ -8,6 +8,7 @@
     - name: do_pihole
       prompt: Refresh adlists yes or no?
       default: 'no'
+      private: false
 #  strategy: free # noqa: run-once[play]
   roles:
     - util_server
