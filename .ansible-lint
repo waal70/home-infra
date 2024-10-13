@@ -6,3 +6,10 @@ exclude_paths:
   - .ansible-lint
 skip_list:
   - "package-latest"
+mock_modules:
+  - community.general.shutdown
+  - ansible.posix.authorized_key
+  - community.docker.docker_container_exec
+  - community.general.filesize
+  - community.general.filesystem
+  - ansible.posix.mount
