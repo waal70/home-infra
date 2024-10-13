@@ -15,7 +15,7 @@ auth_method: 1
 
 # Portainer version
 # Note that 'latest' will get you 2.19.x - the tag seems to be behind
-version: 2.20.3
+version: 2.21.3
 
 # Misc settings
 company_logo_url: url_to_company_logo
