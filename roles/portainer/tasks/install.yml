@@ -11,6 +11,7 @@
     links: "{{ container_links | default(omit) }}"
     networks: "{{ container_network | default(omit, True) }}"
     networks_cli_compatible: false # avoid ansible 2.12. Deprecation warning
+    image_name_mismatch: "recreate"
     published_ports: "{{ container_ports | default(omit, True) }}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

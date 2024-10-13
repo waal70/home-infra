@@ -29,7 +29,8 @@ docker_compose_path: /usr/local/bin/docker-compose
 
 # Portainer Agent version
 # Specific versions are preferred. You can also put "latest" here
-portainer_agent_version: "2.20.3"
+# Andre October 2024: bump version to 2.21.3 from 2.20.3
+portainer_agent_version: "2.21.3"
 
 # Enable repo setup
 docker_add_repo: true
