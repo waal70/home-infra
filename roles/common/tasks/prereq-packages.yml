@@ -3,6 +3,7 @@
   ansible.builtin.set_fact:
     _common_install_packages:
       - python3-debian
+      - python3-requests
       - sudo
 
 - name: Update all packages if needed

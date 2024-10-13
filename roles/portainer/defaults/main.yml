@@ -35,4 +35,4 @@ admin_user: admin
 # Endpoints (of Portainer Agents)
 endpoints:
   - { name: "{{ inventory_hostname }}", url: "", id: "1" }
-# - { name: "ams-dmz-jump", url: "tcp://172.16.100.4:9001" }
+#  - { name: "ams-dmz-jump", url: "tcp://172.16.10.92:9001", id: "2" }

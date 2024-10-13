@@ -42,6 +42,15 @@
         chmod 440 /etc/sudoers.d/ansible
       changed_when: true
 
+    - name: Set the package locations to EU-based repositories (because, well, reasons)
+      ansible.builtin.template:
+        src: ./debian-preseed/sources.list
+        dest: /etc/apt/sources.list
+        owner: root
+        group: root
+        mode: '0644'
+        force: true
+
     - name: Change the root password
       ansible.builtin.user:
         name: root

@@ -23,7 +23,7 @@
   {
     "group": "jumpservers",
     "name": "ams-dmz-jump",
-    "mac": "00:30:18:06:e6:b8"
+    "mac": "ae:94:6d:cb:30:2e"
   },
   {
     "group": "proxmox_servers",
@@ -43,7 +43,7 @@
   {
     "group": "nas",
     "name": "ssdnas",
-    "mac": "7e:6a:ec:26:a1:7a"
+    "mac": "ae:94:6d:cb:30:2e"
   },
   {
     "group": "raspberry_single",
