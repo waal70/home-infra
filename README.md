@@ -146,3 +146,4 @@ Choose the numbered yaml-files to only select a portion of the roles.
 * ~~FIX: setting ^has_journal is hit and miss - does not seem to work all the time - fix this!~~
 * Change repository adding by using the new 822 ansible task
 * TODO: install default dockers on jumpserver
+* TODO: get the linter to work
