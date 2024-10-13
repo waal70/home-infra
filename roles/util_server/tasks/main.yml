@@ -9,7 +9,7 @@
 
 - name: Include pi-hole installation and configuration tasks
   ansible.builtin.import_tasks: pi-hole.yml
-  when: do_pihole
+  when: do_pihole == "yes"
 
 # - name: Ensure cron-job for pihole-update is present
 #   ansible.builtin.cron:

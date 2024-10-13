@@ -5,7 +5,7 @@
 # Downloading a netboot image now depends on the age of the current image
 netboot_max_age: "38d"
 netboot_url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz"
-do_pihole: true # will refresh adlists and domainlists
+# do_pihole: true # will refresh adlists and domainlists - moved to vars_prompt
 install_pihole: false # switch to (re-)install pihole
 
 iface_dummy: "eth53"

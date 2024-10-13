@@ -4,6 +4,10 @@
   hosts:
     - util
   become: true
+  vars_prompt:
+    - name: do_pihole
+      prompt: Refresh adlists yes or no?
+      default: 'no'
 #  strategy: free # noqa: run-once[play]
   roles:
     - util_server
