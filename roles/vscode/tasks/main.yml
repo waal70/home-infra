@@ -1,0 +1,21 @@
+---
+# tasks file for vscode
+# Follows: https://code.visualstudio.com/docs/setup/linux
+- name: Add the Microsoft Visual Studio Code repository
+  ansible.builtin.deb822_repository:
+    name: vscode
+    types: [deb]
+    uris: "{{ vscode_repo_url }}"
+    suites: "{{ vscode_apt_suite }}"
+    components: "{{ vscode_apt_components }}"
+    signed_by: "{{ vscode_apt_key_url }}"
+    state: present
+    enabled: true
+
+- name: Update package cache and install the packages for VS Code
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - code
+    update_cache: true
+    state: present

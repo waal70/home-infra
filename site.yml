@@ -8,3 +8,4 @@
 - import_playbook: 06-util-server.yml
 - import_playbook: 07-ansible-control-node.yml
 - import_playbook: 08-jumpserver.yml
+- import_playbook: 09-dev-laptop.yml

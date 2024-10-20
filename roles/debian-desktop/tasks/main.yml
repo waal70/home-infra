@@ -1,0 +1,20 @@
+---
+# tasks file for debian-desktop
+# Coming out from preseed and common role, first order of business is to install
+# additional firmware packages:
+- name: Install (Intel) firmware packages
+  ansible.builtin.apt:
+    name:
+      - firmware-iwlwifi
+      - firmware-misc-nonfree
+      - firmware-sof-signed
+      - intel-microcode
+    state: present
+
+- name: Install the graphical desktop environment
+  ansible.builtin.command:
+    cmd: tasksel install desktop laptop
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  become: true
+  changed_when: true

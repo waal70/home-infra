@@ -5,6 +5,11 @@
     "mac": "b8:27:eb:d6:0c:d2"
   },
   {
+    "group": "dev-workstation",
+    "name": "dev-t440p",
+    "mac": "50:7b:9d:01:04:47"
+  },
+  {
     "group": "raspberry_single",
     "name": "pi01",
     "mac": "b8:27:eb:38:d0:eb"
