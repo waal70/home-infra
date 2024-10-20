@@ -2,6 +2,24 @@
 # tasks file for debian-desktop
 # Coming out from preseed and common role, first order of business is to install
 # additional firmware packages:
+# nouveau.modeset=0
+- name: Fix GRUB nouveau errors and reboot
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT=".*quiet'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet nouveau.modeset=0"'
+  register: grubfix
+
+- name: Update grub # noqa: no-handler
+  ansible.builtin.command: update-grub
+  when: grubfix.changed
+  changed_when: grubfix.changed
+
+- name: Reboot after fixing GRUB # noqa: no-handler
+  ansible.builtin.reboot:
+  when: grubfix.changed
+  changed_when: grubfix.changed
+
 - name: Install (Intel) firmware packages
   ansible.builtin.apt:
     name:

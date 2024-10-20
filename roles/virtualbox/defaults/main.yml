@@ -8,3 +8,5 @@ vbox_apt_suite: bookworm
 vbox_apt_components: contrib
 
 vbox_apt_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+
+vbox_install_version: "7.1"

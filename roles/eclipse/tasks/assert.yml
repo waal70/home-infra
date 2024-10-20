@@ -89,23 +89,6 @@
       - eclipse_tmp_path is iterable
     quiet: true
 
-- name: assert | Test eclipse_install_lombok
-  ansible.builtin.assert:
-    that:
-      - eclipse_install_lombok is defined
-      - eclipse_install_lombok is boolean
-    quiet: true
-
-- name: assert | Test eclipse_lombok_version
-  ansible.builtin.assert:
-    that:
-      - eclipse_lombok_version is defined
-      - eclipse_lombok_version is string
-      - eclipse_lombok_version is not none
-    quiet: true
-  when:
-    - eclipse_install_lombok
-
 - name: assert | Test eclipse_install_maven
   ansible.builtin.assert:
     that:

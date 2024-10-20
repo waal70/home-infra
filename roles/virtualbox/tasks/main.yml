@@ -16,7 +16,6 @@
 - name: Install required VirtualBox packages
   ansible.builtin.apt:
     name:
-      - virtualbox-6.1
-      - virtualbox-ext-pack
+      - "virtualbox-{{ vbox_install_version }}"
     update_cache: true
     state: present
