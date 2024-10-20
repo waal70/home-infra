@@ -7,7 +7,8 @@
   ansible.builtin.lineinfile:
     path: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT=".*quiet'
-    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet nouveau.modeset=0"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
+#    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet nouveau.modeset=0"'
   register: grubfix
 
 - name: Update grub # noqa: no-handler
