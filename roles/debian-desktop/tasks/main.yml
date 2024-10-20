@@ -66,7 +66,7 @@
 - name: Configure flatpak repository
   ansible.builtin.command:
     cmd: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-  changed_when: true
+  changed_when: false
 
 - name: Nuke firefox ESR that comes standard with GNOME
   ansible.builtin.apt:
