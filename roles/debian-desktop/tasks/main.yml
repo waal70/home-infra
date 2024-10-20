@@ -51,9 +51,10 @@
 - name: Ensure "'nl_NL.utf8'" is present as a locale
   community.general.locale_gen:
     name:
-      - "nl_NL.utf8"
-      - "en_US.utf8"
+      - "nl_NL.UTF-8"
+      - "en_US.UTF-8"
     state: present
+
 
 - name: Add flatpak and Remmina remote desktop
   ansible.builtin.apt:
