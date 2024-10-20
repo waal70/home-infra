@@ -1,0 +1,45 @@
+---
+# tasks file to kill gnome bloatware
+- name: Purge and clean apt from useless gnome apps
+  ansible.builtin.apt:
+    name:
+      - gnome-2048
+      - gnome-calendar
+      - gnome-characters
+      - gnome-chess
+      - gnome-contacts
+      - gnome-games
+      - gnome-klotski
+      - gnome-mahjongg
+      - gnome-maps
+      - gnome-mines
+      - gnome-music
+      - gnome-nibbles
+      - gnome-robots
+      - gnome-sound-recorder
+      - gnome-sudoku
+      - gnome-sushi
+      - gnome-taquin
+      - gnome-tetravex
+      - gnome-video-effects
+      - gnome-weather
+      - tali
+      - hitori
+      - four-in-a-row
+      - five-or-more
+      - evolution
+      - aisleriot
+      - quadrapassel
+      - seahorse
+      - simple-scan
+      - swell-foop
+      - shotwell
+      - totem
+      - rhythmbox
+      - transmission-gtk
+      - lightsoff
+      - cheese
+    state: absent
+    purge: true
+    autoremove: true
+    autoclean: true

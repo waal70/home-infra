@@ -29,6 +29,11 @@
       - intel-microcode
     state: present
 
+- name: Check for presence of graphical desktop environment
+  ansible.builtin.stat:
+    path: "/etc/gnome"
+  register: gnomestat
+
 - name: Install the graphical desktop environment
   ansible.builtin.command:
     cmd: tasksel install desktop laptop
@@ -36,3 +41,49 @@
     DEBIAN_FRONTEND: noninteractive
   become: true
   changed_when: true
+  when: not gnomestat.stat.exists
+
+- name: Ensure psutil is present # we need psutil to use dconf later on
+  ansible.builtin.apt:
+    name: python3-psutil
+    state: present
+
+- name: Ensure "'nl_NL.utf8'" is present as a locale
+  community.general.locale_gen:
+    name:
+      - "nl_NL.utf8"
+      - "en_US.utf8"
+    state: present
+
+- name: Add flatpak and Remmina remote desktop
+  ansible.builtin.apt:
+    name:
+      - flatpak
+      - gnome-software-plugin-flatpak
+      - remmina
+    state: latest
+
+- name: Configure flatpak repository
+  ansible.builtin.command:
+    cmd: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  changed_when: true
+
+- name: Nuke firefox ESR that comes standard with GNOME
+  ansible.builtin.apt:
+    name: firefox-esr
+    state: absent
+    purge: true
+
+- name: Install firefox using flatpak
+  community.general.flatpak:
+    name: org.mozilla.firefox
+    state: latest
+
+- name: Import tasks to get rid of bloatware
+  ansible.builtin.import_tasks:
+    file: kill-gnome-bloat.yml
+
+- name: Import tasks to customize GNOME
+  ansible.builtin.import_tasks:
+    file: customize-gnome.yml
+  become_user: "{{ interactive_user }}"

@@ -1,0 +1,48 @@
+---
+# tasks file for customize-gnome
+# In order to customize, we need dconf
+- name: Set locale
+  community.general.dconf:
+    key: "/system/locale/region"
+    value: "'nl_NL.UTF-8'"
+
+- name: Set Terminal to black
+  community.general.dconf:
+    key: "/org/gnome/terminal/legacy/theme-variant"
+    value: "'dark'"
+
+- name: Set Location to no
+  community.general.dconf:
+    key: "/org/gnome/system/location/enabled"
+    value: 'false'
+    state: present
+
+- name: Set Calendar weekdate
+  community.general.dconf:
+    key: "/org/gnome/desktop/calendar/show-weekdate"
+    value: 'true'
+
+- name: Set desktop interface things 1
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/clock-show-weekday"
+    value: 'true'
+
+- name: Set desktop interface things 2
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/color-scheme"
+    value: "'prefer-dark'"
+
+- name: Set desktop interface things 3
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/enable-hot-corners"
+    value: 'true'
+
+- name: Set shell things
+  community.general.dconf:
+    key: "/org/gnome/shell/last-selected-power-profile"
+    value: "'performance'"
+
+- name: Set shortcut menu
+  community.general.dconf:
+    key: "/org/gnome/shell/favorite-apps"
+    value: "['org.mozilla.firefox.desktop', 'code.desktop', 'virtualbox.desktop', 'epp.package.java.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'org.gnome.Terminal.desktop', 'org.remmina.Remmina.desktop']" # noqa yaml[line-length]
