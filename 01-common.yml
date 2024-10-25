@@ -6,7 +6,7 @@
   # Please check group_vars for the appropriate values for these common roles
   roles:
     - waal70.debian-common
-    - log2ram
+    - waal70.log2ram
     - role: no_journal
       when: not enable_journaling | bool
     - role: powersave
