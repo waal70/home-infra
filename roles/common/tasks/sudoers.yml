@@ -1,7 +1,0 @@
----
-- name: Edit sudoers for passwordless sudo
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
-    regexp: ^%sudo
-    line: "%sudo ALL=(ALL:ALL) NOPASSWD: ALL"
-    state: present
