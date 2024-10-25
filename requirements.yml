@@ -2,3 +2,8 @@
 roles:
   # Install a role from Ansible Galaxy.
   - name: waal70.debian-common
+  - name: waal70.eclipse
+  - name: waal70.log2ram
+  - name: waal70.ansible_control
+  - name: waal70.virtualbox
+  - name: waal70.vscode

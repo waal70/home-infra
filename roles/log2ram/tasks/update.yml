@@ -1,6 +1,0 @@
----
-- name: Update log2ram on Debian systems. # noqa package-latest
-  ansible.builtin.apt:
-    name: log2ram
-    state: latest
-  when: ansible_os_family == "Debian"
