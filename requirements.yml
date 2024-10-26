@@ -14,6 +14,7 @@ roles:
   - name: waal70.portainer
   - name: waal70.powersave
   - name: waal70.pve
+  - name: waal70.pxe_prep
   - name: waal70.samba_ad_dc
   - name: waal70.util_server
   - name: waal70.virtualbox
