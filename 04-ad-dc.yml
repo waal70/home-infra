@@ -4,10 +4,10 @@
   hosts: samba_ad_dc_primary
   become: true
   roles:
-    - { role: samba_ad_dc, smb_role: 'primary' }
+    - { role: waal70.samba_ad_dc, smb_role: 'primary' }
 
 - name: Setup Samba based ad-dc over standard Debian bookworm, for the additional AD's
   hosts: samba_ad_dc_additional
   become: true
   roles:
-    - { role: samba_ad_dc, smb_role: 'additional' }
+    - { role: waal70.samba_ad_dc, smb_role: 'additional' }

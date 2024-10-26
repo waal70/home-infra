@@ -11,4 +11,4 @@
       private: false
 #  strategy: free # noqa: run-once[play]
   roles:
-    - util_server
+    - waal70.util_server

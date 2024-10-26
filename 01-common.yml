@@ -5,9 +5,9 @@
   become: true
   # Please check group_vars for the appropriate values for these common roles
   roles:
-    - waal70.debian-common
+    - waal70.debian_common
     - waal70.log2ram
-    - role: no_journal
+    - role: waal70.no_journal
       when: not enable_journaling | bool
-    - role: powersave
+    - role: waal70.powersave
       when: enable_powersave | bool

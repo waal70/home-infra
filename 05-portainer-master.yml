@@ -6,5 +6,5 @@
   become: true
   # strategy: free # noqa: run-once[play]
   roles:
-    - role: docker
-    - role: portainer
+    - role: waal70.docker
+    - role: waal70.portainer

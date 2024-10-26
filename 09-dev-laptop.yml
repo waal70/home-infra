@@ -6,8 +6,8 @@
   become: true
 #  strategy: free # noqa: run-once[play]
   roles:
-    - waal70.debian-common
-    - debian-desktop
+    - waal70.debian_common
+    - waal70.debian_desktop
     - waal70.eclipse
     - waal70.virtualbox
     - waal70.vscode

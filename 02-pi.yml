@@ -5,4 +5,4 @@
   # strategy: free # noqa: run-once[play]
   become: true
   roles:
-    - pi_common
+    - waal70.pi_common
