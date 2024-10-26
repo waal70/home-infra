@@ -1,6 +1,0 @@
----
-- name: Test play for powersave
-  hosts: localhost
-  remote_user: root
-  roles:
-    - powersave

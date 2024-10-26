@@ -1,8 +1,0 @@
-auto {{ iface_dummy }}
-iface {{ iface_dummy }} inet manual
-pre-up ip link add dev dummy0 type dummy; ip link set name {{ iface_dummy }} dev dummy0
-post-down ip link del {{ iface_dummy }}
-iface {{ iface_dummy }} inet static
-        address {{ iface_dummy_private_ipv4 }}
-iface {{ iface_dummy }} inet6 static
-        address {{ iface_dummy_private_ipv6 }}

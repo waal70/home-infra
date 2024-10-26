@@ -1,3 +1,0 @@
-# This file will take hostname entries in the form
-# ip-address hostname
-# and will add these entries to the 'local DNS' of the pi-hole instance.

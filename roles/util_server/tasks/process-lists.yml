@@ -1,8 +1,0 @@
-- name: Loop through all white and blacklists, adding to domainlist table
-  ansible.builtin.command:
-    cmd: >
-      pihole-FTL sqlite3 /etc/pihole/gravity.db "INSERT INTO domainlist (id, type, domain, enabled, date_added, date_modified, comment)
-       VALUES ({{ item.id }}, '{{ item.type }}', '{{ item.domain }}', {{ item.enabled }}, {{ item.date_added }},
-        {{ item.date_modified }}, '{{ item.comment }}');"
-  loop: "{{ process_lists }}"
-  changed_when: true
