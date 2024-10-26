@@ -1,20 +1,15 @@
 ---
 - name: Show info on specific host
   hosts:
-    - pve01
+    - localhost
   become: true
   vars:
     root_partition_default: "{{ ansible_mounts|json_query('[?mount == `/` && fstype == `ext4`].device | [0]') }}"
+    rp_regex: '^(.+?)\d*"$'
+    rp_replace: '\1'
+    rp_out: "{{ root_partition_default|map('regex_replace', rp_regex, rp_replace) }}"
 
   tasks:
-    - name: Set root_partition for all systems
-      ansible.builtin.set_fact:
-        root_partition: "{{ root_partition_default }}"
-
-    - name: Correct root_partition when Raspberry pi found
-      ansible.builtin.set_fact:
-        root_partition: /dev/mmcblk0p2
-      when: root_partition_default == '/dev/root'
     - name: Collect facts
       ansible.builtin.setup:
         filter:
@@ -23,8 +18,8 @@
 
     - name: Print info
       ansible.builtin.debug:
-        var: hostinfo
+        var: rp_out
 
     - name: Get partition info
       ansible.builtin.debug:
-        msg: "{{ root_partition }}"
+        msg: "{{ root_partition_default[:-1] }}"

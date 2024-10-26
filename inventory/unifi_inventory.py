@@ -78,7 +78,7 @@ class UnifiInventory(object):
     def get_credentials(self):
         """Function that obtains secrets for username/password from Ansible Vault."""
 
-        cfgfile = "./roles/unifi_info/vars/main.yml"
+        cfgfile = "./inventory/unifi_vars.yml"
         loader = DataLoader()
         vault_secrets = CLI.setup_vault_secrets(loader=loader,
             vault_ids=C.DEFAULT_VAULT_IDENTITY_LIST) # pylint: disable=no-member
