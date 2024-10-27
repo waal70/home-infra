@@ -1,21 +1,38 @@
 ---
 roles:
   # Install a role from Ansible Galaxy.
-  # Install these roles using ansible-galaxy install -r requirements.yml
+  # Install these roles using ansible-galaxy install -g -f -r roles/requirements.yml
   - name: waal70.ansible_control
+    src: https://github.com/waal70/ansible-role-ansible_control
   - name: waal70.debian_common
+    src: https://github.com/waal70/ansible-role-debian_common
   - name: waal70.debian_desktop
+    src: https://github.com/waal70/ansible-role-debian_desktop
   - name: waal70.debian_omv
+    src: https://github.com/waal70/ansible-role-debian_omv
   - name: waal70.docker
+    src: https://github.com/waal70/ansible-role-docker
   - name: waal70.eclipse
+    src: https://github.com/waal70/ansible-role-eclipse
   - name: waal70.log2ram
+    src: https://github.com/waal70/ansible-role-log2ram
   - name: waal70.no_journal
+    src: https://github.com/waal70/ansible-role-no_journal
   - name: waal70.pi_common
+    src: https://github.com/waal70/ansible-role-pi_common
   - name: waal70.portainer
+    src: https://github.com/waal70/ansible-role-portainer
   - name: waal70.powersave
+    src: https://github.com/waal70/ansible-role-powersave
   - name: waal70.pve
+    src: https://github.com/waal70/ansible-role-pve
   - name: waal70.pxe_prep
+    src: https://github.com/waal70/ansible-role-pxe_prep
   - name: waal70.samba_ad_dc
+    src: https://github.com/waal70/ansible-role-samba_ad_dc
   - name: waal70.util_server
+    src: https://github.com/waal70/ansible-role-util_server
   - name: waal70.virtualbox
+    src: https://github.com/waal70/ansible-role-virtualbox
   - name: waal70.vscode
+    src: https://github.com/waal70/ansible-role-vscode
