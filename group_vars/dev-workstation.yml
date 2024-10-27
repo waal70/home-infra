@@ -1,5 +1,5 @@
 ---
 # group variables for dev-workstations
 enable_journaling: true # Set to true to enable journaling, false to disable
-log2ram_state: "remove"
+log2ram_state: remove
 enable_powersave: false

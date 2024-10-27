@@ -1,8 +1,0 @@
----
-# tasks file for update_ssh
-- name: "Set authorized key for {{ ansible_user_id }}, removing all the authorized keys already set" # noqa: name[template]
-  ansible.posix.authorized_key:
-    user: "{{ ansible_user_id }}"
-    key: "{{ lookup('file', '../home/ssh-keys/ansible/ansible-key.pub') }}"
-    state: present
-    exclusive: true
