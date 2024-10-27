@@ -6,5 +6,5 @@
   roles:
     - role: waal70.pve
       when: pve_reset is undefined
-    - role: pxe_prep
+    - role: waal70.pxe_prep
       when: pve_reset is defined # will become defined by adding -e "pve_reset=true" on command-line
