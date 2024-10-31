@@ -4,11 +4,11 @@
   hosts:
     - util
   become: true
-  vars_prompt:
-    - name: do_pihole
-      prompt: Refresh adlists yes or no?
-      default: 'no'
-      private: false
+  # vars_prompt:
+  #   - name: do_pihole
+  #     prompt: Refresh adlists yes or no?
+  #     default: 'no'
+  #     private: false
 #  strategy: free # noqa: run-once[play]
   roles:
     - waal70.util_server
