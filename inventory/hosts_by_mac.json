@@ -22,7 +22,7 @@
   {
     "group": "portainer-master",
     "name": "ams-deb-01",
-    "mac": "e4:5f:01:87:ca:3f",
+    "mac": "e4:5f:11:87:ca:3f",
     "_comment": "08:00:27:52:63:bc"
   },
   {
@@ -54,6 +54,16 @@
     "group": "raspberry_single",
     "name": "pi5-01",
     "mac": "d8:3a:dd:db:5a:be"
+  },
+  {
+    "group": "raspberry_single",
+    "name": "pi5-02",
+    "mac": "2c:cf:67:33:3e:7c"
+  },
+  {
+    "group": "raspberry_single",
+    "name": "pi4-02",
+    "mac": "e4:5f:01:87:ca:3f"
   },
   {
     "group": "hifiberry",
