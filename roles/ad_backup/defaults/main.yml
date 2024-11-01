@@ -1,0 +1,5 @@
+---
+# defaults file for ad_backup
+smb_username: Administrator
+smb_password: "{{ vault_smb_password }}"
+backup_path: "/tmp"

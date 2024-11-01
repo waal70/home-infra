@@ -1,25 +1,7 @@
 ---
 - name: Show info on specific host
   hosts:
-    - localhost
+    - adpi0
   become: true
-  vars:
-    root_partition_default: "{{ ansible_mounts|json_query('[?mount == `/` && fstype == `ext4`].device | [0]') }}"
-    rp_regex: '^(.+?)\d*"$'
-    rp_replace: '\1'
-    rp_out: "{{ root_partition_default|map('regex_replace', rp_regex, rp_replace) }}"
-
-  tasks:
-    - name: Collect facts
-      ansible.builtin.setup:
-        filter:
-          - "*"
-      register: hostinfo
-
-    - name: Print info
-      ansible.builtin.debug:
-        var: rp_out
-
-    - name: Get partition info
-      ansible.builtin.debug:
-        msg: "{{ root_partition_default[:-1] }}"
+  roles:
+    - ad_backup
