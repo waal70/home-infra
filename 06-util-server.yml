@@ -12,3 +12,4 @@
 #  strategy: free # noqa: run-once[play]
   roles:
     - waal70.util_server
+    - waal70.ad_backup
