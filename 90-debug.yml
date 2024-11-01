@@ -4,4 +4,4 @@
     - adpi0
   become: true
   roles:
-    - ad_backup
+    - waal70.ad_backup
