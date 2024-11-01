@@ -1,5 +1,12 @@
 ---
 # tasks file for ad_backup
+- name: Check time of last backup
+  ansible.builtin.import_tasks: checkage.yml
+
+- name: Import tasks to mount backup folder
+  ansible.builtin.import_tasks: mountlocal.yml
+  delegate_to: localhost
+
 - name: Check the SAMBA database for errors and correct if necessary
   ansible.builtin.command:
     cmd: "samba-tool dbcheck -U{{ smb_username }} --fix --yes"
@@ -11,7 +18,7 @@
     msg: "{{ dbcheck_output.stdout_lines | last }}"
 
 - name: Backup SAMBA AD DC block
-  when: "'0 errors' in dbcheck_output.stdout_lines | last"
+  when: "('0 errors' in dbcheck_output.stdout_lines | last) and (backup_age.files | length > 0)"
   block:
     - name: Create an online backup-file on server {{ inventory_hostname }}
       ansible.builtin.command:
@@ -48,3 +55,25 @@
         path: "{{ item.path }}"
         state: absent
       with_items: "{{ backupfiles.files }}"
+
+    - name: Touch the backup marker
+      ansible.builtin.file:
+        path: /etc/samba/backupmarker
+        state: touch
+        mode: "0777"
+        modification_time: 'now'
+# END BLOCK
+
+- name: Import tasks to transfer backup files to backup server # noqa no-handler
+  ansible.builtin.import_tasks: transferbackup.yml
+  delegate_to: localhost
+  when: mounted.changed
+
+- name: Give user info on the network share not being available # noqa no-handler
+  ansible.builtin.debug:
+    msg:
+      - "Please note that the backup-server appears to be offline"
+      - "The backup-files will be retained locally until you run this playbook again"
+      - "at which time also all retained files will be transferred."
+      - "The server which is offline is: {{ smb_backup_share }}"
+  when: not mounted.changed

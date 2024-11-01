@@ -1,0 +1,24 @@
+---
+# tasks file for ad_backup - transferbackup
+- name: Find the files that need transfering in temporary-files/{{ inventory_hostname }}
+  ansible.builtin.find:
+    paths: "temporary-files/{{ inventory_hostname }}/"
+    patterns: "samba-backup*.bz2"
+  register: files_to_be_transferred
+
+- name: Copy those files to the backup folder
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "{{ local_backup_path }}{{ smb_backup_path }}"
+    mode: "0755"
+  with_items: "{{ files_to_be_transferred.files }}"
+
+- name: Delete the local files
+  ansible.builtin.file:
+    path: "temporary-files/{{ inventory_hostname }}/"
+    state: absent
+
+- name: And unmount the backup folder
+  ansible.posix.mount:
+    path: "{{ local_backup_path }}"
+    state: unmounted
