@@ -2,6 +2,8 @@
 roles:
   # Install a role from Ansible Galaxy.
   # Install these roles using ansible-galaxy install -g -f -r roles/requirements.yml
+  - name: waal70.ad_backup
+    src: https://github.com/waal70/ansible-role-ad_backup
   - name: waal70.ansible_control
     src: https://github.com/waal70/ansible-role-ansible_control
   - name: waal70.debian_common
