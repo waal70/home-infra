@@ -5,7 +5,7 @@
     "mac": "b8:27:eb:d6:0c:d2"
   },
   {
-    "group": "dev-workstation",
+    "group": "dev_workstation",
     "name": "dev-t440p",
     "mac": "50:7b:9d:01:04:47"
   },
@@ -20,7 +20,7 @@
     "mac": "b8:27:eb:27:3d:82"
   },
   {
-    "group": "portainer-master",
+    "group": "portainer_master",
     "name": "ams-deb-01",
     "mac": "e4:5f:11:87:ca:3f",
     "_comment": "08:00:27:52:63:bc"
@@ -111,7 +111,7 @@
       "raspberry",
       "util",
       "jumpservers",
-      "portainer-master",
+      "portainer_master",
       "ansiblecontrol",
       "samba_ad_dc_servers",
       "proxmox_servers"

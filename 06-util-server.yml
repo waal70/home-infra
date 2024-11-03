@@ -11,5 +11,5 @@
   #     private: false
 #  strategy: free # noqa: run-once[play]
   roles:
-    - waal70.util_server
+    - { role: waal70.util_server, do_pihole: 'no', install_pihole: false }
     - waal70.ad_backup

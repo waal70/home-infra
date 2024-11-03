@@ -2,7 +2,7 @@
 # file: 09-dev-laptop.yml
 - name: Setup laptop with GNOME and some packages
   hosts:
-    - dev-workstation
+    - dev_workstation
   become: true
 #  strategy: free # noqa: run-once[play]
   roles:

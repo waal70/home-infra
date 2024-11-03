@@ -2,7 +2,7 @@
 # file: debi05-portainer-master.yml
 - name: Setup main Portainer server. This is required when using a jumpserver
   hosts:
-    - portainer-master
+    - portainer_master
   become: true
   # strategy: free # noqa: run-once[play]
   roles:

@@ -1,11 +1,18 @@
 ---
 # .ansible-lint
+
+profile: production
+
 exclude_paths:
-  - .vscode/
+  - .cache/
   - .github/
+  - .gitignore
   - .ansible-lint
+  - ./temporary-files/
+
 skip_list:
   - "package-latest"
+
 mock_modules:
   - community.general.shutdown
   - ansible.posix.authorized_key
