@@ -38,3 +38,5 @@ roles:
     src: https://github.com/waal70/ansible-role-virtualbox
   - name: waal70.vscode
     src: https://github.com/waal70/ansible-role-vscode
+  - name: mindpointgroup.deb12_cis
+    src: https://github.com/ansible-lockdown/DEBIAN12-CIS.git

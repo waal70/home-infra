@@ -22,13 +22,19 @@
   {
     "group": "portainer_master",
     "name": "ams-deb-01",
-    "mac": "e4:5f:11:87:ca:3f",
-    "_comment": "08:00:27:52:63:bc"
+    "mac": "00:30:18:06:e6:b8",
+    "_comment": "08:00:27:52:63:bc",
+    "_comment2": "e4:5f:11:87:ca:3f"
+  },
+  {
+    "group": "ciscontrols",
+    "name": "cc-test",
+    "mac": "e4:5f:01:87:ca:3f"
   },
   {
     "group": "jumpservers",
     "name": "ams-dmz-jump",
-    "mac": "ae:94:6d:cb:30:2e"
+    "mac": "00:30:18:16:e6:b8"
   },
   {
     "group": "proxmox_servers",

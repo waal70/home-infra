@@ -1,0 +1,7 @@
+---
+- name: Show info on specific host
+  hosts:
+    - cc-test
+  become: true
+  roles:
+    - mindpointgroup.deb12_cis
