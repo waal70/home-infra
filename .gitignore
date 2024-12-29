@@ -16,3 +16,4 @@ roles/util_server/files/mca-dump.json
 inventory/unifi-inventory.conf
 temporary-files/*
 !temporary-files/README.md
+ansible.cfg
