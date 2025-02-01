@@ -22,6 +22,8 @@ roles:
     src: https://github.com/waal70/ansible-role-no_journal
   - name: waal70.pi_common
     src: https://github.com/waal70/ansible-role-pi_common
+  - name: waal70.pihole
+    src: https://github.com/waal70/ansible-role-pihole
   - name: waal70.portainer
     src: https://github.com/waal70/ansible-role-portainer
   - name: waal70.powersave
@@ -32,8 +34,8 @@ roles:
     src: https://github.com/waal70/ansible-role-pxe_prep
   - name: waal70.samba_ad_dc
     src: https://github.com/waal70/ansible-role-samba_ad_dc
-  - name: waal70.util_server
-    src: https://github.com/waal70/ansible-role-util_server
+  - name: waal70.tftp
+    src: https://github.com/waal70/ansible-role-tftp
   - name: waal70.virtualbox
     src: https://github.com/waal70/ansible-role-virtualbox
   - name: waal70.vscode

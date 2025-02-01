@@ -1,5 +1,5 @@
 ---
-# file: 05-util-server.yml
+# file: 06-util-server.yml
 - name: Setup utility server
   hosts:
     - util
@@ -11,5 +11,6 @@
   #     private: false
 #  strategy: free # noqa: run-once[play]
   roles:
-    - { role: waal70.util_server, do_pihole: 'no', install_pihole: false }
+    - { role: waal70.pihole, do_pihole: true, install_pihole: false }
     - waal70.ad_backup
+    - waal70.tftp
