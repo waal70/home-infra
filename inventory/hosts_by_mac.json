@@ -106,7 +106,8 @@
     "children": [
       "hifiberry",
       "pican2",
-      "raspberry_single"
+      "raspberry_single",
+      "portainer_master"
     ]
   },
   {

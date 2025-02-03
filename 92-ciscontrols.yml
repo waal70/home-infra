@@ -1,7 +1,7 @@
 ---
 - name: Playbook to apply default settings + make CIS compliant
   hosts:
-    - cc-test
+    - pi5-01
   become: true
   roles:
     - waal70.debian_common
@@ -11,3 +11,7 @@
     - role: waal70.powersave
       when: enable_powersave | bool
     - mindpointgroup.deb12_cis
+  post_tasks:
+    - name: Inform user of which warnings are okay following CIS controls application
+      ansible.builtin.debug:
+        msg: "It is okay to see WARNINGS for CIS benchmarks: [1.2.1.2] [1.2.1.2] [2.1.22] [4.1.6]"
