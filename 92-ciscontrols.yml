@@ -4,4 +4,6 @@
     - cc-test
   become: true
   roles:
+    - waal70.debian_common
+    - waal70.log2ram
     - mindpointgroup.deb12_cis
