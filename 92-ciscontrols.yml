@@ -1,7 +1,7 @@
 ---
 - name: Playbook to apply default settings + make CIS compliant
   hosts:
-    - pi5-01
+    - cc-test
   become: true
   roles:
     - waal70.debian_common
