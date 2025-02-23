@@ -11,4 +11,4 @@
   #     private: false
 #  strategy: free # noqa: run-once[play]
   roles:
-    - { role: waal70.pihole, do_pihole: true, install_pihole: true }
+    - { role: waal70.pihole, do_pihole: true, install_pihole: false }
