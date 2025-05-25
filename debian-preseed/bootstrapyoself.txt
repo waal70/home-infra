@@ -1,0 +1,16 @@
+# Run the following commands as root in order to bootstrap your
+# Linux system to accept the ansible user.
+
+# Values taken from the preseed.cfg
+
+useradd -m ansible
+mkdir -p /home/ansible/.ssh
+usermod -aG sudo ansible
+touch /home/ansible/.ssh/authorized_keys
+/bin/sh -c "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDd3UGDB1cyK1MiiXqOIkDUUqfjQ/scfHfNRefuXyJlX ansible keypair' >> /home/ansible/.ssh/authorized_keys"
+chown -R ansible:ansible /home/ansible/.ssh/
+chmod 600 /home/ansible/.ssh/authorized_keys
+chmod 700 /home/ansible/.ssh/
+touch /etc/sudoers.d/ansible
+/bin/sh -c "echo 'ansible ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ansible"
+chmod 440 /etc/sudoers.d/ansible

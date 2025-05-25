@@ -10,6 +10,11 @@
     "mac": "78:8a:20:7e:56:fc"
   },
   {
+    "group": "regular",
+    "name": "minis100",
+    "mac": "58:47:ca:76:0a:81"
+  },
+  {
     "group": "dev_workstation",
     "name": "dev-t440p",
     "mac": "50:7b:9d:01:04:47"
@@ -57,9 +62,9 @@
     "mac": "b8:27:eb:39:a6:b3"
   },
   {
-    "group": "nas",
-    "name": "ssdnas",
-    "mac": "ae:94:6d:cb:30:2e"
+    "group": "regular",
+    "name": "omv",
+    "mac": "ca:05:86:13:8b:71"
   },
   {
     "group": "raspberry_single",
