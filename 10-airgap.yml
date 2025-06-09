@@ -1,0 +1,9 @@
+---
+# file: 10-airgap.yml
+- name: Setup airgapped devices before disconnecting from the network
+  hosts:
+    - airgap-01
+  become: true
+  roles:
+    - waal70.debian_common
+    - waal70.airgap
