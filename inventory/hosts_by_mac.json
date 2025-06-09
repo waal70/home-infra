@@ -67,6 +67,16 @@
     "mac": "ca:05:86:13:8b:71"
   },
   {
+    "group": "regular",
+    "name": "airgap-01",
+    "mac": "a0:1d:48:ba:b1:18"
+  },
+  {
+    "group": "raspberry_single",
+    "name": "pi5-010",
+    "mac": "d8:3a:dd:db:5a:be"
+  },
+  {
     "group": "raspberry_single",
     "name": "pi5-011",
     "mac": "d8:3a:dd:db:5b:be"
