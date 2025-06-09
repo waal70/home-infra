@@ -27,7 +27,9 @@ deb12cis_warning_banner: |
       Complies with waal70 home-infra settings.
       Last refreshed: {{ now(fmt='%Y-%m-%d %H:%M:%S') }}
 deb12cis_legacy_boot: true
-deb12cis_journald_systemmaxuse: 50M # to sync with debian_common
+# deb12cis_journald_systemmaxuse: 50M # to sync with debian_common
+deb12cis_auditd_disk_full_action: single
+deb12cis_auditd_admin_space_left_action: single
 deb12cis_sshd_default_log_level: "ERROR"
 deb12cis_sshd_allow_users: "{{ interactive_user }} {{ ansible_user }}"
 deb12cis_config_aide: false
