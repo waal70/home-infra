@@ -7,3 +7,8 @@
   roles:
     - waal70.debian_common
     - waal70.airgap
+    - mindpointgroup.deb12_cis # WARNING: only apply this role after the airgapped system is to your liking!
+  post_tasks:
+    - name: Inform user of which warnings are okay following CIS controls application
+      ansible.builtin.debug:
+        msg: "It is okay to see WARNINGS for CIS benchmarks: [1.2.1.2] [1.2.1.2] [2.1.22] [4.1.6]"
