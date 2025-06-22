@@ -34,7 +34,10 @@ git clone https://github.com/waal70/home-infra.git
 ```
 
 Edit the ansible.cfg coming down from that main repo, so that it contains
+
+```console
 vault_password_file = /home/awaal/ansible/home/ansible-vault/.vault_pass
+```
 
 ## Install the roles
 
@@ -68,6 +71,19 @@ And, while your at it: get the Yubico Authenticator:
 ```console
 wget https://developers.yubico.com/yubioath-flutter/Releases/yubico-authenticator-latest-linux.tar.gz
 ```
+
+## Configure SSH
+
+Place a config in ~/.ssh so that it will know which keys to use
+
+```console
+Host github.com
+ HostName github.com
+ IdentityFile ~/ansible/home/ssh-keys/awaal/awaal-key
+
+Host *
+ IdentityFile ~/ansible/home/ssh-keys/awaal/awaal-yubi-1
+ ```
 
 ## Add the extensions to vscode
 
