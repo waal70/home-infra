@@ -106,4 +106,4 @@ This will open the argv.json where we add the "password-store":"gnome-libsecret"
 
 Restart vscode and go through the authentication for github. It should now be able to interact with the keyring
 
-You should now be good to go!
+And, you should now be good to go!
