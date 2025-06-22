@@ -25,8 +25,7 @@ sudo apt update && sudo apt install ansible ansible-lint
 
 ## Bootstrap the repositories
 
-Install git to be able to clone the repositories. First clone the secret one, followed by the main one:
-
+Install git to be able to clone the repositories. First clone the secret one, followed by the main one.
 
 ```console
 git clone ssh://172.16.1.2:8022/volume1/private-git/home.git
@@ -66,7 +65,7 @@ Go to ~/.ssh
 ssh-keygen -K
 ```
 
-Rename the private file to *-yubi-1 for the first key, and to *-yubi-2 for the second.
+Rename the private file to username-yubi-1 for the first key, and to username-yubi-2 for the second.
 These names should coincide with the configured names in SSH config (also in ~/.ssh)
 
 And, while your at it: get the Yubico Authenticator:
