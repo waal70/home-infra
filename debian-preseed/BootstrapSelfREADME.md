@@ -33,6 +33,9 @@ git clone ssh://172.16.1.2:8022/volume1/private-git/home.git
 git clone https://github.com/waal70/home-infra.git
 ```
 
+In the private repo, chmod the ssh stuff to 600 for key material
+Add +x to the passphrase file
+
 Edit the ansible.cfg coming down from that main repo, so that it contains
 
 ```console
@@ -85,7 +88,7 @@ Host *
  IdentityFile ~/ansible/home/ssh-keys/awaal/awaal-yubi-1
  ```
 
-## Add the extensions to vscode
+## Add extensions to vscode
 
 PlatformIO requires apt install python3-venv
 
@@ -97,5 +100,10 @@ markdownlint
 JMESPath
 Yaml
 PlatformIO
+
+Also, open the Command Palette (Ctrl+Shift+P) and run the Preferences: Configure Runtime Arguments command
+This will open the argv.json where we add the "password-store":"gnome-libsecret"
+
+Restart vscode and go through the authentication for github. It should now be able to interact with the keyring
 
 You should now be good to go!
