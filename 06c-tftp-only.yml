@@ -1,0 +1,14 @@
+---
+# file: 06b-tftp-only.yml
+- name: Setup utility server
+  hosts:
+    - util
+  become: true
+  # vars_prompt:
+  #   - name: do_pihole
+  #     prompt: Refresh adlists yes or no?
+  #     default: 'no'
+  #     private: false
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - waal70.tftp
