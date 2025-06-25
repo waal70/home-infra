@@ -104,6 +104,15 @@ PlatformIO
 Also, open the Command Palette (Ctrl+Shift+P) and run the Preferences: Configure Runtime Arguments command
 This will open the argv.json where we add the "password-store":"gnome-libsecret"
 
-Restart vscode and go through the authentication for github. It should now be able to interact with the keyring
+Restart vscode and perform a commit & push to make the authentication for github. It should now be able to interact with the keyring
+
+## Reconfigure Firefox for usability
+
+Go to
+about:config
+add Boolean in browser.urlbar.update2.engineAliasRefresh, set as true
+
+Now go the regular settings and add search engine
+<https://www.google.com/search?udm=14&q=%s> and set it as default
 
 And, you should now be good to go!
