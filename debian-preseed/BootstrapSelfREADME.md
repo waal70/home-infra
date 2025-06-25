@@ -85,6 +85,8 @@ Host github.com
 
 Host *
  IdentityFile ~/ansible/home/ssh-keys/awaal/awaal-yubi-1
+ IdentityAgent none
+
  ```
 
 ## Add extensions to vscode
