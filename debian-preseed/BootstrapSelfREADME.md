@@ -85,7 +85,8 @@ Host github.com
 
 Host *
  IdentityFile ~/ansible/home/ssh-keys/awaal/awaal-yubi-1
- ```
+ IdentityAgent none
+```
 
 ## Add extensions to vscode
 
@@ -103,6 +104,31 @@ PlatformIO
 Also, open the Command Palette (Ctrl+Shift+P) and run the Preferences: Configure Runtime Arguments command
 This will open the argv.json where we add the "password-store":"gnome-libsecret"
 
-Restart vscode and go through the authentication for github. It should now be able to interact with the keyring
+Restart vscode and perform a commit & push to make the authentication for github. It should now be able to interact with the keyring
 
+## Reconfigure Firefox for usability
+
+Go to
+about:config
+add Boolean in browser.urlbar.update2.engineAliasRefresh, set as true
+
+Now go the regular settings and add search engine
+<https://www.google.com/search?udm=14&q=%s> and set it as default
+
+Review settings, think about:
+
+### Tab Privacy and security
+
+Delete cookies and site data when Firefox is closed
+Turn off ask to save passwords
+Turn off Save and fill *
+Turn off Data collection stuff
+
+### Home tab
+
+Turn off "sponsored shortcuts"
+
+### Extensions
+
+I quite like IPvFoo (by Paul Marks) - turn off additional permissions
 And, you should now be good to go!
