@@ -1,0 +1,108 @@
+---
+- name: Get distribution version
+  setup:
+    filter: ansible_distribution*
+- name: Skip if not Debian 12
+  meta: end_host
+  when: ansible_distribution != 'Debian' or ansible_distribution_major_version != '12'
+- name: apt clean
+  apt:
+    clean: yes
+  become: yes
+- name: Get filesystem facts
+  setup:
+    filter: ansible_mounts
+- name: Fail if free space on / is below 5 GiB
+  ansible.builtin.assert:
+    that:
+      - item.size_available > (5 * 1024 * 1024 * 1024)
+    fail_msg: "Free disk space on {{ item.mount }} is below 5 GiB"
+  loop: "{{ ansible_mounts }}"
+  when: item.mount == "/"
+- name: All apt packages up to date
+  apt:
+    upgrade: dist
+    update_cache: yes
+  become: yes
+- name: apt autoremove
+  apt:
+    autoremove: yes
+  become: yes
+- name: apt clean
+  apt:
+    clean: yes
+  become: yes
+- name: Check if reboot required
+  ansible.builtin.stat:
+    path: /run/reboot-required
+    get_checksum: no
+  register: reboot_required_file
+- name: Reboot if required
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 60
+    test_command: whoami
+  when: reboot_required_file.stat.exists
+  become: true
+- name: Switch OS from bookworm to trixie
+  ansible.builtin.replace:
+    path: /etc/apt/sources.list
+    regexp: 'bookworm'
+    replace: 'trixie'
+  become: yes
+- name: Find all 3rd-party repos
+  ansible.builtin.find:
+    paths: /etc/apt/sources.list.d
+    patterns: '*'
+    recurse: no
+  register: third_party_repos
+- name: Switch 3rd-party repos from bookworm to trixie
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: 'bookworm'
+    replace: 'trixie'
+  loop: "{{ third_party_repos.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  become: yes
+- name: Use apt to move to trixie
+  apt:
+    upgrade: dist
+    update_cache: yes
+    force_apt_get: yes
+  become: yes
+- name: Get distribution version
+  setup:
+    filter: ansible_distribution*
+- name: Fail if not Debian 13
+  assert:
+    that:
+      - ansible_distribution_major_version == '13'
+    fail_msg: "Upgrade to Debian 13 failed"
+- name: apt autoremove
+  apt:
+    autoremove: yes
+  become: yes
+- name: apt clean
+  apt:
+    clean: yes
+  become: yes
+- name: Reboot on trixie
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 60
+    test_command: whoami
+  become: yes
+- name: Modernize apt sources
+  ansible.builtin.command:
+    cmd: apt -y modernize-sources
+  become: yes
+- name: Pause for 5 minutes for staggered upgrades
+  pause:
+    minutes: 5
