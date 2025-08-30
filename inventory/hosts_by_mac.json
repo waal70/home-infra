@@ -47,7 +47,7 @@
     "mac": "00:30:18:16:e6:b8"
   },
   {
-    "group": "proxmox_servers",
+    "group": "regular",
     "name": "pve01",
     "mac": "b8:85:84:a5:e3:2d"
   },
@@ -68,7 +68,7 @@
   },
   {
     "group": "regular",
-    "name": "airgap-01",
+    "name": "debian-opti3040",
     "mac": "18:66:da:1d:1c:c1"
   },
   {
