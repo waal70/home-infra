@@ -76,3 +76,7 @@ in-target chmod 600 /home/ansible/.ssh/authorized_keys; \
 in-target chmod 700 /home/ansible/.ssh/; \
 in-target /bin/sh -c "echo 'ansible ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ansible"; \
 in-target chmod 440 /etc/sudoers.d/ansible;
+
+locale: Cannot set LC_CTYPE to default locale: No such file or directory
+locale: Cannot set LC_MESSAGES to default locale: No such file or directory
+locale: Cannot set LC_ALL to default locale: No such file or directory

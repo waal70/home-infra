@@ -44,7 +44,7 @@
 
     - name: Set the package locations to EU-based repositories (because, well, reasons)
       ansible.builtin.template:
-        src: ./debian-preseed/sources.list
+        src: ./debian-preseed/sources.bookworm.list
         dest: /etc/apt/sources.list
         owner: root
         group: root

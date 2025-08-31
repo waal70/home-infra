@@ -37,9 +37,14 @@
     "_comment2": "e4:5f:11:87:ca:3f"
   },
   {
-    "group": "ciscontrols",
-    "name": "cc-test",
-    "mac": "08:00:27:b4:63:63"
+    "group": "regular",
+    "name": "airgap-01",
+    "mac": "f8:bc:12:a2:4f:b0"
+  },
+  {
+    "group": "regular",
+    "name": "ssdnas",
+    "mac": "d6:d7:a4:fc:36:0e"
   },
   {
     "group": "jumpservers",
