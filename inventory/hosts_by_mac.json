@@ -26,6 +26,11 @@
   },
   {
     "group": "raspberry_single",
+    "name": "pi03",
+    "mac": "b8:27:eb:89:31:3c"
+  },
+  {
+    "group": "raspberry_single",
     "name": "pi02",
     "mac": "b8:27:eb:27:3d:82"
   },

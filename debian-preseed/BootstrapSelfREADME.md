@@ -132,3 +132,10 @@ Turn off "sponsored shortcuts"
 
 I quite like IPvFoo (by Paul Marks) - turn off additional permissions
 And, you should now be good to go!
+
+### Upgrade pi to trixie
+
+First, change the relevant sources in /etc/apt
+Then issue a sudo apt update and then:
+sudo apt full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" --purge --auto-remove
+
