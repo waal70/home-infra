@@ -1,6 +1,6 @@
 ---
 # group variables for raspberry pi's
-enable_powersave: false
+enable_powersave: true
 enable_journaling: false # Set to true to enable journaling, false to disable
 # Raspberries have the USB module in-kernel, this benchmark should be disabled
 deb12cis_rule_1_1_1_8: false
