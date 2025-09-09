@@ -1,0 +1,26 @@
+#!/usr/bin/expect -f
+#
+
+proc slurp {file} {
+    set fh [open $file r]
+    set ret [read $fh]
+    close $fh
+    return $ret
+}
+
+# First argument: name of yubikey challenge file
+# Second argument: name of container image
+# Third argument: name of the mount under dev/mapper
+
+set CHALLENGEFILE [lindex $argv 0];
+set IMG_NAME [lindex $argv 1];
+set LUKS_NAME [lindex $argv 2];
+
+set YK_CHALLENGE [slurp $CHALLENGEFILE]
+
+set timeout -1
+spawn yubikey-luks-open -d "$IMG_NAME" -n "$LUKS_NAME"
+match_max 100000
+expect -exact "Enter password created with yubikey-luks-enroll:"
+send -- "$YK_CHALLENGE\r"
+expect eof

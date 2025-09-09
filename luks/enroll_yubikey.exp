@@ -1,0 +1,42 @@
+#!/usr/bin/expect -f
+#
+
+proc slurp {file} {
+    set fh [open $file r]
+    set ret [read $fh]
+    close $fh
+    return $ret
+}
+
+# First argument: name of passphrase file
+# Second argument: name of yubikey challenge file
+# Third argument: name of container image
+# Fourth argument: the number of the key-slot
+
+set PASSPHRASE_FILE [lindex $argv 0];
+set CHALLENGEFILE [lindex $argv 1];
+set IMG_NAME [lindex $argv 2];
+set YUBI_SLOT [lindex $argv 3];
+
+set timeout -1
+
+set MAIN_PASSPHRASE [slurp "$PASSPHRASE_FILE"]
+set YK_CHALLENGE [slurp "$CHALLENGEFILE"]
+
+spawn yubikey-luks-enroll -c -s "$YUBI_SLOT" -d "$IMG_NAME"
+match_max 100000
+
+expect -exact "Enter any remaining passphrase: "
+
+send -- "$MAIN_PASSPHRASE\r"
+expect -exact "\r
+Adding yubikey to initrd\r
+Please enter the yubikey challenge password. This is the password that will only work while your yubikey is installed in your computer:"
+send -- "$YK_CHALLENGE\r"
+expect -exact "\r
+Please enter the yubikey challenge password again:"
+send -- "$YK_CHALLENGE\r"
+expect -exact "\r
+Please provide an existing passphrase. This is NOT the passphrase you just entered, this is the passphrase that you currently use to unlock your LUKS encrypted drive:"
+send -- "$MAIN_PASSPHRASE\r"
+expect eof
