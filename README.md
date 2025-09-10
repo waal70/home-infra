@@ -149,3 +149,13 @@ Choose the numbered yaml-files to only select a portion of the roles.
 * TODO: get the linter to work
 * TODO: make linter run automatically
 * TODO: only on PR? Yes, only on PR! Kickoff of process will be automatic
+
+## License
+
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html#license-text)
+
+## Author information
+
+Unless otherwise noted, this entire repository is (c) 2023 by André (waal70). [See github profile](https://github.com/waal70)
+
+Please contact me if you need a commercial license for any of these files
