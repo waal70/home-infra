@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "path": "../home-infra"
+        },
+        {
+            "path": "../../.ansible/roles"
+        },
+        {
+            "path": "../home"
+        }
+    ],
+    "settings": {
+        "ansible.python.interpreterPath": "/bin/python3"
+    }
+}
