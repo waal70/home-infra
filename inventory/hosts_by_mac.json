@@ -20,6 +20,11 @@
     "mac": "2e:a7:72:58:68:6d"
   },
   {
+    "group": "dev_workstation",
+    "name": "chromedev",
+    "mac": "7c:c2:c6:49:fd:47"
+  },
+  {
     "group": "raspberry_single",
     "name": "pi01",
     "mac": "b8:27:eb:38:d0:eb"
@@ -57,8 +62,8 @@
     "mac": "00:30:18:16:e6:b8"
   },
   {
-    "group": "regular",
-    "name": "pve01",
+    "group": "portainer_master",
+    "name": "testenv",
     "mac": "b8:85:84:a5:e3:2d"
   },
   {
@@ -131,8 +136,7 @@
     "children": [
       "hifiberry",
       "pican2",
-      "raspberry_single",
-      "portainer_master"
+      "raspberry_single"
     ]
   },
   {
