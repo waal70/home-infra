@@ -5,4 +5,4 @@
     - testenv
   become: true
   roles:
-    - waal70.paperless-ngx
+    - waal70.paperless_ngx
