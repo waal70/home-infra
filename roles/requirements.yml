@@ -22,6 +22,8 @@ roles:
     src: https://github.com/waal70/ansible-role-log2ram
   - name: waal70.no_journal
     src: https://github.com/waal70/ansible-role-no_journal
+  - name: waal70.paperless-ngx
+    src: https://github.com/waal70/ansible-role-paperless-ngx
   - name: waal70.pi_common
     src: https://github.com/waal70/ansible-role-pi_common
   - name: waal70.pihole
