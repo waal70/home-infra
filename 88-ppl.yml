@@ -1,0 +1,8 @@
+---
+# file: 88-ppl.yml
+- name: Test paperless API connection
+  hosts:
+    - testenv
+  become: true
+  roles:
+    - waal70.paperless-ngx
