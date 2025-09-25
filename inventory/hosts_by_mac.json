@@ -129,6 +129,7 @@
     "hostname": "adpi0",
     "name": "adpi0",
     "mac": "e4:5f:01:82:c0:16",
+    "smb_role": "primarydepinary",
     "ansible_host": "10.0.0.4"
   },
   {
@@ -143,6 +144,7 @@
     "group": "samba_ad_dc_servers",
     "children": [
       "samba_ad_dc_primary",
+      "util",
       "samba_ad_dc_additional"
     ]
   },

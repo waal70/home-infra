@@ -1,7 +1,16 @@
 ---
 - name: Show info on specific host
   hosts:
-    - adpi0
+    - all
   become: true
-  roles:
-    - waal70.ad_backup
+  tasks:
+    - name: Debug info
+      ansible.builtin.debug:
+        msg:
+          - "{{ groups['samba_ad_dc_servers'] }}"
+          - "{{ groups['samba_ad_dc_servers'] | length }}"
+          - "{{ hostvars[inventory_hostname]['andre'] | default('not defined') }}"
+    - name: more debug
+      ansible.builtin.debug:
+        msg: "Yepsidaisies!"
+      when: "'andre' in hostvars[inventory_hostname]"

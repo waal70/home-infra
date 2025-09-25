@@ -44,7 +44,8 @@ class UnifiInventory(object):
         self.inventory = {}
         self.read_cli_args()
         current_working_directory = os.getcwd()
-        Display().debug("CURRENT working directory is: " + current_working_directory)
+        Display().verbosity=0
+        Display().vv("CURRENT working directory is: " + current_working_directory)
 
         self.parse_config()
         # Called with `--list`.
@@ -86,7 +87,7 @@ class UnifiInventory(object):
         data = loader.load_from_file(cfgfile)
         self.username = data["vault_controller_username"]
         self.password = data["vault_controller_password"]
-        Display().debug("Succesfully retrieved username/password-combo for user " + self.username)
+        Display().vv("Succesfully retrieved username/password-combo for user " + self.username)
 
     def login(self):
         """Function that obtains a TOKEN from Unifi controller."""
@@ -109,7 +110,7 @@ class UnifiInventory(object):
         """Function that queries the unifi controller to get a list of active clients."""
         uri = (config.get('unifi', 'controller_api') +
                '/s/' + config.get('unifi', 'controller_site') + '/stat/sta')
-        Display().debug('Going to query URL: ' + uri)
+        Display().vv('Going to query URL: ' + uri)
         response = requests.get(uri, headers=headers, verify=False, timeout=10)
         livelist = jmespath.search('''data[*].
                                    {mac: mac, ansible_host: not_null(ip, last_ip), 
@@ -118,24 +119,41 @@ class UnifiInventory(object):
         # Initialize the list that will contain all data on live clients that will be ansible'd
         global livelist_known # pylint: disable=global-variable-not-assigned
         global unique_groups # pylint: disable=global-variable-not-assigned
-
+        
         for item in livelist:
+            # this item's mac address is specified:
             if item.get("mac") in str_macfile:
                 # Finger out the 'group' and the 'name' from the hosts_by_mac and
                 # combine them into the record
                 # At the same time, create a list with unique group names
-                group = [m["group"] for m in macs if m.get("mac") == item["mac"]][0]
-                if group not in unique_groups:
-                    unique_groups.append(group)
-                name = [m["name"] for m in macs if m.get("mac") == item["mac"]][0]
-                comb_dict = {'group': group, 'hostname': name}
+                # 2025-09: Also copy over additional label/value pairs
+                # select only the part of macs that has the current mac
+                current_item = None
+                comb_dict = {'group': '', 'hostname': ''}
+                for current_item in macs:
+                    if current_item.get("mac") == item["mac"]:
+                        break
+                    else:
+                        current_item = None
+                # current_item is of type dict
+                # Loop through all items:
+                for label in current_item:
+                    if str(label) == 'name':
+                        comb_dict['hostname']= str(current_item[str(label)])
+                    else:
+                        comb_dict[str(label)] = str(current_item[str(label)])
+                    if str(label) == 'group':
+                        v_group = current_item['group']
+                        if v_group not in unique_groups:
+                            unique_groups.append(str(v_group))
+
                 item = item | comb_dict
                 livelist_known.append(item)
         # now loop through all macs entries that have an "ansible_host"
         # SKIP the ones that were already processed
         ah_entries = jmespath.search('[?ansible_host]', macs)
         for entry in ah_entries:
-            if entry.get("mac") not in livelist:
+            if entry.get("mac") not in str(livelist_known):
                 livelist_known.append(entry)
             group_ah = entry.get("group")
             if group_ah not in unique_groups:
@@ -143,8 +161,6 @@ class UnifiInventory(object):
 
         # now add to unique groups the group from macs that has no mac, but only children
         unique_groups.append(jmespath.search('[?children].group', macs))
-        Display().debug(jmespath.search('[?children].{group: group, children: children}', macs))
-
 
     def produce_inventory(self):
         """Function that produces the Ansible inventory."""
@@ -168,7 +184,7 @@ class UnifiInventory(object):
                     subgroup = { curgroup : {'children': []} }
                     children = jmespath.search('[?group==\''+ str(curgroup) +'\'].children[]', macs)
                     subgroup[curgroup]["children"] += children
-                    Display().debug('[?group==\''+ str(curgroup) +'\'].children[]')
+                    Display().vv('[?group==\''+ str(curgroup) +'\'].children[]')
                     groupresult = groupresult | subgroup
 
         # now create the _meta entry:
@@ -180,11 +196,14 @@ class UnifiInventory(object):
             }
         }
         for server in livelist_known:
-            entry = {server["hostname"]:{}}
-            entry[server["hostname"]].update({"ansible_host": server["ansible_host"]})
+            # The key for this is the hostname
+            current_host = server["hostname"]
+            entry = {current_host:{}}
+            for lv_pair in server:
+                entry[current_host].update(server)
             metaresult["_meta"]["hostvars"].update(entry)
 
-        Display().debug(metaresult)
+        Display().vv(str(metaresult))
 
         # Add the metaresult and groupresult together:
         return metaresult | groupresult
