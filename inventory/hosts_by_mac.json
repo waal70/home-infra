@@ -40,7 +40,7 @@
     "mac": "b8:27:eb:27:3d:82"
   },
   {
-    "group": "portainer_master",
+    "group": "raspberry_single",
     "name": "pi5-02",
     "mac": "2c:cf:67:33:3e:7c",
     "_comment": "08:00:27:52:63:bc",

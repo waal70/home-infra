@@ -1,20 +1,22 @@
 ---
 # file: site.yml
+- name: Assertions
+  ansible.builtin.import_playbook: 00-assertions.yml
 - name: Common configuration
-  import_playbook: 01-common.yml
+  ansible.builtin.import_playbook: 01-common.yml
 - name: Raspberry Pi setup
-  import_playbook: 02-pi.yml
+  ansible.builtin.import_playbook: 02-pi.yml
 - name: Proxmox VE setup
-  import_playbook: 03-pve.yml
+  ansible.builtin.import_playbook: 03-pve.yml
 - name: Active Directory Domain Controller
-  import_playbook: 04-ad-dc.yml
+  ansible.builtin.import_playbook: 04-ad-dc.yml
 - name: Portainer Master setup
-  import_playbook: 05-portainer-master.yml
+  ansible.builtin.import_playbook: 05-portainer-master.yml
 - name: Utility Server setup
-  import_playbook: 06-util-server.yml
+  ansible.builtin.import_playbook: 06-util-server.yml
 - name: Ansible Control Node setup
-  import_playbook: 07-ansible-control-node.yml
+  ansible.builtin.import_playbook: 07-ansible-control-node.yml
 - name: Jumpserver setup
-  import_playbook: 08-jumpserver.yml
+  ansible.builtin.import_playbook: 08-jumpserver.yml
 - name: Development Laptop setup
-  import_playbook: 09-dev-laptop.yml
+  ansible.builtin.import_playbook: 09-dev-laptop.yml
