@@ -1,8 +1,9 @@
 ---
 # file: 88-ppl.yml
-- name: Test paperless API connection
+- name: Deploy paperless-ngx and vaultwarden
   hosts:
     - testenv
   become: true
   roles:
     - waal70.paperless_ngx
+    - waal70.vaultwarden

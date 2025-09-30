@@ -40,6 +40,8 @@ roles:
     src: https://github.com/waal70/ansible-role-samba_ad_dc
   - name: waal70.tftp
     src: https://github.com/waal70/ansible-role-tftp
+  - name: waal70.vaultwarden
+    src: https://github.com/waal70/ansible-role-vaultwarden
   - name: waal70.virtualbox
     src: https://github.com/waal70/ansible-role-virtualbox
   - name: waal70.vscode
