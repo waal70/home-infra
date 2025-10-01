@@ -1,0 +1,62 @@
+---
+# file: 06b-piholelocaldns.yml
+- name: Playbook that will update the local DNS entries in Pi-hole and show current entries
+  hosts:
+    - util:dns
+  become: true
+  vars:
+    pihole_localdns_newlist:
+      - "1.2.3.4 myserver.authoritativedomain"
+    pihole_localdns_authoritativedomain: "authoritativedomain"
+  tasks:
+    - name: Include variables that may contain secrets
+      ansible.builtin.include_vars:
+        file: ../home/ansible-vault/localdns-vars.yml
+
+    - name: Get currently configured local DNS entries in Pi-hole
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}/api/config/dns/hosts"
+        method: GET
+        return_content: true
+        status_code: 200
+      register: pihole_localdns
+
+    - name: Bulk get rid of current local DNS entries in Pi-hole. Also set authoritative domain to 'local' to avoid issues.
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}/api/config"
+        method: PATCH
+        body_format: json
+        body: |
+           {
+              "config": {
+                "dns": {
+                  "hosts": [],
+                  "domain": "local"
+                  }
+                }
+            }
+      when: pihole_localdns.json is defined and (pihole_localdns.json | length) > 0
+
+    - name: Bulk set new domains. Set authoritative domain to {{ pihole_localdns_authoritativedomain }}
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}/api/config"
+        method: PATCH
+        body_format: json
+        body: |
+           {
+              "config": {
+                "dns": {
+                  "domain": "{{ pihole_localdns_authoritativedomain }}",
+                  "hosts": {{ pihole_localdns_newlist | to_json }}
+                  }
+                }
+            }
+      register: pihole_dnsdomain
+      retries: 3
+      delay: 5
+      when: pihole_localdns_newlist is defined and (pihole_localdns_newlist | length) > 0
+
+    - name: Report out to user
+      ansible.builtin.debug:
+        msg: "Local DNS entries added: {{ pihole_localdns_newlist | length }}"
+      when: pihole_localdns_newlist is defined and (pihole_localdns_newlist | length) > 0
