@@ -5,5 +5,5 @@
     - testenv
   become: true
   roles:
-    # - waal70.paperless_ngx
+    - waal70.paperless_ngx
     - waal70.vaultwarden
