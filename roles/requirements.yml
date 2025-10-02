@@ -8,6 +8,8 @@ roles:
     src: https://github.com/waal70/ansible-role-airgap
   - name: waal70.ansible_control
     src: https://github.com/waal70/ansible-role-ansible_control
+  - name: waal70.backup
+    src: https://github.com/waal70/ansible-role-backup
   - name: waal70.debian_common
     src: https://github.com/waal70/ansible-role-debian_common
   - name: waal70.debian_desktop
@@ -38,6 +40,8 @@ roles:
     src: https://github.com/waal70/ansible-role-pxe_prep
   - name: waal70.samba_ad_dc
     src: https://github.com/waal70/ansible-role-samba_ad_dc
+  - name: waal70.ssh_host_key
+    src: https://github.com/waal70/ansible-role-ssh_host_key
   - name: waal70.tftp
     src: https://github.com/waal70/ansible-role-tftp
   - name: waal70.vaultwarden
@@ -48,5 +52,3 @@ roles:
     src: https://github.com/waal70/ansible-role-vscode
   - name: waal70.yubikey
     src: https://github.com/waal70/ansible-role-yubikey
-  - name: mindpointgroup.deb12_cis
-    src: https://github.com/ansible-lockdown/DEBIAN12-CIS.git
