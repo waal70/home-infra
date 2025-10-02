@@ -2,7 +2,7 @@
 # file: 88-ppl.yml
 - name: Deploy paperless-ngx and vaultwarden
   hosts:
-    - testenv
+    - pi5-02
   become: true
   roles:
     - waal70.vaultwarden

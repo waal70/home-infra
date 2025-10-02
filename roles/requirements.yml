@@ -20,6 +20,8 @@ roles:
     src: https://github.com/waal70/ansible-role-docker
   - name: waal70.eclipse
     src: https://github.com/waal70/ansible-role-eclipse
+  - name: waal70.homepage
+    src: https://github.com/waal70/ansible-role-homepage
   - name: waal70.log2ram
     src: https://github.com/waal70/ansible-role-log2ram
   - name: waal70.no_journal

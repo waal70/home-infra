@@ -40,11 +40,9 @@
     "mac": "b8:27:eb:27:3d:82"
   },
   {
-    "group": "raspberry_single",
+    "group": "portainer_master",
     "name": "pi5-02",
-    "mac": "2c:cf:67:33:3e:7c",
-    "_comment": "08:00:27:52:63:bc",
-    "_comment2": "e4:5f:11:87:ca:3f"
+    "mac": "2c:cf:67:33:3e:7c"
   },
   {
     "group": "regular",
@@ -62,7 +60,7 @@
     "mac": "00:30:18:16:e6:b8"
   },
   {
-    "group": "portainer_master",
+    "group": "regular",
     "name": "testenv",
     "mac": "b8:85:84:a5:e3:2d"
   },
@@ -137,6 +135,7 @@
     "children": [
       "hifiberry",
       "pican2",
+      "portainer_master",
       "raspberry_single"
     ]
   },
