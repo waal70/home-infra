@@ -7,3 +7,4 @@
   roles:
     - waal70.vaultwarden
     - waal70.paperless_ngx
+    - waal70.backup
