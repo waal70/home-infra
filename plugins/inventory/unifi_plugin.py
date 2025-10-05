@@ -1,7 +1,7 @@
-
-import urllib3
+'''Unifi inventory plugin for Ansible - combines Unifi controller data with JSON topology file'''
 import json
 import os
+import urllib3
 import jmespath
 import requests
 
@@ -39,6 +39,7 @@ DOCUMENTATION = r'''
         required: true
 '''
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
+    """Required class for an Ansible inventory plugin."""
 
     NAME = 'unifi_plugin'
 
@@ -49,6 +50,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         self.password = None
         self.controller_login = None
         self.controller_api = None
+        self.controller_site = None
         self.macfile = None
         self.macs: any
         self.active_clients: any
@@ -89,10 +91,11 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                         self.inventory.add_group(subgroup)
                         if not self.inventory.add_child(parentgroup, nested_group):
                             raise AnsibleParserError
- 
-            # loop to add actual hosts            
+
+            # loop to add actual hosts
             for configured_client in self.macs:
-                if 'children' in configured_client: continue # We have stumbled on a nested group definition
+                if 'children' in configured_client:
+                    continue # We have stumbled on a nested group definition
                 s_configured_client_mac = configured_client["mac"].strip().lower()
                 if s_configured_client_mac in str(self.active_clients):
                     s_name = configured_client["name"]
@@ -107,9 +110,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                             self.inventory.set_variable(s_name, "ansible_host", s_ansible_host)
 
         except KeyError as kerr:
-            raise AnsibleParserError(f'Missing required option on the configuration file: {path}', kerr)
+            raise AnsibleParserError("Incorrect key used: ", kerr) from kerr
         except AnsibleParserError as ape:
-            raise AnsibleParserError("There was an error while parsing", ape)
+            raise AnsibleParserError("There was an error while parsing", ape) from ape
 
     def login(self):
         """Function that obtains a TOKEN from Unifi controller."""
@@ -120,12 +123,12 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         }
         response = requests.post(self.get_option('controller_login'),
                                  data=body,verify=False, timeout=10)
-        if (response.status_code != 200):
+        if response.status_code != 200:
             raise AnsibleParserError("Faulty values in configfile, cannot login to controller")
         self.headers = {
             'Cookie': 'TOKEN=' + response.cookies.get("TOKEN")
         }
-    
+
     def read_configured_mac_addresses(self):
         """Function that reads a file containing pre-configured hardware addresses."""
         macfile = open(self.macfile, "r", encoding="utf-8")
@@ -135,7 +138,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def list_clients(self):
         """Function that queries unifi for known active clients"""
-        uri = (self.controller_api + '/s/' + self.controller_site + '/stat/sta')
+        uri = self.controller_api + '/s/' + self.controller_site + '/stat/sta'
         response = requests.get(uri, headers=self.headers, verify=False, timeout=10)
         self.active_clients = list(jmespath.search('''data[*].
                                               {mac: mac, ansible_host: not_null(ip, last_ip), 
