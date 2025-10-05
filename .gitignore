@@ -18,3 +18,4 @@ temporary-files/*
 !temporary-files/README.md
 .ansible/
 ansible.cfg
+plugins/inventory/__pycache__/unifi_plugin.cpython-313.pyc

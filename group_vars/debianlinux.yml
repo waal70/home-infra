@@ -1,0 +1,31 @@
+---
+# mindpointgroup debian cis overrides:
+deb12cis_warning_banner: |
+      Authorized use only. All activity may be monitored and reported.
+      Complies with waal70 home-infra settings.
+      Last refreshed: {{ now(fmt='%Y-%m-%d %H:%M:%S') }}
+deb12cis_legacy_boot: true
+# deb12cis_journald_systemmaxuse: 50M # to sync with debian_common
+deb12cis_auditd_disk_full_action: single
+deb12cis_auditd_admin_space_left_action: single
+deb12cis_sshd_default_log_level: "ERROR"
+deb12cis_sshd_allow_users: "{{ interactive_user }} {{ ansible_user }}"
+deb12cis_config_aide: false
+# The debian_common role takes care of these settings:
+deb12cis_rule_6_2_1_1_3: false
+deb12cis_rule_6_2_1_1_5: false
+deb12cis_rule_6_2_1_2_1: false
+deb12cis_rule_6_2_1_2_2: false
+deb12cis_rule_6_2_1_2_3: false
+deb12cis_rule_6_2_1_2_4: false
+deb12cis_journald_systemkeepfree: 4.8G
+deb12cis_journald_runtimekeepfree: 4.8G
+# end settings common role
+
+# log2ram requires rsync
+deb12cis_rsync_server: true
+
+# Andre 2025: I like root to not have a password, so set to false
+deb12cis_rule_5_4_2_4: false
+# Andre 2025: sudo users may escalate with NOPASSWD, which I like, so disable 5.2.4
+deb12cis_rule_5_2_4: false
