@@ -1,7 +1,7 @@
 ---
 - name: Perform default config on all hosts
   hosts: all
-  # strategy: free # noqa: run-once[play]
+  strategy: free # noqa: run-once[play]
   become: true
   # Please check group_vars for the appropriate values for these common roles
   roles:
