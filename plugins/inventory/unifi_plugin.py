@@ -100,14 +100,21 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 if s_configured_client_mac in str(self.active_clients):
                     s_name = configured_client["name"]
                     s_group = configured_client["group"]
+                    self.display.vv("Predefined record is " + str(configured_client))
                     for active_client in self.active_clients:
                         if active_client.get("mac").strip().lower() == s_configured_client_mac:
-                            # self.display.vv("Corresponding record is: " + str(active_client))
-                            s_ansible_host = str(active_client.get('ansible_host'))
-                            self.display.vv(s_ansible_host)
+                            # We are now sure we have a match between configured and active client
+                            # active_client contains all the info from Unifi
                             self.inventory.add_group(s_group)
                             self.inventory.add_host(s_name, s_group)
+                            s_ansible_host = str(active_client.get('ansible_host'))
                             self.inventory.set_variable(s_name, "ansible_host", s_ansible_host)
+                            # configured_client contains all the info from the user-provided JSON file
+                            # so loop through all keys in configured_client and add them as variables
+                            for key in configured_client:
+                                if key in ['mac', 'name', 'group']:
+                                    continue
+                                self.inventory.set_variable(s_name, key, configured_client[key])
 
         except KeyError as kerr:
             raise AnsibleParserError("Incorrect key used: ", kerr) from kerr

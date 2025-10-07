@@ -2,13 +2,8 @@
 # file: 06b-piholedns.yml
 - name: Playbook that will update adlists on pihole and re-write configuration
   hosts:
-    - util:dns
+    - dns
   become: true
-  # vars_prompt:
-  #   - name: do_pihole
-  #     prompt: Refresh adlists yes or no?
-  #     default: 'no'
-  #     private: false
 #  strategy: free # noqa: run-once[play]
   roles:
     - { role: waal70.pihole, do_pihole: true, install_pihole: false }

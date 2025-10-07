@@ -2,7 +2,7 @@
 # file: 88-ppl.yml
 - name: Deploy paperless-ngx and vaultwarden
   hosts:
-    - portainer_master
+    - homeserver
     - testenv
   become: true
   roles:

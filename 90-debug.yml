@@ -10,7 +10,7 @@
           - "{{ groups['samba_ad_dc_servers'] }}"
           - "{{ groups['samba_ad_dc_servers'] | length }}"
           - "{{ hostvars[inventory_hostname]['andre'] | default('not defined') }}"
-    - name: more debug
+    - name: More debug
       ansible.builtin.debug:
         msg: "Yepsidaisies!"
       when: "'andre' in hostvars[inventory_hostname]"

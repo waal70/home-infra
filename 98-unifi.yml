@@ -1,9 +1,0 @@
----
-# file: 98-unifi.yml
-- name: Test Unifi network controller
-  hosts:
-    - localhost
-  become: false
-#  strategy: free # noqa: run-once[play]
-  roles:
-    - unifi_info

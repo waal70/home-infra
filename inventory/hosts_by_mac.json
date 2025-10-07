@@ -1,8 +1,24 @@
 [
   {
-    "group": "ansiblecontrol",
-    "name": "pi04",
-    "mac": "b8:27:eb:d6:0c:d2"
+    "group": "activedirectory",
+    "name": "adpi0",
+    "mac": "e4:5f:01:82:c0:16",
+    "ad_role": "primary"
+  },
+  {
+    "group": "dns",
+    "name": "adpi0",
+    "mac": "e4:5f:01:82:c0:16"
+  },
+  {
+    "group": "raspberry",
+    "name": "adpi0",
+    "mac": "e4:5f:01:82:c0:16"
+  },
+  {
+    "group": "tftp",
+    "name": "adpi0",
+    "mac": "e4:5f:01:82:c0:16"
   },
   {
     "group": "dns",
@@ -10,7 +26,7 @@
     "mac": "78:8a:20:7e:56:fc"
   },
   {
-    "group": "regular",
+    "group": "generic",
     "name": "minis100",
     "mac": "58:47:ca:76:0a:81"
   },
@@ -25,138 +41,32 @@
     "mac": "7c:c2:c6:49:fd:47"
   },
   {
-    "group": "raspberry_single",
-    "name": "pi01",
-    "mac": "b8:27:eb:38:d0:eb"
+    "group": "dev_workstation",
+    "name": "dev",
+    "mac": "d8:9e:f3:7c:da:3d"
   },
   {
-    "group": "raspberry_single",
-    "name": "pi03",
-    "mac": "b8:27:eb:89:31:3c"
-  },
-  {
-    "group": "raspberry_single",
-    "name": "pi02",
-    "mac": "b8:27:eb:27:3d:82"
-  },
-  {
-    "group": "portainer_master",
+    "group": "homeserver",
     "name": "pi5-02",
     "mac": "2c:cf:67:33:3e:7c"
   },
   {
-    "group": "regular",
-    "name": "airgap-01",
-    "mac": "f8:bc:12:a2:4f:b0"
-  },
-  {
-    "group": "regular",
-    "name": "ssdnas",
-    "mac": "9a:48:f4:94:7c:35"
-  },
-  {
-    "group": "jumpservers",
-    "name": "ams-dmz-jump",
-    "mac": "00:30:18:16:e6:b8"
-  },
-  {
-    "group": "regular",
+    "group": "generic",
     "name": "testenv",
     "mac": "b8:85:84:a5:e3:2d"
   },
-  {
-    "group": "proxmox_servers",
-    "name": "pve02",
-    "mac": "b8:85:84:9d:59:19"
-  },
-  {
-    "group": "pican2",
-    "name": "pican",
-    "mac": "b8:27:eb:39:a6:b3"
-  },
-  {
-    "group": "regular",
-    "name": "omv",
-    "mac": "ca:05:86:13:8b:71"
-  },
-  {
-    "group": "regular",
-    "name": "debian-opti3040",
-    "mac": "18:66:da:1d:1c:c1"
-  },
-  {
-    "group": "raspberry_single",
-    "name": "pi5-010",
-    "mac": "d8:3a:dd:db:5a:be"
-  },
-  {
-    "group": "raspberry_single",
-    "name": "pi5-011",
-    "mac": "d8:3a:dd:db:5b:be"
-  },
-  {
-    "group": "raspberry_single",
-    "name": "pi5-021",
-    "mac": "2c:cc:67:33:3e:7c"
-  },
-  {
-    "group": "raspberry_single",
+ {
+    "group": "raspberry",
     "name": "pi4-02",
     "mac": "e4:5f:01:87:ca:3f"
-  },
-  {
-    "group": "hifiberry",
-    "name": "hifipi",
-    "mac": "b8:27:eb:4b:ce:56"
-  },
-  {
-    "group": "samba_ad_dc_primary",
-    "name": "adpi0",
-    "mac": "fa:ke:no:su:ee:99",
-    "ad_role_primary": "10.0.0.4"
-  },
-  {
-    "group": "samba_ad_dc_additional",
-    "name": "pi03-pause",
-    "mac": "00:00:00:00:00:00",
-    "_comment": "pi03 mac is e4:5f:01:87:ca:3f",
-    "ad_role_additional": "this is a pi4"
-  },
-  {
-    "group": "util",
-    "hostname": "adpi0",
-    "name": "adpi0",
-    "mac": "e4:5f:01:82:c0:16",
-    "smb_role": "primarydepinary",
-    "ansible_host": "10.0.0.4"
-  },
-  {
-    "group": "raspberry",
-    "children": [
-      "hifiberry",
-      "pican2",
-      "portainer_master",
-      "raspberry_single"
-    ]
-  },
-  {
-    "group": "samba_ad_dc_servers",
-    "children": [
-      "samba_ad_dc_primary",
-      "util",
-      "samba_ad_dc_additional"
-    ]
   },
   {
     "group": "debianlinux",
     "children": [
       "raspberry",
-      "util",
-      "jumpservers",
-      "portainer_master",
-      "ansiblecontrol",
-      "samba_ad_dc_servers",
-      "proxmox_servers"
+      "dns",
+      "homeserver",
+      "generic"
     ]
   }
 ]

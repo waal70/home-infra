@@ -10,7 +10,7 @@
       when: not enable_journaling | bool
     - role: waal70.powersave
       when: enable_powersave | bool
-    - mindpointgroup.deb12_cis
+    # - mindpointgroup.deb12_cis
   post_tasks:
     - name: Inform user of which warnings are okay following CIS controls application
       ansible.builtin.debug:

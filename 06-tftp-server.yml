@@ -1,0 +1,9 @@
+---
+# file: 06-tftp-server.yml
+- name: Setup TFTP server
+  hosts:
+    - tftp
+  become: true
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - waal70.tftp

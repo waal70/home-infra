@@ -1,5 +1,6 @@
 ---
 # file: 06b-piholelocaldns.yml
+# TODO: integrate into waal70.pihole role
 - name: Playbook that will update the local DNS entries in Pi-hole and show current entries
   hosts:
     - util:dns

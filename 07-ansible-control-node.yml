@@ -2,7 +2,7 @@
 # file: 07-ansible-control-node.yml
 - name: Setup ansible control server
   hosts:
-    - ansiblecontrol:dev_workstation
+    - dev_workstation
   become: true
 #  strategy: free # noqa: run-once[play]
   roles:
