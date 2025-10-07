@@ -3,7 +3,8 @@
     "group": "activedirectory",
     "name": "adpi0",
     "mac": "e4:5f:01:82:c0:16",
-    "ad_role": "primary"
+    "ad_role": "primary",
+    "dns_forwarder": "10.1.1.4"
   },
   {
     "group": "dns",
