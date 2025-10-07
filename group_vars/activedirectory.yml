@@ -4,7 +4,6 @@ log2ram_size: 150M
 log2ram_log_disk_size: 200M
 enable_powersave: true
 # Change this to yes if you want to update the adlists
-do_pihole: false
 
 # util server IS a tftp server
 deb12cis_tftp_server: true

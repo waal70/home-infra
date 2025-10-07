@@ -12,8 +12,10 @@
   ansible.builtin.import_playbook: 04-ad-dc.yml
 - name: Portainer Master setup
   ansible.builtin.import_playbook: 05-portainer-master.yml
-- name: Utility Server setup
-  ansible.builtin.import_playbook: 06-util-server.yml
+- name: TFTP Server setup
+  ansible.builtin.import_playbook: 06-tftp-server.yml
+- name: Pi-Hole setup and/or refresh
+  ansible.builtin.import_playbook: 06b-piholedns.yml
 - name: Ansible Control Node setup
   ansible.builtin.import_playbook: 07-ansible-control-node.yml
 - name: Jumpserver setup
