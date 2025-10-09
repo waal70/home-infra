@@ -136,6 +136,12 @@ And, you should now be good to go!
 ### Upgrade pi to trixie
 
 First, change the relevant sources in /etc/apt
+
+sudo sed -i 's/bookworm/trixie/g' /etc/apt/sources.list
+
+sudo find /etc/apt/sources.list.d -type f -exec sed -i 's/bookworm/trixie/g' {} \;
+
+
 Then issue a sudo apt update and then:
 sudo apt full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" --purge --auto-remove
 

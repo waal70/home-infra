@@ -1,0 +1,22 @@
+Guide for booting Minisforum S100 with linux:
+
+Prepare a USB stick with a writeable part (Rufus)
+Grab the correct modules:
+
+./usr/lib/modules/6.12.48+deb13-amd64/kernel/fs/ufs/ufs.ko.xz
+./usr/lib/modules/6.12.48+deb13-amd64/kernel/drivers/ufs/core/ufshcd-core.ko.xz
+./usr/lib/modules/6.12.48+deb13-amd64/kernel/drivers/ufs/host/ufshcd-pci.ko.xz
+./usr/lib/modules/6.12.43+deb13-amd64/kernel/fs/ufs/ufs.ko.xz
+
+by copying them to the installation media
+
+Do not choose automated install, but rather "install"
+When the partitioner shows you only the USB, ESC out and choose shell
+
+There, go to the modules and modprobe them into the installation (using -f to force)
+by specifying:
+
+modprobe -f ./<module-name>
+
+With exit return to the installer and continue with 'detect disks'
+	

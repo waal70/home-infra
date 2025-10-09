@@ -1,35 +1,17 @@
 [
   {
-    "group": "activedirectory",
+    "group": ["activedirectory", "dns", "raspberry", "tftp"],
     "name": "adpi0",
     "mac": "e4:5f:01:82:c0:16",
     "ad_role": "primary",
     "dns_forwarder": "10.1.1.4"
   },
   {
-    "group": "dns",
-    "name": "adpi0",
-    "mac": "e4:5f:01:82:c0:16"
-  },
-  {
-    "group": "raspberry",
-    "name": "adpi0",
-    "mac": "e4:5f:01:82:c0:16"
-  },
-  {
-    "group": "tftp",
-    "name": "adpi0",
-    "mac": "e4:5f:01:82:c0:16"
-  },
-  {
-    "group": "dns",
-    "name": "ckpi",
-    "mac": "78:8a:20:7e:56:fc"
-  },
-  {
-    "group": "generic",
-    "name": "minis100",
-    "mac": "58:47:ca:76:0a:81"
+    "group": ["activedirectory", "dns", "raspberry"],
+    "name": "adpi1",
+    "mac": "e4:5f:01:87:ca:3f",
+    "ad_role": "additional",
+    "dns_forwarder": "10.1.1.5"
   },
   {
     "group": "dev_workstation",
@@ -47,37 +29,24 @@
     "mac": "d8:9e:f3:7c:da:3e"
   },
   {
-    "group": "homeserver",
+    "group": ["homeserver", "raspberry"],
     "name": "pi5-02",
     "mac": "2c:cf:67:33:3e:7c"
   },
   {
-    "group": "homeserver",
+    "group": ["generic", "test", "raspberry"],
     "name": "pi5-01",
     "mac": "d8:3a:dd:db:5a:be"
   },
   {
-    "group": "generic",
+    "group": ["generic", "test"],
+    "name": "minis100",
+    "mac": "58:47:ca:76:0a:81"
+  },
+  {
+    "group": ["generic","test"],
     "name": "testenv",
     "mac": "b8:85:84:a5:e3:2d"
-  },
-   {
-    "group": "activedirectory",
-    "name": "adpi1",
-    "mac": "e4:5f:01:87:ca:3f",
-    "ad_role": "additional",
-    "dns_forwarder": "10.1.1.5"
-  },
-   {
-    "group": "dns",
-    "name": "adpi1",
-    "mac": "e4:5f:01:87:ca:3f"
-  },
-
- {
-    "group": "raspberry",
-    "name": "adpi1",
-    "mac": "e4:5f:01:87:ca:3f"
   },
   {
     "group": "debianlinux",

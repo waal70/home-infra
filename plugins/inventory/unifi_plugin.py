@@ -83,6 +83,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             # loop to add nested groups:
             for record in self.macs:
                 if 'children' in record:
+                    # This is a group of groups
                     parentgroup = str(record["group"])
                     sublist = record["children"]
                     self.inventory.add_group(parentgroup)
@@ -95,11 +96,17 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             # loop to add actual hosts
             for configured_client in self.macs:
                 if 'children' in configured_client:
-                    continue # We have stumbled on a nested group definition
+                    continue # We have stumbled on a nested group definition, so skip
                 s_configured_client_mac = configured_client["mac"].strip().lower()
                 if s_configured_client_mac in str(self.active_clients):
                     s_name = configured_client["name"]
                     s_group = configured_client["group"]
+                    if isinstance(s_group,list):
+                        # Multiple groups defined in this tag
+                        for g in s_group:
+                            self.inventory.add_group(g)
+                            self.inventory.add_host(s_name, g)
+                        s_group = s_group[0]
                     self.display.vv("Predefined record is " + str(configured_client))
                     for active_client in self.active_clients:
                         if active_client.get("mac").strip().lower() == s_configured_client_mac:

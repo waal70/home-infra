@@ -3,30 +3,8 @@
   hosts:
     - all
   become: true
+  gather_facts: true
   tasks:
-    - name: Block for active activedirectory install
-      block:
-        - name: Debug all
-          ansible.builtin.debug:
-            msg: "{{ groups['activedirectory'] }}"
-
-        - name: "Check whether there is already samba-ad-dc configured for {{ inventory_hostname }}"
-          ansible.builtin.command: samba-tool domain info 127.0.0.1
-          register: checkall_result
-          changed_when: false
-          delegate_to: "{{ item }}"
-          with_items: "{{ groups['activedirectory'] }}"
-
-        - name: Debug all
-          ansible.builtin.debug:
-            msg: "{{ checkall_result }}"
-        - name: Set switch
-          ansible.builtin.set_fact:
-            all_ad_up: true
-      rescue:
-        - name: Set switch in case of failure
-          ansible.builtin.set_fact:
-            all_ad_up: false
-    - name: Set message
+    - name: Block for active group membership
       ansible.builtin.debug:
-        msg: "All AD's are up and running: {{ all_ad_up }}"
+        msg: "Groups are: {{ group_names }}"

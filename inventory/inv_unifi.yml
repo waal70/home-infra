@@ -1,6 +1,6 @@
 plugin: unifi_plugin
-controller_api: https://unifi/proxy/network/api
-controller_login: https://unifi/api/auth/login
+controller_api: https://unifi.andrecatherine.net/proxy/network/api
+controller_login: https://unifi.andrecatherine.net/api/auth/login
 controller_site: default
 macfile: "./inventory/hosts_by_mac.json"
 vault_controller_username: !vault |
