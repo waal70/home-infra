@@ -44,6 +44,16 @@
     "mac": "58:47:ca:76:0a:81"
   },
   {
+    "group": ["generic","test", "dns"],
+    "name": "testenv3",
+    "mac": "18:66:da:1d:1c:c1"
+  },
+  {
+    "group": ["generic","test"],
+    "name": "testenv2",
+    "mac": "b8:85:84:9d:59:19"
+  },
+  {
     "group": ["generic","test"],
     "name": "testenv",
     "mac": "b8:85:84:a5:e3:2d"
