@@ -3,6 +3,7 @@
 - name: Setup main Portainer server. This is required when using a jumpserver
   hosts:
     - homeserver
+    - testenvironment
   become: true
   # strategy: free # noqa: run-once[play]
   roles:

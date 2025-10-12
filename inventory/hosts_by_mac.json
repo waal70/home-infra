@@ -39,6 +39,11 @@
     "mac": "d8:3a:dd:db:5a:be"
   },
   {
+    "group": ["hifiberry", "raspberry"],
+    "name": "hifiberry-01",
+    "mac": "b8:27:eb:4b:ce:56"
+  },
+  {
     "group": ["generic", "test"],
     "name": "minis100",
     "mac": "58:47:ca:76:0a:81"
@@ -49,7 +54,7 @@
     "mac": "18:66:da:1d:1c:c1"
   },
   {
-    "group": ["generic","test"],
+    "group": ["testenvironment","test"],
     "name": "testenv2",
     "mac": "b8:85:84:9d:59:19"
   },
