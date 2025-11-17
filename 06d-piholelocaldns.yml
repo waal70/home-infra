@@ -12,7 +12,7 @@
   tasks:
     - name: Include variables that may contain secrets
       ansible.builtin.include_vars:
-        file: ../home/ansible-vault/localdns-vars.yml
+        file: ../home/ansible-vault/waal70.pihole-vars.yml
 
     - name: Get currently configured local DNS entries in Pi-hole
       ansible.builtin.uri:
