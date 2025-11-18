@@ -45,6 +45,11 @@
   },
   {
     "group": ["generic", "test"],
+    "name": "ssdnas",
+    "mac": "9a:48:f4:94:7c:35"
+  },
+  {
+    "group": ["generic", "test"],
     "name": "minis100",
     "mac": "58:47:ca:76:0a:81"
   },
