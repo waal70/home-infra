@@ -1,0 +1,11 @@
+---
+# file: 88-ppl.yml
+- name: Deploy paperless-ngx and vaultwarden
+  hosts:
+    - testenv2
+  become: true
+  roles:
+    - waal70.immich
+    # - { role: waal70.paperless_ngx, do_stack_update: false }
+    # - waal70.homepage
+    # - waal70.backup
