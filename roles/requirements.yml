@@ -38,6 +38,9 @@ roles:
   - name: waal70.log2ram
     src: https://github.com/waal70/ansible-role-log2ram
     version: main
+  - name: waal70.nfs
+    src: https://github.com/waal70/ansible-role-nfs
+    version: main
   - name: waal70.no_journal
     src: https://github.com/waal70/ansible-role-no_journal
     version: main
