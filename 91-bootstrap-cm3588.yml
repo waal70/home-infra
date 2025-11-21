@@ -1,12 +1,12 @@
 ---
-# file: 91-omv.yml
+# file: 91-bootstrap-cm3588.yml
 # As this is the bootstrap script, it should be run WITHOUT firstrun.sh!!
 - name: Bootstrap Friendly-Elec
   hosts:
-  # this means: specify on commandline, for instance: ansible-playbook 99-nuke.yml -e 'nuke=ams-dmz-jump'
     - ssdnas
   remote_user: root
   vars:
+    ansible_user: root
     ansible_password: fa
 
   tasks:

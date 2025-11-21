@@ -1,6 +1,7 @@
 # Install the device that will contain ansible
 
 For some nice bootstrapping, here are the instructions to go about configuring the ansible controller node!
+stat -c "%a %n" filename to get octal permissions
 
 ## Preseed
 

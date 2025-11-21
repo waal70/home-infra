@@ -46,7 +46,7 @@
   {
     "group": ["generic", "test"],
     "name": "ssdnas",
-    "mac": "9a:48:f4:94:7c:35"
+    "mac": "1a:de:ca:bb:0d:79"
   },
   {
     "group": ["generic", "test"],
@@ -64,7 +64,7 @@
     "mac": "b8:85:84:9d:59:19"
   },
   {
-    "group": ["generic","test"],
+    "group": ["testenvironment","test"],
     "name": "testenv",
     "mac": "b8:85:84:a5:e3:2d"
   },
