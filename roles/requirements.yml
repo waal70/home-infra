@@ -29,6 +29,9 @@ roles:
   - name: waal70.eclipse
     src: https://github.com/waal70/ansible-role-eclipse
     version: main
+  - name: waal70.gitea
+    src: https://github.com/waal70/ansible-role-gitea
+    version: main
   - name: waal70.homepage
     src: https://github.com/waal70/ansible-role-homepage
     version: main
