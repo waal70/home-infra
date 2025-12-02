@@ -8,4 +8,5 @@
     - waal70.vaultwarden
     - { role: waal70.paperless_ngx, do_stack_update: false }
     - waal70.homepage
+    - waal70.immich
     - waal70.backup

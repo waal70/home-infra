@@ -22,5 +22,5 @@
   ansible.builtin.import_playbook: 08-jumpserver.yml
 - name: Development Laptop setup
   ansible.builtin.import_playbook: 09-dev-laptop.yml
-- name: Homelab server setup
-  ansible.builtin.import_playbook: 88-ppl.yml
+- name: Ensure services are present and running
+  ansible.builtin.import_playbook: 12-services.yml
