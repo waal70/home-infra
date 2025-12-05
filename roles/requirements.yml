@@ -11,6 +11,9 @@ roles:
   - name: waal70.ansible_control
     src: https://github.com/waal70/ansible-role-ansible_control
     version: main
+  - name: waal70.authentik
+    src: https://github.com/waal70/ansible-role-authentik
+    version: main
   - name: waal70.backup
     src: https://github.com/waal70/ansible-role-backup
     version: main
