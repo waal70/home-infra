@@ -6,7 +6,8 @@
   become: true
   roles:
     - waal70.vaultwarden
-    - { role: waal70.paperless_ngx, do_stack_update: false }
+    - waal70.authentik
+    - { role: waal70.paperless_ngx, do_stack_update: true }
     - waal70.homepage
     - waal70.immich
     - waal70.backup

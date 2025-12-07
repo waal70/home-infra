@@ -1,0 +1,9 @@
+---
+# file: 12h-services-homepage.yml
+- name: Update homepage and backup services
+  hosts:
+    - homeserver
+  become: true
+  roles:
+    - waal70.homepage
+    - waal70.backup
