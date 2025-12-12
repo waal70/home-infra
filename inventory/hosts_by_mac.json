@@ -31,7 +31,7 @@
   {
     "group": ["homeserver", "raspberry"],
     "name": "pi5-02",
-    "mac": "2c:cf:67:33:3e:7c"
+    "mac": "88:a2:9e:19:fe:67"
   },
   {
     "group": ["generic", "test", "raspberry"],
