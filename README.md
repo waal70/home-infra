@@ -75,6 +75,10 @@ The variable definition string can be used in a yaml.
 
 * I protect my SSH-keys with a passphrase. You will need to run an agent and add the keys to that if you wish to not type the private key's passphrase all the time. I have included ```firstrun.sh``` to show you how to do it.
 
+### LUKS
+
+For an extra layer of security in using a private repository, I also decided to only git clone the private repository into a LUKS-encrypted container. Please see ```luks/mountContainer.sh``` to see how I achieved this.
+
 ## Inventory
 
 My setup has Unifi-based networking, it is SDN-like and employs a controller. This means that central info on IP-addresses and connected clients is maintained by the Unifi controller.
