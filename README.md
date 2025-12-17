@@ -1,161 +1,131 @@
 # home-infra
 
-An Ansible playbook that sets up multiple Debian servers with Proxmox and some hardening.
-It includes dynamic inventory for environments in the UniFi ecosystem, but you can also use non-dynamic inventory
+Multiple Ansible playbooks that sets up an infrastructure. Mostly based on raspberry pi's, debian (bookworm and trixie), docker and Proxmox.
 
+It includes an inventory-plugin that uses the UniFi ecosystem, but you can also use non-dynamic inventory.
+  
 ## Pre-requisites
+  
+* Ansible control node with ansible-core available (for some nice chicken-egg there is the role ```waal70.ansible_control``` included)
+* All controlled nodes assume a standard Debian installation that was configured using preseed.cfg from the role ```waal70.tftp```
+* This set of files assumes two named users, you will need to generate SSH keypairs for both:
+  * one that is the user that ansible will run under. You may refer to this in playbooks as ```ansible_user```
+  * one that is the user a human may use to login to ansible-controlled nodes. You may refer to this in your playbooks as ```interactive_user```
+* For want of a better solution, this also requires the existence of a ```PRIVATE_REPO```. In my case it is a self-hosted git-repository. In this repository, among other things, the SSH-keys for the two named users are stored. The layout of that repository is as follows:
 
-* Ansible control node with ansible-core available (for some nice chicken-egg there is the role "ansible_control" included)
-* All controlled nodes assume a standard Debian installation that was configured using preseed.cfg from ./debian-preseed
-* Most notably, you will need a public-private keypair for user "ansible" and store this in the...
-* ...private git repository containing sensitive information (ssh-keys) named 'home' as a peer of 'home-infra'
-* This repository should have ansible-vault, inventory and ssh-keys subdirectories
+```bash
+PRIVATE_REPO
+├── ansible-vault
+│   ├── ansible-galaxy-api-token
+│   ├── .vault_pass
+│   └── <FQ-rolename>-vars.yml
+├── homepage
+│   ├── bookmarks.yaml
+│   ├── custom.css
+│   ├── custom.js
+│   ├── docker.yaml
+│   ├── kubernetes.yaml
+│   ├── proxmox.yaml
+│   ├── services.yaml
+│   ├── settings.yaml
+│   └── widgets.yaml
+├── inventory
+│   ├── client.list
+├── ssh-keys
+│   ├── <ansible_user>
+│   │   ├── <ansible_user>-key
+│   │   ├── <ansible_user>-key.pub
+│   │   └── passphrase
+│   ├── <interactive_user>
+│   │   ├── <interactive_user>-yubi-1
+│   │   ├── <interactive_user>-yubi-1.pub
+│   │   ├── <interactive_user>-yubi-2
+│   │   ├── <interactive_user>-yubi-2.pub
+│   │   └── config
+```
 
-## Sensitive info
+## Dealing with sensitive info
+  
+* Configure your vault password by setting it in ```.vault_pass```. Mine is stored in my private repo under ```ansible-vault```, as you can see above
+* Point to this file in your ```ansible.cfg```, by setting ```vault_password_file = .vault_pass``` in the ```[defaults]```-section, of course specifying the proper path to the private repository
+* Remember to subsequently run all commands from the directory where ansible.cfg is residing, or else it will not pick up the correct configuration
+* The command to encrypt sensitive info is: ```ansible-vault encrypt_string 'some_sensitive_value' --name 'variable_containing_sensitive_stuff'```
+* In case of a password - the "some_sensitive_value" should already be hashed with ```mkpasswd -m sha-512```
 
-* Configure your vault password by setting it in .vault_pass
-* Point to this file in your ansible.cfg, by setting "vault_password_file = .vault_pass" in the [defaults]-section
-* To keep it out of this repository, I have configured ansible.cfg to point to a separate repository, also in your home folder. Create the .vault_pass there (i.e.: ../home)
-* Run all commands from the directory where ansible.cfg is residing, or else it will not pick up the location of .vault_pass
-* Set your sensitive info by running: ansible-vault encrypt_string 'some_sensitive_value' --name 'variable_containing_sensitive_stuff'
-* In case of a password - the "some_sensitive_value" should already be hashed with mkpasswd -m sha-512
+Example:
 
-E.g.:
+```bash
+ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'
+```
 
-    ansible-vault encrypt_string 'SuperSecretPassword' --name 'root_pass'
+Depending on your .vault_pass, this will yield:
 
-The resulting string will be able to be used in your .yaml
+```bash
+Encryption successful
+root_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          38633730386435346138626532316130653339653031613233343533336135333132396165633736
+          3962643565633164303435363235326162346563313564650a323032383634396336663461623034
+          35376638303236636636616362303736653637313063353831613536386635383963636239306439
+          6665643262383639650a346435326531363964376463663639653962383932613264366430636630
+          34346639356365343462613434626261373430326566656433316435383563643762
+```
 
-* This playbook expects to run as user 'ansible' that has a key-pair. The public key is provided in the preseed-stage
-* Expect to type the private key's passphrase a lot, unless you use ssh-agent (automated in first-run):
-* ssh-agent bash
-* ssh-add full-path-to-private-key
+The variable definition string can be used in a yaml.
+
+* I protect my SSH-keys with a passphrase. You will need to run an agent and add the keys to that if you wish to not type the private key's passphrase all the time. I have included ```firstrun.sh``` to show you how to do it.
 
 ## Inventory
 
-Either specify a regular inventory file (such as the included /inventory/hosts). Include the ansible_host in the entry,
-so that a typical entry may look as follows:
+My setup has Unifi-based networking, it is SDN-like and employs a controller. This means that central info on IP-addresses and connected clients is maintained by the Unifi controller.
+This is why I choose to (dynamically) retrieve IP-addresses for hosts I would like to manage with Ansible from that controller. The key for that is the MAC-address. If you would like to use this as well, you may use the inventory-plugin from this repository, ```unifi_plugin.py```. This plugin requires the existence of a ```inv_unifi.yml``` inside the ```inventory``` folder.
+This file configures the settings for the Unifi-controller, such as the URLs for the API, the credentials, and the site you would like to target (in case of multiple sites). It also has an entry for ```macfile```. This should point to a JSON-file that contains the configuration, per-client, for ansible. An example is provided inside the ```inventory``` folder (```hosts_by_mac.json```)
 
-    [proxmox_servers]
-    pve01 ansible_host=172.16.11.108
+Of course, you may also specify a normal inventory file. Check the [Ansible documentation](https://docs.ansible.com/projects/ansible/devel/inventory_guide/intro_inventory.html) for more information on how to properly do that.
 
-The repository also includes a dynamic inventory, which currently is based on a UniFi environment.
-It will query the Unifi-controller for a list of currently active clients. It compares this list
-against a known list of mac-addresses, that you wish to configure with Ansible.
-These mac-addresses are in the /inventory/hosts_by_mac.json file, you will need to specify an entry as follows:
+## Roles included
 
-    [
-        {
-        "group": "jumpservers",
-        "name": "pi04",
-        "mac": "b8:27:eb:d6:0c:d2"
-        "otherkeysareignored": "woopwoop",
-    },
-    ]
+Well, I say "included" but in actual fact they reside in their own repositories. That is why, under the ```roles``` folder, you will find a ```requirements.yml```, listing all possible roles that are handled/used by this set of playbooks. You may manually install these roles by running:
 
-The markup speaks for itself, I hope.
-There are two types of special entries, the first details a group of groups, allowing nesting:
+```bash
+ansible-galaxy install -g -f -r roles/requirements.yml
+```
 
-    {
-        "group": "groupofgroups",
-        "children": [
-        "proxmox_servers",
-        "other_group"
-        ]
-    }
+In the ```firstrun.sh```, however, there is a check included that will run this automatically, should the roles not have been found on your system.
 
-The second details an entry for which you already have the IP-address (because it is maybe outside Unifi scope).
-It has all the default groups, but MANDATORILY also a "hostname" entry and a "ansible_host" entry with the IP.
-Later I will try and fix the doubling of hostname and name, but for now, this is what it is...
+## Bootstrapping/Terraforming/Preseeding
 
-    {
-        "group": "util",
-        "hostname": "adpi0",
-        "name": "adpi0",
-        "mac": "e4:5f:01:82:c0:16",
-        "ansible_host": "10.0.0.4"
-    }
+In order to facilitate a known good basis to build from, these playbooks all expect a certain baseline of install. All of the hosts are expected to run Debian Linux (headless). As of writing this guide, trixie is the default version, although bookworm will also work most of the time. To ensure this baseline is there, the preseeding option of the debian-installer is used.
 
-## Services included
-
-* [Proxmox]
-* [log2ram]
-* [Samba Active Directory Domain Controller]
-* Needs expanding - just doing this for the linter
-
-## Role-common
-
-* Sets force-colors in .bashrc (for the interactive_user)
-* Edits journald to reduce journal sizes. Also vacuums to 10M
-* Sets IPv6 to not autoconfigure
-* Sets hostname and changes /etc/hosts to reflect
-* Removes the has_journal flag from the root filesystem. Also sets noatime,nodiratime
-* Adds passwordless sudo for members of the sudo group
-* Installs powertop and sets powertop --auto-tune to run at startup
-
-## Role-log2ram
-
-* Installs log2ram - moves /var/log to a memory-based disk
-
-## Role-pve
-
-* Follows <https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm> to install pve over the standard Debian install
-* Also sets root user password for initial login into web-interfaceset
-
-## Role-pxe-prep
-
-* Overwrites the MBR on the /dev/sda. This will prompt a PXE-based boot next restart.
-* Set "-e pve_reset=true" on the command-line
-
-## Role samba-ad-dc
-
-* Follows <https://waal70blog.wordpress.com/2017/05/01/raspberry-pi-as-a-domain-controller/> for provisioning of a domain
-* Follows <https://waal70blog.wordpress.com/2017/12/03/joining-a-secondary-raspberry-pi-to-your-domain/> for additional domain controllers
-* Follows <https://waal70blog.wordpress.com/2017/12/03/setting-up-sysvol-replication/> for the SysVol replication
-* Yes, these are also shameless plugs :)
-
-## To use preseed
-
-* Dedicate a server to the "util_server" role, which will take of all this stuff
-* Change your DHCP service to provide the correct details in PXE boot stage.
-* If you wish to follow along manually:
-* Publish ./debian-preseed/preseed.cfg on a webserver
-* Boot a target node with a Debian Install boot volume (i.e. a USB key)
-* Choose "HELP" on the installer menu
-* At the boot: prompt, type: auto url=<http://webserver/preseed.cfg>" there, replacing webserver with the address to your webserver that is hosting the preseed-file
-* The preseed file will take care of the installer questions and leave you with a waal70 approved base image
+In the role ```waal70.tftp``` a tftp-server is brought to life, using the latest images from Debian. To it, a ```preseed.cfg``` is added, so that after initial install, all hosts end up in a more or less similar state, which is well described in the documentation.
 
 ## PXE-boot
 
-* See ./debian-preseed/tftp-HOWTO.md
-* See the details in the util_server role
+To further automate this, you should enable Network Booting or PXE Booting on the hosts that you wish to manage with Ansible. A howto is provided in the ```howtos``` folder of this repository (```tftp-HOWTO.md```)
 
-## To run the playbook: try this
+## General instructions to run the playbook:
 
-./firstrun.sh (to load the ssh-agent with the appropriate keys)
-ansible-playbook site.yml (to kick off the full monty script)
+```bash
+./firstrun.sh
+ansible-playbook site.yml
+```
 
-Choose --limit inventory_name to limit the execution to certain hosts.
-Choose the numbered yaml-files to only select a portion of the roles.
+Use ```--limit inventory_name``` to limit the execution to certain hosts.
+Use any of the numbered yaml-files (in ```playbooks```) to only select a portion of the roles.
 
 ## TO DO
 
-* ~~FIX: Ansible master now requires an earlier ssh connection, in order to save fingerprint - should be not necessary~~
-* TODO: Networking is left on DHCP - change to static config
-* TODO: server_hardening role is not used now
-* ~~FIX: setting ^has_journal is hit and miss - does not seem to work all the time - fix this!~~
-* Change repository adding by using the new 822 ansible task
-* TODO: install default dockers on jumpserver
-* TODO: get the linter to work
-* TODO: make linter run automatically
-* TODO: only on PR? Yes, only on PR! Kickoff of process will be automatic
+Future plans of this repository include:
+
+* Adding a CI/CD pipeline to automate some steps (running the playbook?) after changes are committed.
+* Implementing a 'pull' mechanism so that hosts are less dependent on the ansible-controller
 
 ## License
 
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html#license-text)
-
+  
 ## Author information
 
-Unless otherwise noted, this entire repository is (c) 2023 by André (waal70). [See github profile](https://github.com/waal70)
+Unless otherwise noted, this entire repository is (c) 2023-2025 by André (waal70). [See github profile](https://github.com/waal70)
 
-Please contact me if you need a commercial license for any of these files
+Please contact me if you need a commercial license for any of these files, including the ones in the ```roles/requirements.yml```

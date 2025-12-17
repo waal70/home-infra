@@ -10,7 +10,7 @@
         msg: "Groups are: {{ group_names }}"
     - name: Block for active group membership
       ansible.builtin.debug:
-        msg: "Private repo is: {{ private_repo_test }}"
+        msg: "Private repo is: {{ private_repo }}"
     - name: Show content of /etc/foo.txt
       ansible.builtin.debug:
-        msg: "the value of key is {{ lookup('ansible.builtin.file', private_repo_test ~ '/ssh-keys/' ~ ansible_user ~ '/' ~ ansible_user ~ '-key.pub') }}"
+        msg: "the value of key is {{ lookup('ansible.builtin.file', private_repo ~ '/ssh-keys/' ~ ansible_user ~ '/' ~ ansible_user ~ '-key.pub') }}"
