@@ -7,7 +7,7 @@
   roles:
     - waal70.vaultwarden
     - waal70.authentik
-    - { role: waal70.paperless_ngx, do_stack_update: false }
+    - waal70.paperless_ngx
     - waal70.homepage
     - waal70.immich
     - waal70.backup

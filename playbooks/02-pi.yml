@@ -2,7 +2,6 @@
 # file: pi.yml
 - name: Bootstrap Raspberry Pi's on the network
   hosts: raspberry
-  strategy: free # noqa: run-once[play]
   become: true
   roles:
     - waal70.pi_common
