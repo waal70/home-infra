@@ -2,6 +2,7 @@
 # Ensure environment variable PRIVATE_REPO contains the full path to the directory containing your non-public files
 # In this repo, it is set through firstrun.sh
 # PRIVATE_REPO = ${HOME}/ansible/home
+# Rewrite this file into ansible.cfg with the correct path before running ansible-playbook commands
 remote_user = ansible
 private_key_file = ${PRIVATE_REPO}/ssh-keys/ansible/ansible-key
 host_key_checking = False
