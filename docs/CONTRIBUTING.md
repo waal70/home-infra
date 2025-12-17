@@ -13,3 +13,20 @@ Always write a clear log message for your commits.
 ## Coding conventions
 
 * Really just run ansible-lint on the production profile. This will tell you whether you are coding properly :)
+* Commit messages should contain one of these prefixes, followed by a colon:
+
+```yaml
+[
+  'build',
+  'chore',
+  'ci',
+  'docs',
+  'feat',
+  'fix',
+  'perf',
+  'refactor',
+  'revert',
+  'style',
+  'test'
+];
+```
