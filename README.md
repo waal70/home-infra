@@ -107,7 +107,7 @@ In the role ```waal70.tftp``` a tftp-server is brought to life, using the latest
 
 To further automate this, you should enable Network Booting or PXE Booting on the hosts that you wish to manage with Ansible. A howto is provided in the ```howtos``` folder of this repository (```tftp-HOWTO.md```)
 
-## General instructions to run the playbook:
+## General instructions to run the playbook
 
 ```bash
 ./firstrun.sh
