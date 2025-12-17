@@ -30,7 +30,8 @@ PRIVATE_REPO
 │   ├── settings.yaml
 │   └── widgets.yaml
 ├── inventory
-│   ├── client.list
+│   ├── hosts_by_mac.json
+│   ├── inv_unifi.yml
 ├── ssh-keys
 │   ├── <ansible_user>
 │   │   ├── <ansible_user>-key
@@ -82,8 +83,8 @@ For an extra layer of security in using a private repository, I also decided to 
 ## Inventory
 
 My setup has Unifi-based networking, it is SDN-like and employs a controller. This means that central info on IP-addresses and connected clients is maintained by the Unifi controller.
-This is why I choose to (dynamically) retrieve IP-addresses for hosts I would like to manage with Ansible from that controller. The key for that is the MAC-address. If you would like to use this as well, you may use the inventory-plugin from this repository, ```unifi_plugin.py```. This plugin requires the existence of a ```inv_unifi.yml``` inside the ```inventory``` folder.
-This file configures the settings for the Unifi-controller, such as the URLs for the API, the credentials, and the site you would like to target (in case of multiple sites). It also has an entry for ```macfile```. This should point to a JSON-file that contains the configuration, per-client, for ansible. An example is provided inside the ```inventory``` folder (```hosts_by_mac.json```)
+This is why I choose to (dynamically) retrieve IP-addresses for hosts I would like to manage with Ansible from that controller. The key for that is the MAC-address. If you would like to use this as well, you may use the inventory-plugin from this repository, ```unifi_plugin.py```. This plugin requires the existence of a ```inv_unifi.yml```. An example is inside the ```inventory``` folder, but you use ```ansible.cfg``` to point to its forever home. In my case, you guessed it, it is in the private repository.
+This file configures the settings for the Unifi-controller, such as the URLs for the API, the credentials, and the site you would like to target (in case of multiple sites). It also has an entry for ```macfile```. This should point to a JSON-file that contains the configuration, per-client, for ansible. An example is provided inside the ```inventory``` folder (```hosts_by_mac.json```). The ```inv_unifi.yml``` allows you to put this file wherever on your filesystem. May I suggest the ```inventory``` folder in your private repo?
 
 Of course, you may also specify a normal inventory file. Check the [Ansible documentation](https://docs.ansible.com/projects/ansible/devel/inventory_guide/intro_inventory.html) for more information on how to properly do that.
 
