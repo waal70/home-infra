@@ -20,3 +20,4 @@ temporary-files/*
 ansible.cfg
 plugins/inventory/__pycache__/unifi_plugin.cpython-313.pyc
 var/lib/samba/private/idmap.ldb
+__pycache__
