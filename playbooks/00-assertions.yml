@@ -1,0 +1,27 @@
+---
+# file: 00-assertions.yml
+- name: Check supported OS
+  hosts: all
+  become: true
+  tasks:
+    - name: Debug the ansible roles-path
+      ansible.builtin.debug:
+        var: ansible_search_path
+    - name: Assert supported version of OS
+      ansible.builtin.assert:
+        that:
+          - ansible_os_family == "Debian"
+          - ansible_distribution_major_version | int >= 12
+        fail_msg: "This repository only supports Debian bookworm and trixie"
+        success_msg: "System passes supported OS and OS-version"
+    - name: Assert that appropriate environment variables are set
+      ansible.builtin.assert:
+        that:
+          - interactive_user is defined
+          - interactive_home is defined
+          - interactive_password is defined
+          - lookup('ansible.builtin.env', 'PRIVATE_REPO') != ''
+          - lookup('ansible.builtin.env', 'SSH_ASKPASS') != ''
+          - lookup('ansible.builtin.env', 'SSH_ASKPASS_REQUIRE') != ''
+        fail_msg: "One or more required environment variables are not set. Did you run firstrun.sh?"
+        success_msg: "All required environment variables are set"
