@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # First, set the tag variable:
-TAG="v3.1.1"
+TAG="v3.1.2"
 TAGMESSAGE="Tagging for companion release home-infra with tag $TAG"
 
 echo "You are about to tag all Ansible roles in ~/.ansible/roles with the tag: $TAG"
