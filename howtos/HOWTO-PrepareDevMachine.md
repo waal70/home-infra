@@ -1,11 +1,10 @@
-# Install the device that will contain ansible
+# Bootstrap a machine manual steps
 
-For some nice bootstrapping, here are the instructions to go about configuring the ansible controller node!
-stat -c "%a %n" filename to get octal permissions
+For some nice bootstrapping, here are the instructions to go about configuring the any node!
 
 ## Preseed
 
-Run the network based installation as usual. This will leave you with an almost stock Debian and the interactive and ansible user configured
+Run the network based installation as usual. Specify the preseed.cfg from waal70.tftp. This will leave you with an almost stock Debian and the interactive and ansible user configured.
 
 ## Install ansible
 
@@ -142,7 +141,5 @@ sudo sed -i 's/bookworm/trixie/g' /etc/apt/sources.list
 
 sudo find /etc/apt/sources.list.d -type f -exec sed -i 's/bookworm/trixie/g' {} \;
 
-
 Then issue a sudo apt update and then:
 sudo apt full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" --purge --auto-remove
-

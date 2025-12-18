@@ -1,7 +1,9 @@
 # Run the following commands as root in order to bootstrap your
 # Linux system to accept the ansible user.
 
-# Values taken from the preseed.cfg
+# These are the same steps that will are in the post-install from the preseed.cfg
+# ASSUME: ansible_user is called "ansible"
+# ASSUME: The correct public key for the ansible user is in the command below
 
 useradd -m ansible
 mkdir -p /home/ansible/.ssh

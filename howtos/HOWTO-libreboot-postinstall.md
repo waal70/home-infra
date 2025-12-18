@@ -4,6 +4,7 @@ System complaining about mei_me? Messages in ```dmesg``` stating that after so m
 It is because we have nerfed the Intel Management Engine, but Linux still inserts modules for it.
 
 To remove the modules currently inserted:
+
 ```console
 sudo rmmod mei_me
 sudo rmmod mei
