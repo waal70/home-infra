@@ -80,6 +80,9 @@ roles:
   - name: waal70.tftp
     src: https://github.com/waal70/ansible-role-tftp
     version: main
+  - name: waal70.unbound
+    src: https://github.com/waal70/ansible-role-unbound
+    version: main
   - name: waal70.vaultwarden
     src: https://github.com/waal70/ansible-role-vaultwarden
     version: main
