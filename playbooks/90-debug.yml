@@ -1,7 +1,7 @@
 ---
 - name: Show info on specific host
   hosts:
-    - localhost
+    - all
   become: true
   gather_facts: true
   tasks:
@@ -14,3 +14,12 @@
     - name: Show content of /etc/foo.txt
       ansible.builtin.debug:
         msg: "the value of key is {{ lookup('ansible.builtin.file', private_repo ~ '/ssh-keys/' ~ ansible_user ~ '/' ~ ansible_user ~ '-key.pub') }}"
+    - name: Get root user info
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ target_user }}"
+    - name: Show root user info
+      ansible.builtin.debug:
+        var: "ansible_facts.getent_passwd[target_user].1" #UID, GID is .2
+  vars:
+    target_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER, true) | default(ansible_user_id, true) }}"

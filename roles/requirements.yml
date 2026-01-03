@@ -32,6 +32,9 @@ roles:
   - name: waal70.eclipse
     src: https://github.com/waal70/ansible-role-eclipse
     version: main
+  - name: waal70.forgejo
+    src: https://github.com/waal70/ansible-role-forgejo
+    version: main
   - name: waal70.gitea
     src: https://github.com/waal70/ansible-role-gitea
     version: main
