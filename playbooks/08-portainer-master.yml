@@ -2,7 +2,6 @@
 # file: 08-portainer-master.yml
 - name: Setup main Portainer server. This is required when using a jumpserver
   hosts:
-    - outpost
     - homeserver
     - testenvironment
   become: true

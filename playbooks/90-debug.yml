@@ -20,6 +20,14 @@
       ansible.builtin.debug:
         msg: "Outpost nodes are: {{ groups['outpost'] }}"
       when: groups['outpost'] is defined
+    - name: Gather facts for possible Portainer installs
+      ansible.builtin.setup:
+        gather_subset:
+          - '!all'
+          - network
+      delegate_to: "{{ item }}"
+      delegate_facts: true
+      loop: "{{ groups['homeserver'] + groups['outpost'] }}"
     - name: Show IP-addresses for all outpost group membership
       ansible.builtin.debug:
         msg: "Outpost node {{ item }} has IP {{ hostvars[item]['ansible_default_ipv4']['address'] }}"
@@ -53,17 +61,6 @@
     - name: Debug stack list length
       ansible.builtin.debug:
         msg: "Stack list length is {{ stack_list | length }}"
-    - name: Gather facts for possible Portainer installs
-      ansible.builtin.setup:
-        gather_subset:
-          - all_ipv4_addresses
-      delegate_to: "{{ item }}"
-      delegate_facts: true
-      loop: "{{ groups['homeserver'] + (groups['outpost'] | default([])) }}"
-
-    - name: Debug gathered facts for possible Portainer installs
-      ansible.builtin.debug:
-        msg: "Host has IP {{ hostvars }}"
   vars:
     target_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER, true) | default(ansible_user_id, true) }}"
     og_endpoints:

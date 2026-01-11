@@ -3,7 +3,6 @@
 - name: Deploy paperless-ngx and vaultwarden
   hosts:
     - homeserver
-    - outpost
   become: true
   roles:
     - waal70.vaultwarden
@@ -12,3 +11,10 @@
     - waal70.homepage
     - waal70.immich
     - waal70.backup
+
+- name: Deploy additional Portainer stacks
+  hosts:
+    - outpost
+  become: true
+  roles:
+    - waal70.homepage # For testing only
