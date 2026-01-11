@@ -1,0 +1,9 @@
+---
+# file: 0555555-outpost.yml
+- name: Setup Outpost server (Portainer Agent, Authentik)
+  hosts:
+    - outpost
+  become: true
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - waal70.docker

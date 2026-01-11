@@ -1,7 +1,7 @@
 ---
 - name: Show info on specific host
   hosts:
-    - all
+    - pi5-01
   become: true
   gather_facts: true
   tasks:
@@ -11,15 +11,47 @@
     - name: Block for active group membership
       ansible.builtin.debug:
         msg: "Private repo is: {{ private_repo }}"
-    - name: Show content of /etc/foo.txt
+        # For development for pi5 development server
+    - name: Find whether there exists an outpost group in the inventory
       ansible.builtin.debug:
-        msg: "the value of key is {{ lookup('ansible.builtin.file', private_repo ~ '/ssh-keys/' ~ ansible_user ~ '/' ~ ansible_user ~ '-key.pub') }}"
-    - name: Get root user info
-      ansible.builtin.getent:
-        database: passwd
-        key: "{{ target_user }}"
-    - name: Show root user info
+        msg: "Outpost group exists with members: {{ groups['outpost'] | default('No outpost group defined') }}"
+      when: groups['outpost'] is defined
+    - name: Find hostnames for nodes belonging to 'outpost' group
       ansible.builtin.debug:
-        var: "ansible_facts.getent_passwd[target_user].1" #UID, GID is .2
+        msg: "Outpost nodes are: {{ groups['outpost'] }}"
+      when: groups['outpost'] is defined
+    - name: Show IP-addresses for all outpost group membership
+      ansible.builtin.debug:
+        msg: "Outpost node {{ item }} has IP {{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+      loop: "{{ groups['outpost'] }}"
+      when: groups['outpost'] is defined
+    - name: Setup endpoints variable for outpost nodes
+      ansible.builtin.set_fact:
+        agent_endpoints: >
+          {%- set ep_list = [] -%}
+          {%- for host in groups['outpost'] -%}
+          {%-   set _ = ep_list.append({'name': host,
+                                       'url': 'tcp://' + hostvars[host]['ansible_default_ipv4']['address'] + ':9001',
+                                       'id': loop.index + 1}) -%}
+          {%- endfor -%}
+          {{ ep_list }}
+      loop: "{{ groups['outpost'] }}"
+      loop_control:
+        loop_var: host
+      when: groups['outpost'] is defined
+    - name: Debug endpoints variable
+      ansible.builtin.debug:
+        var: agent_endpoints
+      when: groups['outpost'] is defined
+    - name: Add the agent_endpoints to the og_endpoints variable
+      ansible.builtin.set_fact:
+        og_endpoints: "{{ og_endpoints + agent_endpoints }}"
+      when: groups['outpost'] is defined
+    - name: Debug the final og_endpoints variable
+      ansible.builtin.debug:
+        var: og_endpoints
   vars:
     target_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER, true) | default(ansible_user_id, true) }}"
+    og_endpoints:
+      - { name: "{{ inventory_hostname }}", url: "", id: "1" }
+ # - { name: "ams-dmz-jump", url: "tcp://172.16.10.92:9001", id: "2" }

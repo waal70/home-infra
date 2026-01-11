@@ -3,6 +3,7 @@
 - name: Deploy paperless-ngx and vaultwarden
   hosts:
     - homeserver
+    - outpost
   become: true
   roles:
     - waal70.vaultwarden
