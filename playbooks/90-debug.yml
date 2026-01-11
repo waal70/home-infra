@@ -1,7 +1,7 @@
 ---
 - name: Show info on specific host
   hosts:
-    - pi5-01
+    - localhost
   become: true
   gather_facts: true
   tasks:
@@ -50,8 +50,23 @@
     - name: Debug the final og_endpoints variable
       ansible.builtin.debug:
         var: og_endpoints
+    - name: Debug stack list length
+      ansible.builtin.debug:
+        msg: "Stack list length is {{ stack_list | length }}"
+    - name: Gather facts for possible Portainer installs
+      ansible.builtin.setup:
+        gather_subset:
+          - all_ipv4_addresses
+      delegate_to: "{{ item }}"
+      delegate_facts: true
+      loop: "{{ groups['homeserver'] + (groups['outpost'] | default([])) }}"
+
+    - name: Debug gathered facts for possible Portainer installs
+      ansible.builtin.debug:
+        msg: "Host has IP {{ hostvars }}"
   vars:
     target_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER, true) | default(ansible_user_id, true) }}"
     og_endpoints:
       - { name: "{{ inventory_hostname }}", url: "", id: "1" }
  # - { name: "ams-dmz-jump", url: "tcp://172.16.10.92:9001", id: "2" }
+    stack_list: {}
