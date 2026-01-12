@@ -1,6 +1,6 @@
 ---
-# file: 88-ppl.yml
-- name: Deploy paperless-ngx and vaultwarden
+# file: 12-services.yml
+- name: Deploy services to the network
   hosts:
     - homeserver
   become: true
@@ -12,9 +12,11 @@
     - waal70.immich
     - waal70.backup
 
-- name: Deploy additional Portainer stacks
+- name: Deploy services to outpost servers
   hosts:
     - outpost
   become: true
   roles:
-    - waal70.homepage # For testing only
+    - waal70.homepage
+  vars:
+    endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
