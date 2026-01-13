@@ -17,6 +17,7 @@
     - outpost
   become: true
   roles:
-    - waal70.homepage
+    - waal70.forgejo
+    - waal70.backup
   vars:
     endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
