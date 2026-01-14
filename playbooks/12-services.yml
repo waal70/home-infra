@@ -1,5 +1,12 @@
 ---
 # file: 12-services.yml
+- name: Gather facts for services targets
+  hosts:
+    - homeserver
+    - outpost
+  tasks:
+    - name: Ping these hosts
+      ansible.builtin.ping:
 - name: Deploy services to the network
   hosts:
     - homeserver

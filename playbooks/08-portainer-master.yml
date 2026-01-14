@@ -1,5 +1,12 @@
 ---
 # file: 08-portainer-master.yml
+- name: Gather facts for homeserver and outposts
+  hosts:
+    - homeserver
+    - outpost
+  tasks:
+    - name: Ping these hosts
+      ansible.builtin.ping:
 - name: Setup main Portainer server. This is required when using a jumpserver
   hosts:
     - homeserver
