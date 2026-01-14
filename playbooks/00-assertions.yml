@@ -4,6 +4,8 @@
   hosts: all
   become: true
   tasks:
+    - name: Ping all hosts in order to update the cached facts
+      ansible.builtin.ping:
     - name: Debug the ansible roles-path
       ansible.builtin.debug:
         var: ansible_search_path
