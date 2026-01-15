@@ -16,20 +16,20 @@ There is a workaround, however!
 ./usr/lib/modules/6.12.48+deb13-amd64/kernel/fs/ufs/ufs.ko.xz
 ./usr/lib/modules/6.12.48+deb13-amd64/kernel/drivers/ufs/core/ufshcd-core.ko.xz
 ./usr/lib/modules/6.12.48+deb13-amd64/kernel/drivers/ufs/host/ufshcd-pci.ko.xz
-./usr/lib/modules/6.12.43+deb13-amd64/kernel/fs/ufs/ufs.ko.xz
 ```
 
 * Copy these to the writable part of your installation media.
 * Proceed with installation of the S100 using your prepared medium.
 * Do not choose automated install, but rather "install"
-* When the partitioner shows you only the USB device, ESCape out and choose 'Open a shell'
+* Select "Force UEFI boot" because otherwise, your drive will not show up later, as the S100 only UEFI-boots
+* When the partitioner shows you only the USB device, ESCape out and choose 'Execute a shell'
 * There, go to the modules you grabbed earlier and modprobe them into the installation (using -f to force)
+* Note the dot-slash is important, as modprobe will otherwise search for the file in the installer's /lib
 
 ```bash
 modprobe -f ./<module-name1>
 modprobe -f ./<module-name2>
 modprobe -f ./<module-name3>
-modprobe -f ./<module-name4>
 ```
 
 * By typing ```exit``` you will return to the installer

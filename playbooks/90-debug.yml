@@ -1,10 +1,22 @@
 ---
 - name: Show info on specific host
   hosts:
-    - localhost
+    - pi5-04
   become: true
   gather_facts: true
   tasks:
+  # Pass the process name
+    - name: Install Python psutil
+      ansible.builtin.apt:
+        name: python3-psutil
+        state: present
+    - name: Getting process IDs of the process # noqa: syntax-check[unknown-module]
+      pids:
+          name: ext4lazyinit
+      register: pids_of_ext4li
+    - name: Printing the process IDs obtained
+      debug:
+        msg: "PIDs found:{{pids_of_ext4li.pids|join(',')}}"
     - name: Block for active group membership
       ansible.builtin.debug:
         msg: "Groups are: {{ group_names }}"

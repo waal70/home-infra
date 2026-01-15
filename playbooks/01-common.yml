@@ -6,7 +6,7 @@
   roles:
     - waal70.debian_common
     - waal70.log2ram
-    - role: waal70.no_journal
-      when: not enable_journaling | bool
+    # - role: waal70.no_journal
+    #  when: not enable_journaling | bool
     - role: waal70.powersave
       when: enable_powersave | bool
