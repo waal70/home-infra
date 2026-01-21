@@ -18,6 +18,11 @@
     - waal70.homepage
     - waal70.immich
     - waal70.backup
+  post_tasks:
+    - name: Run completed, so delete the marker
+      ansible.builtin.file:
+        path: /tmp/portainertje
+        state: absent
 
 - name: Deploy services to outpost servers
   hosts:
@@ -30,3 +35,12 @@
     endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
     backup_directories:
       - /appdata
+    port_skip: false
+  post_tasks:
+    - name: Inform user of state of variable
+      ansible.builtin.debug:
+        msg: "host is {{ ansible_hostname }}"
+    - name: Run completed, so delete the marker
+      ansible.builtin.file:
+        path: /tmp/portainertje
+        state: absent
