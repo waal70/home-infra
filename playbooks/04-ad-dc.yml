@@ -6,3 +6,7 @@
   roles:
     - waal70.samba_ad_dc
     - waal70.ad_backup
+    - waal70.backup
+  vars:
+    backup_directories:
+      - "/home/{{ ansible_user }}/samba_backups"

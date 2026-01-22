@@ -1,0 +1,57 @@
+# where <pattern> is a shell glob that matches the names of your backup archives 
+# (e.g. backup-*.tar.gz, *.zip, 2024_??_backup.*, etc.).
+#!/usr/bin/env bash
+# ------------------------------------------------------------
+# The script keeps the 10 most-recent files (by modification time)
+# that match the pattern and deletes any older ones.
+# ------------------------------------------------------------
+
+set -euo pipefail   # safer scripting
+
+
+# Backup tasks (e.g. stopping a container, running a command in docker)
+{% for task in backup_tasks %}
+{{ task }}
+{% endfor %}
+
+BACKUP_DIR={{ backup_folder }}
+PATTERN={{ backup_pattern }}   
+
+# Verify the directory exists
+if [[ ! -d "$BACKUP_DIR" ]]; then
+    echo "Error: Directory '$BACKUP_DIR' does not exist." >&2
+    exit 1
+fi
+
+# ---------- Find, sort, and prune ----------
+# 1. List matching files (non-recursive) with full paths
+# 2. Sort by modification time, newest first
+# 3. Skip the first 10 entries (the ones we want to keep)
+# 4. Delete the remaining files
+
+# Using `printf '%P\0'` to handle filenames with spaces/newlines safely
+mapfile -d '' old_files < <(
+    find "$BACKUP_DIR" -maxdepth 1 -type f -name "$PATTERN" -printf '%T@\t%p\0' |
+    LC_ALL=C sort -z -t $'\t' -k1,1nr |
+    cut -z -f2- |
+    tail -z -n +11   # keep everything *after* the first 10 (i.e. the old ones)
+)
+
+# Count how many items are in the array
+num_old_files=$(printf "%s\n" "${old_files[@]}" | grep -c . || true)
+
+if (( $num_old_files == 0 )); then
+    echo "Nothing to delete: fewer than 10 files match pattern '$PATTERN'."
+    exit 0
+fi
+
+# Show what will be deleted (comment out the echo block once you're sure)
+echo "Deleting $num_old_files older backup(s) matching pattern '$PATTERN':"
+for f in "${old_files[@]}"; do
+    echo "  $f"
+done
+
+# Uncomment the next line to actually perform deletion.
+sudo rm -- "${old_files[@]}"
+
+echo "Done."
