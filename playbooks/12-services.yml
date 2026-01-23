@@ -35,6 +35,7 @@
     endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
     backup_directories:
       - /appdata
+    backup_minute: "45"
     port_skip: false
   post_tasks:
     - name: Inform user of state of variable

@@ -10,3 +10,4 @@
   vars:
     backup_directories:
       - "/home/{{ ansible_user }}/samba_backups"
+    backup_minute: "55"
