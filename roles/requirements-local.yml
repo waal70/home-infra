@@ -58,6 +58,10 @@ roles:
     src: https://git.andrecatherine.net/waal70/ansible-role-immich
     version: main
     scm: git
+  - name: waal70.kiwix
+    src: https://git.andrecatherine.net/waal70/ansible-role-kiwix
+    version: main
+    scm: git
   - name: waal70.log2ram
     src: https://git.andrecatherine.net/waal70/ansible-role-log2ram
     version: main
