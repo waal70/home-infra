@@ -23,3 +23,6 @@ var/lib/samba/private/idmap.ldb
 __pycache__
 .ansible
 
+inv_unifi.yml
+dev.proxmox.yml
+stage/prod/additional_vars.ini

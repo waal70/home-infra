@@ -1,0 +1,5 @@
+---
+# group variables for jumpservers
+enable_journaling: true # Set to true to enable journaling, false to disable
+log2ram_size: 80M
+enable_powersave: false

@@ -1,5 +1,7 @@
 ---
 # group variables for all servers
+stage: "production"
+ansible_vault: "ansible-vault/{{ stage }}"
 enable_journaling: true # Set to true to enable journaling, false to disable
 enable_powersave: true
 log2ram_size: 80M

@@ -11,6 +11,8 @@ It includes an inventory-plugin that uses the UniFi Network Application, but you
 * This set of files assumes two named users, you will need to generate SSH keypairs for both:
   * one that is the user that ansible will run under. You may refer to this in playbooks as ```ansible_user```
   * one that is the user a human may use to login to ansible-controlled nodes. You may refer to this in your playbooks as ```interactive_user```
+* the ```group_vars/all.yml``` for your stage (see ```inventory/README.md```) should contain ```stage```. This string will be used as a folder when including private var-files, so make sure these files are findable in that folder.
+* this prefix should also be in all.yml, having value ```ansible_vault: "ansible-vault/{{ stage }}"```
 * For want of a better solution, this also requires the existence of a ```PRIVATE_REPO```. In my case it is a self-hosted git-repository. In this repository, among other things, the SSH-keys for the two named users are stored. The layout of that repository is as follows:
 
 ```bash

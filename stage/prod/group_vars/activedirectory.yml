@@ -1,0 +1,11 @@
+---
+# Increase log2ram size for util servers
+log2ram_size: 150M
+log2ram_log_disk_size: 200M
+enable_powersave: true
+# Change this to yes if you want to update the adlists
+
+# util server IS a tftp server
+deb12cis_tftp_server: true
+# util is a samba server
+deb12cis_samba_server: true

@@ -6,9 +6,7 @@
   tasks:
     - name: Ping all hosts in order to update the cached facts
       ansible.builtin.ping:
-    - name: Debug the ansible roles-path
-      ansible.builtin.debug:
-        var: ansible_search_path
+
     - name: Assert supported version of OS
       ansible.builtin.assert:
         that:
@@ -16,6 +14,7 @@
           - ansible_distribution_major_version | int >= 12
         fail_msg: "This repository only supports Debian bookworm and trixie"
         success_msg: "System passes supported OS and OS-version"
+
     - name: Assert that appropriate environment variables are set
       ansible.builtin.assert:
         that:
@@ -27,3 +26,14 @@
           - lookup('ansible.builtin.env', 'SSH_ASKPASS_REQUIRE') != ''
         fail_msg: "One or more required environment variables are not set. Did you run firstrun.sh?"
         success_msg: "All required environment variables are set"
+
+    - name: Assert the target environment is known
+      ansible.builtin.assert:
+        that:
+          - stage is defined
+        fail_msg: "Your group_vars/all.yml should have a value for stage, which is now not the case"
+        success_msg: "This play will target the {{ stage | default('unknown') }} environment"
+  
+    - name: Is ansible-vault something?
+      ansible.builtin.debug:
+        msg: "ansible_vault is {{ ansible_vault | default('no special variable') }}"

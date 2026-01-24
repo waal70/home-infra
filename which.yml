@@ -1,0 +1,3 @@
+# file: which.yml
+- name: Assertions
+  ansible.builtin.import_playbook: playbooks/00-assertions.yml

@@ -7,9 +7,11 @@ remote_user = ansible
 private_key_file = ${PRIVATE_REPO}/ssh-keys/ansible/ansible-key
 host_key_checking = False
 # To use the example from this repo, set PRIVATE_REPO to inventory/inv_unifi.yml
-inventory = ${PRIVATE_REPO}/inventory/inv_unifi.yml
+inventory = stage/prod/
 # Andre add 2025-10: specifiy folder for custom inventory plugins
 inventory_plugins = plugins/inventory
+inventory_enabled = ['unifi_plugin', 'community.proxmox.proxmox']
+inventory_ignore = ['.md', '.example']
 # You may need to specify the full path (without using env var) to the vault password file
 vault_password_file = ${PRIVATE_REPO}/ansible-vault/.vault_pass
 pipelining = True

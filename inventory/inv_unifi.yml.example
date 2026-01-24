@@ -1,3 +1,4 @@
+# This folder should have a *_unifi.yml file if you wish to use the unifi inventory plugin
 plugin: unifi_plugin
 controller_api: https://<unifi-controller-address-here>/proxy/network/api
 controller_login: https://<unifi-controller-address-here>/api/auth/login
