@@ -1,7 +1,7 @@
 ---
 # file: pve.yml
 - name: Setup Proxmox VE servers based on standard Debian bookworm
-  hosts: proxmox_servers
+  hosts: proxmox_nodes
   become: true
   roles:
     - role: waal70.pve

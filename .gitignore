@@ -25,4 +25,4 @@ __pycache__
 
 inv_unifi.yml
 dev.proxmox.yml
-stage/prod/additional_vars.ini
+additional_vars.ini

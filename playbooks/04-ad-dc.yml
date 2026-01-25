@@ -1,7 +1,7 @@
 ---
 # file: ad-dc.yml
-- name: Setup Samba based ad-dc over standard Debian bookworm
-  hosts: activedirectory
+- name: Setup Samba based ad-dc over standard Debian
+  hosts: activedirectory_primary
   become: true
   roles:
     - waal70.samba_ad_dc
@@ -11,3 +11,15 @@
     backup_directories:
       - "/home/{{ ansible_user }}/samba_backups"
     backup_minute: "55"
+
+- name: Setup additional ad-dcs
+  hosts: activedirectory_additional
+  become: true
+  roles:
+    - waal70.samba_ad_dc
+    - waal70.ad_backup
+    - waal70.backup
+  vars:
+    backup_directories:
+      - "/home/{{ ansible_user }}/samba_backups"
+    backup_minute: "59"

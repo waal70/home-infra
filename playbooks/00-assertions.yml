@@ -33,7 +33,3 @@
           - stage is defined
         fail_msg: "Your group_vars/all.yml should have a value for stage, which is now not the case"
         success_msg: "This play will target the {{ stage | default('unknown') }} environment"
-  
-    - name: Is ansible-vault something?
-      ansible.builtin.debug:
-        msg: "ansible_vault is {{ ansible_vault | default('no special variable') }}"
