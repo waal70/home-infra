@@ -34,6 +34,10 @@ roles:
     src: https://git.andrecatherine.net/waal70/ansible-role-debian_omv
     version: main
     scm: git
+  - name: waal70.dev_tools
+    src: https://git.andrecatherine.net/waal70/ansible-role-dev_tools
+    version: main
+    scm: git
   - name: waal70.docker
     src: https://git.andrecatherine.net/waal70/ansible-role-docker
     version: main

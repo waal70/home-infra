@@ -26,6 +26,9 @@ roles:
   - name: waal70.debian_omv
     src: https://github.com/waal70/ansible-role-debian_omv
     version: main
+  - name: waal70.dev_tools
+    src: https://github.com/waal70/ansible-role-dev_tools
+    version: main
   - name: waal70.docker
     src: https://github.com/waal70/ansible-role-docker
     version: main
