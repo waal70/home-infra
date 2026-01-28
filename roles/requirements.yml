@@ -56,6 +56,9 @@ roles:
   - name: waal70.nfs
     src: https://github.com/waal70/ansible-role-nfs
     version: main
+  - name: waal70.nginx_pm
+    src: https://github.com/waal70/ansible-role-nginx_pm
+    version: main
   - name: waal70.no_journal
     src: https://github.com/waal70/ansible-role-no_journal
     version: main
