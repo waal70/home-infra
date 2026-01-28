@@ -51,7 +51,7 @@
   post_tasks:
     - name: Inform user of state of variable
       ansible.builtin.debug:
-        msg: "host is {{ ansible_hostname }}"
+        msg: "host is {{ ansible_facts['hostname'] }}"
     - name: Run completed, so delete the marker
       ansible.builtin.file:
         path: /tmp/portainertje

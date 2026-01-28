@@ -14,7 +14,7 @@
 
     - name: List existing nodes
       community.proxmox.proxmox_node_info:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
@@ -24,7 +24,7 @@
         msg: "Nodes are: {{ proxmox_nodes }}"
     - name: "Create a vmbridge through the API of Proxmox"
       ansible.builtin.uri:
-        url: "{{ proxmox_api }}nodes/{{ ansible_hostname }}/network"
+        url: "{{ proxmox_api }}nodes/{{ ansible_facts['hostname'] }}/network"
         method: GET
         headers:
           Authorization: "{{ authstring }}"
@@ -32,18 +32,18 @@
       register: getnetwork
     - name: Debug getnetwork response
       ansible.builtin.debug:
-        var: ansible_default_ipv4
+        var: ansible_facts['default_ipv4']
     - name: Set fact for current bridges
       ansible.builtin.set_fact:
         node_bridges: "{{ getnetwork.json | community.general.json_query('data[?type==`bridge`].iface') }}"
         node_physical: "{{ getnetwork.json | community.general.json_query('data[?type==`eth`].iface') | first }}"
     - name: Look for the presence of the default VM on the node
       community.proxmox.proxmox_vm_info:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
-        node: "{{ ansible_hostname }}"
+        node: "{{ ansible_facts['hostname'] }}"
         name: "default-debian"
       register: node_info
     - name: "Debug"
@@ -60,10 +60,10 @@
       block:
         - name: "Debug getentwor"
           ansible.builtin.debug:
-            msg: "No default bridge found. Creating one for ip: {{ ansible_default_ipv4.address }}"
+            msg: "No default bridge found. Creating one for ip: {{ ansible_facts['default_ipv4'].address }}"
         - name: "Create default bridge"
           ansible.builtin.uri:
-            url: "{{ proxmox_api }}nodes/{{ ansible_hostname }}/network"
+            url: "{{ proxmox_api }}nodes/{{ ansible_facts['hostname'] }}/network"
             method: POST
             headers:
               Authorization: "{{ authstring }}"
@@ -72,22 +72,22 @@
               iface: "vmbr0"
               type: "bridge"
               autostart: true
-              address: "{{ ansible_default_ipv4.address }}"
-              netmask: "{{ ansible_default_ipv4.netmask }}"
-              gateway: "{{ ansible_default_ipv4.gateway }}"
+              address: "{{ ansible_facts['default_ipv4'].address }}"
+              netmask: "{{ ansible_facts['default_ipv4'].netmask }}"
+              gateway: "{{ ansible_facts['default_ipv4'].gateway }}"
               bridge_ports: "{{ node_physical }}"
               comments: "Ansible generated default bridge"
             validate_certs: false
         - name: "...and apply"
           ansible.builtin.uri:
-            url: "{{ proxmox_api }}nodes/{{ ansible_hostname }}/network"
+            url: "{{ proxmox_api }}nodes/{{ ansible_facts['hostname'] }}/network"
             method: PUT
             headers:
               Authorization: "{{ authstring }}"
             validate_certs: false
     - name: "Now create the template VM on the local storage if it does not exist"
       community.proxmox.proxmox_kvm:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
@@ -103,15 +103,15 @@
         sockets: 1
         agent: true
         state: present
-        node: "{{ ansible_hostname }}"
+        node: "{{ ansible_facts['hostname'] }}"
       when: not template_present
     - name: "Start it to have it populate and do tftp-based install"
       community.proxmox.proxmox_kvm:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
-        node: "{{ ansible_hostname }}"
+        node: "{{ ansible_facts['hostname'] }}"
         name: "default-debian"
         state: started
       register: start_kvm
@@ -119,11 +119,11 @@
       when: not template_present
     - name: Retrieve information about specific VM, allowing up to 10 minutes for creation
       community.proxmox.proxmox_vm_info:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
-        node: "{{ ansible_hostname }}"
+        node: "{{ ansible_facts['hostname'] }}"
         network: true
         name: "default-debian"
       register: info_ret
@@ -136,27 +136,27 @@
         var: info_ret.proxmox_vms[0]
     - name: Stop VM
       community.proxmox.proxmox_kvm:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
-        node: "{{ ansible_hostname }}"
+        node: "{{ ansible_facts['hostname'] }}"
         name: "default-debian"
         state: stopped
       when: not template_present
     - name: "Make this VM into a template for all future Debian-based VMs"
       community.proxmox.proxmox_kvm:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
-        node: "{{ ansible_hostname }}"
+        node: "{{ ansible_facts['hostname'] }}"
         name: "default-debian"
         state: template
       when: not template_present
     - name: "Now storage, back to Ansible modules"
       community.proxmox.proxmox_storage_info:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
@@ -166,11 +166,11 @@
         var: proxmox_storages
     - name: "Create our first full clone"
       community.proxmox.proxmox_kvm:
-        api_host: "{{ ansible_hostname }}"
+        api_host: "{{ ansible_facts['hostname'] }}"
         api_user: "{{ api_user }}"
         api_token_id: "{{ api_token_id | default(omit) }}"
         api_token_secret: "{{ api_token | default(omit) }}"
-        node: "{{ ansible_hostname }}"
+        node: "{{ ansible_facts['hostname'] }}"
         clone: "default-debian"
         full: true
         name: zavala
@@ -180,8 +180,8 @@
     api_token_id: "ansible"
     api_token: "redacted"
     authstring: "PVEAPIToken={{ api_user }}!{{ api_token_id }}={{ api_token }}"
-    proxmox_api: "https://{{ ansible_hostname }}:8006/api2/json/"
-    target_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER, true) | default(ansible_user_id, true) }}"
+    proxmox_api: "https://{{ ansible_facts['hostname'] }}:8006/api2/json/"
+    target_user: "{{ ansible_facts['env'].SUDO_USER | default(ansible_facts['env'].USER, true) | default(ansible_facts['user_id'], true) }}"
     og_endpoints:
       - { name: "{{ inventory_hostname }}", url: "", id: "1" }
  # - { name: "ams-dmz-jump", url: "tcp://172.16.10.92:9001", id: "2" }

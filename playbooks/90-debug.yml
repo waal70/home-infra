@@ -42,7 +42,7 @@
       loop: "{{ groups['homeserver'] + groups['outpost'] }}"
     - name: Show IP-addresses for all outpost group membership
       ansible.builtin.debug:
-        msg: "Outpost node {{ item }} has IP {{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+        msg: "Outpost node {{ item }} has IP {{ hostvars[item]['ansible_facts['default_ipv4']']['address'] }}"
       loop: "{{ groups['outpost'] }}"
       when: groups['outpost'] is defined
     - name: Setup endpoints variable for outpost nodes
@@ -51,7 +51,7 @@
           {%- set ep_list = [] -%}
           {%- for host in groups['outpost'] -%}
           {%-   set _ = ep_list.append({'name': host,
-                                       'url': 'tcp://' + hostvars[host]['ansible_default_ipv4']['address'] + ':9001',
+                                       'url': 'tcp://' + hostvars[host]['ansible_facts['default_ipv4']']['address'] + ':9001',
                                        'id': loop.index + 1}) -%}
           {%- endfor -%}
           {{ ep_list }}
@@ -74,7 +74,7 @@
       ansible.builtin.debug:
         msg: "Stack list length is {{ stack_list | length }}"
   vars:
-    target_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER, true) | default(ansible_user_id, true) }}"
+    target_user: "{{ ansible_facts['env'].SUDO_USER | default(ansible_facts['env'].USER, true) | default(ansible_facts['user_id'], true) }}"
     og_endpoints:
       - { name: "{{ inventory_hostname }}", url: "", id: "1" }
  # - { name: "ams-dmz-jump", url: "tcp://172.16.10.92:9001", id: "2" }

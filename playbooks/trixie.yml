@@ -1,10 +1,10 @@
 ---
 - name: Get distribution version
-  setup:
+  ansible.builtin.setup:
     filter: ansible_distribution*
 - name: Skip if not Debian 12
   meta: end_host
-  when: ansible_distribution != 'Debian' or ansible_distribution_major_version != '12'
+  when: ansible_facts['distribution'] != 'Debian' or ansible_facts['distribution_major_version'] != '12'
 - name: apt clean
   apt:
     clean: yes
@@ -17,7 +17,7 @@
     that:
       - item.size_available > (5 * 1024 * 1024 * 1024)
     fail_msg: "Free disk space on {{ item.mount }} is below 5 GiB"
-  loop: "{{ ansible_mounts }}"
+  loop: "{{ ansible_facts['mounts'] }}"
   when: item.mount == "/"
 - name: All apt packages up to date
   apt:
@@ -80,7 +80,7 @@
 - name: Fail if not Debian 13
   assert:
     that:
-      - ansible_distribution_major_version == '13'
+      - ansible_facts['distribution_major_version'] == '13'
     fail_msg: "Upgrade to Debian 13 failed"
 - name: apt autoremove
   apt:
