@@ -10,8 +10,8 @@
     - name: Assert supported version of OS
       ansible.builtin.assert:
         that:
-          - ansible_os_family == "Debian"
-          - ansible_distribution_major_version | int >= 12
+          - ansible_facts['os_family'] == "Debian"
+          - ansible_facts['distribution_major_version'] | int >= 12
         fail_msg: "This repository only supports Debian bookworm and trixie"
         success_msg: "System passes supported OS and OS-version"
 
