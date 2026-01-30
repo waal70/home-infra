@@ -1,2 +1,2 @@
 ---
-pihole_enable_unbound: true
+pihole_enable_unbound: false

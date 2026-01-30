@@ -17,7 +17,6 @@
     - waal70.paperless_ngx
     - waal70.immich
     - waal70.homepage
-    - waal70.kiwix
     - waal70.backup
   pre_tasks:
     - name: As we are starting the run, delete any left-over marker
@@ -37,6 +36,7 @@
   roles:
     - waal70.forgejo
     - waal70.dev_tools
+    - waal70.kiwix
     - waal70.backup
   vars:
     endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
