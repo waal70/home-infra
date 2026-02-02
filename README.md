@@ -11,6 +11,10 @@ It includes an inventory-plugin that uses the UniFi Network Application, but you
 * This set of files assumes two named users, you will need to generate SSH keypairs for both:
   * one that is the user that ansible will run under. You may refer to this in playbooks as ```ansible_user```
   * one that is the user a human may use to login to ansible-controlled nodes. You may refer to this in your playbooks as ```interactive_user```
+* Note that this repository handles ansible access to hosts in two ways:
+  * After bootstrapping (a freshly applied preseed.cfg) a (temporary) key for ansible is put in authorized_keys
+  * When running any playbook, this key will be replaced by a trusted CA key, authorized_keys will be nuked. You will have to connect over SSH using a signed SSH-key (signed by the appropriate CA). A helper script is included. This can also be done with the help of Hashicorp Vault.
+  * The standard lifetime of these keys is set to 10 minutes, because some of the plays will also connect later in the play
 * the ```group_vars/all.yml``` for your stage (see ```inventory/README.md```) should contain ```stage```. This string will be used as a folder when including private var-files, so make sure these files are findable in that folder.
 * this prefix should also be in all.yml, having value ```ansible_vault: "ansible-vault/{{ stage }}"```
 * For want of a better solution, this also requires the existence of a ```PRIVATE_REPO```. In my case it is a self-hosted git-repository. In this repository, among other things, the SSH-keys for the two named users are stored. The layout of that repository is as follows:
@@ -20,7 +24,9 @@ PRIVATE_REPO
 ├── ansible-vault
 │   ├── ansible-galaxy-api-token
 │   ├── .vault_pass
-│   └── <FQ-rolename>-vars.yml
+│   ├── <production>
+│   │   ├── <FQ-rolename>-vars.yml
+│   │   └── <FQ-rolename>.env
 ├── homepage
 │   ├── bookmarks.yaml
 │   ├── custom.css
@@ -36,14 +42,15 @@ PRIVATE_REPO
 │   ├── inv_unifi.yml
 ├── ssh-keys
 │   ├── <ansible_user>
-│   │   ├── <ansible_user>-key
-│   │   ├── <ansible_user>-key.pub
-│   │   └── passphrase
+│   │   ├── <ansible_user>-key-install-only
+│   │   ├── <ansible_user>-key-install-only.pub
 │   ├── <interactive_user>
 │   │   ├── <interactive_user>-yubi-1
 │   │   ├── <interactive_user>-yubi-1.pub
 │   │   ├── <interactive_user>-yubi-2
 │   │   ├── <interactive_user>-yubi-2.pub
+│   │   ├── <interactive_user>-yubi-3
+│   │   ├── <interactive_user>-yubi-3.pub
 │   │   └── config
 ```
 
