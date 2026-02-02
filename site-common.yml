@@ -1,0 +1,14 @@
+---
+# file: site-common.yml
+- name: Assertions
+  ansible.builtin.import_playbook: playbooks/00-assertions.yml
+- name: Common configuration
+  ansible.builtin.import_playbook: playbooks/01-common.yml
+
+- name: Inform the user about which private key file is being used
+  hosts:
+    - all
+  tasks:
+    - name: Debug which private key file is being used
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} has used {{ ansible_ssh_private_key_file }}"

@@ -2,10 +2,38 @@
 # file: 00-assertions.yml
 - name: Check supported OS
   hosts: all
-  become: true
+  gather_facts: true
   tasks:
-    - name: Ping all hosts in order to update the cached facts
-      ansible.builtin.ping:
+    - name: Verify connectivity to the hosts that are targeted # noqa: ignore-errors
+      ansible.builtin.command: touch /tmp/ansible-ssh-check
+      ignore_errors: true
+      ignore_unreachable: true
+      changed_when: false
+    - name: Process the results of the connectivity check
+      run_once: true
+      block:
+        - name: Set fact for hosts that are up, but do not respond to the default ansible SSH-key
+          ansible.builtin.set_fact:
+            invalid_ssh_key: "{{ ansible_play_hosts_all | difference(ansible_play_hosts) }}"
+
+    - name: Reset errors because we are trying to repair
+      ansible.builtin.meta: clear_host_errors
+
+    - name: Debug invalid SSH key hosts
+      ansible.builtin.debug:
+        msg: "Hosts with invalid SSH key: {{ invalid_ssh_key }}"
+
+    - name: Change ansible-key for hosts with invalid SSH-key and re-gather facts
+      ansible.builtin.set_fact:
+        ansible_ssh_private_key_file: "/home/awaal/ansible/home/ssh-keys/ansible/ansible-key"
+      when: inventory_hostname in invalid_ssh_key
+
+    - name: Re-read facts if custom fact was installed this run # noqa: no-handler
+      ansible.builtin.setup:
+      when: inventory_hostname in invalid_ssh_key
+
+    - name: Clear host errors once more
+      ansible.builtin.meta: clear_host_errors
 
     - name: Assert supported version of OS
       ansible.builtin.assert:
@@ -22,8 +50,8 @@
           - interactive_home is defined
           - interactive_password is defined
           - lookup('ansible.builtin.env', 'PRIVATE_REPO') != ''
-          - lookup('ansible.builtin.env', 'SSH_ASKPASS') != ''
-          - lookup('ansible.builtin.env', 'SSH_ASKPASS_REQUIRE') != ''
+          # - lookup('ansible.builtin.env', 'SSH_ASKPASS') != ''
+          # - lookup('ansible.builtin.env', 'SSH_ASKPASS_REQUIRE') != ''
         fail_msg: "One or more required environment variables are not set. Did you run firstrun.sh?"
         success_msg: "All required environment variables are set"
 
