@@ -2,38 +2,35 @@
 # file: 00-assertions.yml
 - name: Check supported OS
   hosts: all
-  gather_facts: true
+  gather_facts: false
   tasks:
     - name: Verify connectivity to the hosts that are targeted # noqa: ignore-errors
       ansible.builtin.command: touch /tmp/ansible-ssh-check
       ignore_errors: true
       ignore_unreachable: true
+      register: ssh_check_result
       changed_when: false
-    - name: Process the results of the connectivity check
-      run_once: true
-      block:
-        - name: Set fact for hosts that are up, but do not respond to the default ansible SSH-key
-          ansible.builtin.set_fact:
-            invalid_ssh_key: "{{ ansible_play_hosts_all | difference(ansible_play_hosts) }}"
 
-    - name: Reset errors because we are trying to repair
+    - name: Reset errors because maybe we are dealing with a recently bootstrapped system
       ansible.builtin.meta: clear_host_errors
 
-    - name: Debug invalid SSH key hosts
-      ansible.builtin.debug:
-        msg: "Hosts with invalid SSH key: {{ invalid_ssh_key }}"
-
-    - name: Change ansible-key for hosts with invalid SSH-key and re-gather facts
+    - name: Set fact to indicate connectivity issues # noqa: no-handler
       ansible.builtin.set_fact:
-        ansible_ssh_private_key_file: "/home/awaal/ansible/home/ssh-keys/ansible/ansible-key"
-      when: inventory_hostname in invalid_ssh_key
+        ssh_connectivity_issue: "{{ ssh_check_result.unreachable | default(false) }}"
 
-    - name: Re-read facts if custom fact was installed this run # noqa: no-handler
+    # Name of key was changed in February of 2026. If it does not work, try "ansible-key" - you are dealing with an older bootstrap
+    - name: Block to correct this host's SSH-key if needed
+      when: ssh_connectivity_issue
+      block:
+        - name: Change ansible-key for hosts with invalid SSH-key and re-gather facts
+          ansible.builtin.set_fact:
+            ansible_ssh_private_key_file: "/home/awaal/ansible/home/ssh-keys/ansible/ansible-key-install-only"
+        - name: Tell the user of the key-change
+          ansible.builtin.debug:
+            msg: "Host {{ inventory_hostname }} had an invalid SSH-key. Changed to {{ ansible_ssh_private_key_file }}"
+
+    - name: Now is the time to gather facts
       ansible.builtin.setup:
-      when: inventory_hostname in invalid_ssh_key
-
-    - name: Clear host errors once more
-      ansible.builtin.meta: clear_host_errors
 
     - name: Assert supported version of OS
       ansible.builtin.assert:
