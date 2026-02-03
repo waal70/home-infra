@@ -57,11 +57,11 @@
           - interactive_user is defined
           - interactive_home is defined
           - interactive_password is defined
-          - lookup('ansible.builtin.env', 'PRIVATE_REPO') != ''
+          - private_repo is defined
           # - lookup('ansible.builtin.env', 'SSH_ASKPASS') != ''
           # - lookup('ansible.builtin.env', 'SSH_ASKPASS_REQUIRE') != ''
         fail_msg: "One or more required environment variables are not set. Did you run firstrun.sh?"
-        success_msg: "All required environment variables are set"
+        success_msg: "All required environment variables are set, using {{ private_repo }} for secrets"
 
     - name: Assert the target environment is known
       ansible.builtin.assert:
