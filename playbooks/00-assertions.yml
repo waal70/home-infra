@@ -61,7 +61,11 @@
           # - lookup('ansible.builtin.env', 'SSH_ASKPASS') != ''
           # - lookup('ansible.builtin.env', 'SSH_ASKPASS_REQUIRE') != ''
         fail_msg: "One or more required environment variables are not set. Did you run firstrun.sh?"
-        success_msg: "All required environment variables are set, using {{ private_repo }} for secrets"
+        success_msg: "All required environment variables are set."
+
+    - name: Tell the user of the private_repo in use
+      ansible.builtin.debug:
+        msg: "Using private_repo at {{ private_repo }}"
 
     - name: Assert the target environment is known
       ansible.builtin.assert:
