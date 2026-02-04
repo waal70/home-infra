@@ -114,6 +114,10 @@ roles:
     src: https://git.andrecatherine.net/waal70/ansible-role-samba_ad_dc
     version: main
     scm: git
+  - name: waal70.semaphore
+    src: https://git.andrecatherine.net/waal70/ansible-role-semaphore
+    version: main
+    scm: git
   - name: waal70.ssh_host_key
     src: https://git.andrecatherine.net/waal70/ansible-role-ssh_host_key
     version: main

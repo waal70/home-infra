@@ -86,6 +86,9 @@ roles:
   - name: waal70.samba_ad_dc
     src: https://github.com/waal70/ansible-role-samba_ad_dc
     version: main
+  - name: waal70.semaphore
+    src: https://github.com/waal70/ansible-role-semaphore
+    version: main
   - name: waal70.ssh_host_key
     src: https://github.com/waal70/ansible-role-ssh_host_key
     version: main

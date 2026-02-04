@@ -1,9 +1,10 @@
 ---
 - name: Show info on specific host
   hosts:
-    - virtualbox
+    - pi5-01
   become: true
   gather_facts: true
   roles:
-    - waal70.debian_common
-    - ansible-vault-master
+    - waal70.semaphore
+  vars:
+    endpoint_idx: 1
