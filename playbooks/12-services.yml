@@ -42,6 +42,7 @@
     endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
     backup_directories:
       - /appdata
+      - /data
     backup_minute: "45"
   pre_tasks:
     - name: As we are starting the run, delete any left-over marker
