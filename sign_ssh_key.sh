@@ -73,6 +73,7 @@ IDENTITY=""
 PRINCIPALS=""
 VALIDITY="+30m"          # default when -v is omitted
 USE_EXISTING=false
+USE_YUBIKEY=false
 
 while getopts ":c:i:p:v:e:h" opt; do
     case "${opt}" in
@@ -138,6 +139,19 @@ fi
 CERT_FILE="${PRIVATE_KEY_DIR}/${PRIVATE_KEY_BASENAME}-cert.pub"
 
 # ----- Sign the key -----
+if ${USE_YUBIKEY}; then
+echo "Signing '${SIGN_PUBKEY}' with Yubiky CA key '${CA_KEY}' ..."
+ssh-keygen -D /usr/lib/x86_64-linux-gnu/libykcs11.so \
+          -s "${CA_KEY}" \
+          -I "${IDENTITY}" \
+          -n "${PRINCIPALS}" \
+          -V "${VALIDITY}" \
+          -z "$(date +%s)" \
+          -O extension:permit-pty \
+          -O extension:permit-port-forwarding \
+          -f "${CERT_FILE}" \
+          "${SIGN_PUBKEY}"
+else
 echo "Signing '${SIGN_PUBKEY}' with CA key '${CA_KEY}' ..."
 ssh-keygen -s "${CA_KEY}" \
           -I "${IDENTITY}" \
@@ -148,6 +162,7 @@ ssh-keygen -s "${CA_KEY}" \
           -O extension:permit-port-forwarding \
           -f "${CERT_FILE}" \
           "${SIGN_PUBKEY}"
+fi
 
 echo "✅ Certificate written to ${CERT_FILE}"
 if ${USE_EXISTING}; then

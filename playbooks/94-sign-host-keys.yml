@@ -1,0 +1,192 @@
+---
+# This playbook is designed to sign SSH host keys with a Yubikey-based CA and distribute the signed certificates back to the hosts.
+- name: Perform default config on all hosts
+  hosts: all
+  gather_facts: true
+  vars:
+    ssh_host_signer_key_directory: /etc/ssh
+    ssh_host_signer_ca_key: /home/awaal/ansible/home/ssh-keys/ca/ca.pub
+    ssh_host_signer_id: "{{ inventory_hostname }}-{{ ansible_facts['date_time'].date }}"
+    ssh_host_signer_hostnames: "{{ inventory_hostname }}"
+    ssh_host_signer_ssh_config: /etc/ssh/sshd_config
+    ssh_host_key_validity: "+365d"
+    yubi_pin: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          65643135643636666431386539393838663264336332626565633962303330326438313236363135
+          3963653535386562333233376461396333356663363534340a366530386638303036373239366562
+          63326437373534653737633038663137383730396539376465323164376162303931653539343333
+          3162333336313330340a633966323135666430326134313061336438633432353937323530323762
+          3834
+  tasks:
+    - name: Ensure localhost has the Yubikey ykcs package
+      ansible.builtin.apt:
+        name:
+          - ykcs11
+        state: present
+      delegate_to: localhost
+      become: true
+      run_once: true
+
+    - name: Find SSH host keys.
+      ansible.builtin.find:
+        path: "{{ ssh_host_signer_key_directory }}"
+        pattern: ssh_host_*_key
+      register: private_keys
+      failed_when: "\"matched\" not in private_keys or private_keys.matched == 0"
+      become: true
+
+    - name: Create local temporary directory.
+      ansible.builtin.tempfile:
+        suffix: ansible-ssh-host-signer
+        state: directory
+      changed_when: false
+      register: temporary_directory
+      delegate_to: localhost
+
+    - name: Fetch public keys.
+      ansible.builtin.fetch:
+        src: "{{ item.path }}.pub"
+        dest: "{{ temporary_directory.path }}/public_keys/"
+        validate_checksum: true
+      with_items: "{{ private_keys.files }}"
+      changed_when: false
+      become: true
+      retries: 5
+      until: fetch_result is succeeded
+      register: fetch_result
+      delay: 5
+
+    - name: Fetch existing certificates.
+      ansible.builtin.fetch:
+        src: "{{ item.path }}-cert.pub"
+        dest: "{{ temporary_directory.path }}/existing_certificates/"
+        fail_on_missing: false
+      with_items: "{{ private_keys.files }}"
+      register: fetch_certificates_result
+      changed_when: false
+
+    - name: Calculate the number of days remaining in the validity of existing certificates.
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          cert_expiry_date=$(ssh-keygen -Lf {{ _path_to_cert }} | grep 'Valid:' | cut -d ' ' -f 13)
+          cert_expiry_seconds=$(date +%s -d "$cert_expiry_date")
+          now=$(date +%s)
+          let validity=($cert_expiry_seconds - $now)/86400
+          echo "$validity"
+        executable: /bin/bash
+      vars:
+        _path_to_cert: "{{ _basepath }}{{ item.path | basename }}-cert.pub"
+        _basepath: "{{ temporary_directory.path }}/existing_certificates/{{ inventory_hostname }}{{ ssh_host_signer_key_directory }}/"
+      with_items: "{{ private_keys.files }}"
+      register: certificate_validity
+      changed_when: false
+      failed_when: false
+      delegate_to: localhost
+
+    - name: Set fact for remaining certificate validity in days
+      ansible.builtin.set_fact:
+        days_remaining: "{{ days_remaining + [item.stdout | int] }}"
+      with_items: "{{ certificate_validity.results }}"
+      vars:
+        days_remaining: []
+      when: item.rc == 0
+
+    - name: If one of the certificates has a validity of 30 days or fewer, an update is required
+      ansible.builtin.set_fact:
+        update_required: "{{ update_required or item <= 30 }}"
+      vars:
+        update_required: false
+      with_items: "{{ days_remaining }}"
+
+    - name: Block to sign keys and update the host, when an update is required
+      when: update_required
+      block:
+        - name: Sign SSH keys with Yubikey, validity is {{ ssh_host_key_validity }}.
+          ansible.builtin.command:
+            argv:
+              - sshpass
+              - -p
+              - "{{ yubi_pin }}"
+              - -P
+              - "Enter PIN for"
+              - ssh-keygen
+              - -D
+              - /usr/lib/x86_64-linux-gnu/libykcs11.so
+              - -s
+              - "{{ ssh_host_signer_ca_key }}"
+              - -I
+              - "{{ ssh_host_signer_id }}"
+              - -h
+              - -V
+              - "{{ ssh_host_key_validity }}"
+              - -n
+              - "{{ ssh_host_signer_hostnames }}"
+              - "{{ temporary_directory.path }}/public_keys/{{ inventory_hostname }}{{ item.path }}.pub"
+          with_items: "{{ private_keys.files }}"
+          become: true
+          changed_when: false
+          delegate_to: localhost
+          retries: 10
+          delay: 7
+          until: result.rc == 0
+          register: result
+
+        - name: Find certificates.
+          ansible.builtin.find:
+            path: "{{ temporary_directory.path }}/public_keys/{{ inventory_hostname }}{{ ssh_host_signer_key_directory }}"
+            pattern: ssh_host_*_key-cert.pub
+          register: certificates
+          delegate_to: localhost
+
+        - name: Copy certificates back to server.
+          ansible.builtin.copy:
+            src: "{{ item.path }}"
+            dest: "{{ ssh_host_signer_key_directory }}"
+            mode: '0644'
+          with_items: "{{ certificates.files }}"
+          become: true
+
+        - name: Set the appropriate options in sshd_config file
+          ansible.builtin.lineinfile:
+            path: "{{ sshd_config_file }}"
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            state: present
+          with_items:
+            - { regexp: "^#?HostCertificate", line: "HostCertificate /etc/ssh/ssh_host_ed25519_key-cert.pub" }
+          become: true
+
+        - name: Restart sshd to apply new host certificates
+          ansible.builtin.systemd_service:
+            name: sshd
+            state: restarted
+          become: true
+# END BLOCK Perform update
+
+# Edit your known_hosts to trust the new host keys signed by the CA:
+    - name: Add host to known_hosts with CA verification
+      ansible.builtin.lineinfile:
+        path: "~/.ssh/known_hosts"
+        line: "@cert-authority * {{ lookup('ansible.builtin.file', ssh_host_signer_ca_key) }}"
+      delegate_to: localhost
+
+    - name: Remove host from known_hosts to avoid conflicts
+      ansible.builtin.command:
+        argv:
+          - ssh-keygen
+          - -R
+          - "{{ item }}"
+      with_items:
+        - "{{ inventory_hostname }}"
+        - "{{ ansible_facts['default_ipv4'].address }}"
+      delegate_to: localhost
+      register: _remove_host
+      changed_when: "'updated' in _remove_host.stdout"
+
+    - name: Remove local temporary directory.
+      ansible.builtin.file:
+        name: "{{ temporary_directory.path }}"
+        state: absent
+      changed_when: false
+      delegate_to: localhost
