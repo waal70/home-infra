@@ -5,6 +5,6 @@
   become: true
   gather_facts: true
   roles:
-    - waal70.semaphore
+    - waal70.docker
   vars:
     endpoint_idx: 1
