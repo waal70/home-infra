@@ -12,6 +12,7 @@ sshd_config_file: /etc/ssh/sshd_config
 interactive_user: awaal
 interactive_home: /home/awaal
 private_repo: "{{ lookup('ansible.builtin.env', 'HOME') | default('~') }}/ansible/home"
+install_key: "{{ private_repo }}/ssh-keys/{{ ansible_user }}/{{ ansible_user }}-key-install-only"
 ansible_user: "{{ remote_user | default('ansible') }}"
 interactive_password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
