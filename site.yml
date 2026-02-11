@@ -13,7 +13,7 @@
       ansible.builtin.file:
         path: "{{ private_repo }}/ssh-keys/ansible/tmp-ansible-key"
         state: touch
-        mode: "0777"
+        mode: "0600"
         modification_time: '200212311815.00'
       when: not sshkey_stat_result.stat.exists
 
@@ -38,7 +38,7 @@
       ansible.builtin.debug:
         msg:
           - "SSH key is {{ ((now() - (sshkey_mtime | to_datetime('%Y%m%d-%H%M%S'))).total_seconds() / 3600) | round(1) }} hours old"
-          - "Maximum allowed is 12h. I will {%if sshkey_age.files | length == 0 %}NOT {%endif %}generate new keys."
+          - "Maximum allowed is 12h. I will {%if sshkey_age.files | length == 0 %}use the existing keys.{%else %}generate new keys.{%endif %}"
 
     - name: Run the SSH key signing script to get a fresh certificate # noqa: no-changed-when
       ansible.builtin.command: >
