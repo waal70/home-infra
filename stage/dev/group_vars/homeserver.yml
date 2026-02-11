@@ -2,4 +2,4 @@
 # group variables for portainer-master
 enable_journaling: true # Set to true to enable journaling, false to disable
 log2ram_size: 80M
-log2ram_reboot_after_install: true
+log2ram_reboot_after_install: false
