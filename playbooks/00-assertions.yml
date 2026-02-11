@@ -35,7 +35,7 @@
       block:
         - name: Change ansible-key for hosts with invalid SSH-key and re-gather facts
           ansible.builtin.set_fact:
-            ansible_ssh_private_key_file: "/home/awaal/ansible/home/ssh-keys/ansible/ansible-key-install-only"
+            ansible_ssh_private_key_file: "{{ install_key }}"
         - name: Tell the user of the key-change
           ansible.builtin.debug:
             msg: "Host {{ inventory_hostname }} had an invalid SSH-key. Changed to {{ ansible_ssh_private_key_file }}"
