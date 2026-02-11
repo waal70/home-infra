@@ -21,8 +21,8 @@ DOCUMENTATION = r'''
       controller_api:
         description: url of the unifi controller
         required: true
-      controller_login:
-        description: url to login. this is sometimes different from the api url
+      controller_api_key:
+        description: An API key that will be used to access the API
         required: true
       controller_site:
         description: the site identifier
@@ -46,11 +46,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     def __init__(self):
         super(InventoryModule, self).__init__()
         self.plugin: Optional[str] = None
-        self.username: Optional[str] = None
-        self.password: Optional[str] = None
-        self.controller_login: Optional[str] = None
         self.controller_api: Optional[str] = None
+        self.controller_api_key: Optional[str] = None
         self.controller_site: Optional[str] = None
+        self.controller_siteid: Optional[str] = None
         self.macfile: Optional[str] = None
         self.macs: List[Dict[str, Any]] = []
         self.active_clients: List[Dict[str, Any]] = []
@@ -70,15 +69,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         self._read_config_data(path)
 
         self.plugin = self.get_option('plugin')
-        self.username = self.get_option('vault_controller_username')
-        self.password = self.get_option('vault_controller_password')
-        self.controller_login = self.get_option('controller_login')
+        self.controller_api_key = self.get_option('controller_api_key')
         self.controller_api = self.get_option('controller_api')
         self.controller_site = self.get_option('controller_site') or 'default'
         self.macfile = self.get_option('macfile')
 
+
         try:
-            self.login()
+            self.site_to_siteid()
             self.read_configured_mac_addresses()
             self.list_clients()
 
@@ -141,29 +139,73 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         except Exception as exc:
             raise AnsibleParserError(f"Unexpected error: {exc}") from exc
 
-    def login(self):
-        """Obtain a session cookie/token from Unifi controller."""
-        if not (self.username and self.password and self.controller_login):
-            raise AnsibleParserError("Missing controller credentials or login URL")
+    def site_to_siteid(self):
+        """Config file gives site name or short string, translate to GUID-id"""
 
-        # post credentials; requests.Session will store cookies
-        data = {
-            'username': self.username.encode(encoding='utf-8'),
-            'password': self.password.encode(encoding='utf-8'),
-            'remember': 'true'
-        }
-        resp = self.session.post(self.controller_login, data=data, verify=False, timeout=10)
+        if not isinstance(self.controller_api, str) or not self.controller_api.strip():
+            raise AnsibleParserError("controller_api must be a non-empty string.")
+        if not isinstance(self.controller_api_key, str) or not self.controller_api_key.strip():
+            raise AnsibleParserError("controller_api_key must be a non-empty string.")
+        if not isinstance(self.controller_site, str) or not self.controller_site.strip():
+            raise AnsibleParserError("controller_site must be a non-empty string.")
+
+        uri = f"{self.controller_api.rstrip('/')}"
+        self.headers.update({
+            'X-API-KEY': self.controller_api_key,
+            'Accept': 'application/json'
+            })
         try:
-            resp.raise_for_status()
-        except Exception as exc:
-            raise AnsibleParserError(f"Failed to login to controller: {exc}") from exc
+            resp = self.session.get(
+                uri,
+                headers=self.headers,
+                verify=False,
+                timeout=10
+            )
+            if resp.status_code == 401:
+                raise AnsibleParserError(
+                    "Authentication failed (401). The provided API key is "
+                    "invalid, expired, or missing. Please verify "
+                    "`controller_api_key` in your config file."
+                )
+            resp.raise_for_status()          # HTTP errors become exceptions
+        except requests.RequestException as exc:
+            raise AnsibleParserError(f"HTTP request failed: {exc}") from exc
 
-        token = resp.cookies.get("TOKEN")
-        if not token:
-            # some controllers may return different cookie names; store all cookies
-            self.headers = {}
-        else:
-            self.headers = {'Cookie': f'TOKEN={token}'}
+        try:
+            payload: Dict[str, Any] = resp.json()
+        except json.JSONDecodeError as exc:
+            raise AnsibleParserError("Response body is not valid JSON.") from exc
+
+        data: List[Dict[str, Any]] = payload.get("data")
+        if not isinstance(data, list):
+            raise AnsibleParserError(
+                "Unexpected JSON layout - 'data' field is missing or not a list."
+            )
+
+        target_id: Optional[str] = None
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            if item.get("internalReference") == self.controller_site:
+                target_id = item.get("id")
+                break
+
+        if not target_id:
+          # No match – keep the old value (if any) untouched
+            raise AnsibleParserError(
+                f"No entry with internalReference='{self.controller_site}' found."
+           )
+
+        self.controller_siteid = target_id
+
+        self.display.vv(
+            (
+                "Translated site '"
+                + self.controller_site
+                + "' to id: "
+                + self.controller_siteid
+            )
+        )
 
     def read_configured_mac_addresses(self):
         """Read macfile (JSON). Support relative paths safely."""
@@ -193,34 +235,65 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             except Exception as exc:
                 raise AnsibleParserError(f"Failed to parse macfile {path}: {exc}") from exc
 
+    @staticmethod
+    def _safe_str(item: Dict[str, Any], key: str, *, lower: bool = False) -> Optional[str]:
+        """Return a stripped string value or ``None`` if missing/empty."""
+        val = item.get(key)
+        if isinstance(val, str):
+            val = val.strip()
+            if lower:
+                val = val.lower()
+            return val or None
+        return None
+
     def list_clients(self):
         """Query Unifi for active clients and normalize fields."""
         if not (self.controller_api and self.controller_site):
             raise AnsibleParserError("controller_api or controller_site not configured")
 
-        uri = f"{self.controller_api.rstrip('/')}/s/{self.controller_site}/stat/sta"
-        resp = self.session.get(uri, headers=self.headers or None, verify=False, timeout=10)
+        uri = f"{self.controller_api.rstrip('/')}/{self.controller_siteid}/clients?limit=100"
+        # uri = f"{self.controller_api.rstrip('/')}/s/{self.controller_site}/stat/sta"
+
         try:
+            resp = self.session.get(
+                uri,
+                headers=self.headers,
+                verify=False,
+                timeout=10
+            )
+            # ----- 4a. Authentication failure (401) -----
+            if resp.status_code == 401:
+                raise AnsibleParserError(
+                    "Authentication failed (401). Check your API key / token."
+                )
             resp.raise_for_status()
         except Exception as exc:
             raise AnsibleParserError(f"Failed to query controller API: {exc}") from exc
 
-        payload = resp.json()
-        data = payload.get('data') if isinstance(payload, dict) else None
-        if not isinstance(data, list):
-            raise AnsibleParserError("Unexpected API response format: 'data' missing or not a list")
+        try:
+            payload: Any = resp.json()
+        except json.JSONDecodeError as exc:
+            raise AnsibleParserError("Controller response is not valid JSON.") from exc
 
-        clients = []
-        for item in data:
-            mac = (item.get('mac') or "").strip().lower()
-            if not mac:
-                continue
-            ansible_host = item.get('ip') or item.get('last_ip') or None
-            clients.append({
-                'mac': mac,
-                'ansible_host': ansible_host,
-                'dhcp_hostname': item.get('hostname'),
-                'unifi_name': item.get('name') or item.get('hostname'),
-                'oui': item.get('oui')
-            })
-        self.active_clients = clients
+        if not isinstance(payload, dict):
+            raise AnsibleParserError("Unexpected API response: top-level object is not a dict.")
+        data = payload.get("data")
+        if not isinstance(data, list):
+            raise AnsibleParserError(
+                "Unexpected API response format: 'data' missing or not a list."
+            )
+
+        normalised: List[Dict[str, Any]] = [
+            {
+                "mac": self._safe_str(item, "macAddress", lower=True),
+                "ansible_host": self._safe_str(item, "ipAddress"),
+                "dhcp_hostname": self._safe_str(item, "hostname"),
+                "unifi_name": self._safe_str(item, "name"),
+                "oui": self._safe_str(item, "id"),
+            }
+            for item in data
+            # Skip entries without a MAC – they are unusable for Ansible inventory
+            if self._safe_str(item, "macAddress", lower=True)
+        ]
+        self.active_clients = normalised
+        return normalised

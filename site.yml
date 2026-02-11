@@ -45,35 +45,35 @@
         ./firstrun.sh
       when: sshkey_age.files | length > 0
 
-# - name: Assertions
-#   ansible.builtin.import_playbook: playbooks/00-assertions.yml
-# - name: Common configuration
-#   ansible.builtin.import_playbook: playbooks/01-common.yml
-# - name: Raspberry Pi setup
-#   ansible.builtin.import_playbook: playbooks/02-pi.yml
-# - name: Proxmox VE setup
-#   ansible.builtin.import_playbook: playbooks/03-pve.yml
-# - name: Active Directory Domain Controller
-#   ansible.builtin.import_playbook: playbooks/04-ad-dc.yml
-# - name: Outpost setup
-#   ansible.builtin.import_playbook: playbooks/05-outpost.yml
-# - name: TFTP Server setup
-#   ansible.builtin.import_playbook: playbooks/06-tftp-server.yml
-# - name: Pi-Hole setup and/or refresh
-#   ansible.builtin.import_playbook: playbooks/06b-piholedns.yml
-# - name: Ansible Control Node setup
-#   ansible.builtin.import_playbook: playbooks/07-ansible-control-node.yml
-# - name: Homeserver setup
-#   ansible.builtin.import_playbook: playbooks/08-portainer-master.yml
-# - name: Development Laptop setup
-#   ansible.builtin.import_playbook: playbooks/09-dev-laptop.yml
-# - name: Ensure services are present and running
-#   ansible.builtin.import_playbook: playbooks/12-services.yml
+- name: Assertions
+  ansible.builtin.import_playbook: playbooks/00-assertions.yml
+- name: Common configuration
+  ansible.builtin.import_playbook: playbooks/01-common.yml
+- name: Raspberry Pi setup
+  ansible.builtin.import_playbook: playbooks/02-pi.yml
+- name: Proxmox VE setup
+  ansible.builtin.import_playbook: playbooks/03-pve.yml
+- name: Active Directory Domain Controller
+  ansible.builtin.import_playbook: playbooks/04-ad-dc.yml
+- name: Outpost setup
+  ansible.builtin.import_playbook: playbooks/05-outpost.yml
+- name: TFTP Server setup
+  ansible.builtin.import_playbook: playbooks/06-tftp-server.yml
+- name: Pi-Hole setup and/or refresh
+  ansible.builtin.import_playbook: playbooks/06b-piholedns.yml
+- name: Ansible Control Node setup
+  ansible.builtin.import_playbook: playbooks/07-ansible-control-node.yml
+- name: Homeserver setup
+  ansible.builtin.import_playbook: playbooks/08-portainer-master.yml
+- name: Development Laptop setup
+  ansible.builtin.import_playbook: playbooks/09-dev-laptop.yml
+- name: Ensure services are present and running
+  ansible.builtin.import_playbook: playbooks/12-services.yml
 
-# - name: Inform the user about which private key file is being used
-#   hosts:
-#     - all
-#   tasks:
-#     - name: Debug which private key file was used
-#       ansible.builtin.debug:
-#         msg: "{{ inventory_hostname }} has used {{ ansible_ssh_private_key_file }}"
+- name: Inform the user about which private key file is being used
+  hosts:
+    - all
+  tasks:
+    - name: Debug which private key file was used
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} has used {{ ansible_ssh_private_key_file }}"
