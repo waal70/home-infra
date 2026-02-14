@@ -1,0 +1,11 @@
+---
+# file: 06b-piholedns.yml
+- name: Playbook that will update adlists on pihole and re-write configuration
+  hosts:
+    - dns
+  become: true
+#  strategy: free # noqa: run-once[play]
+  roles:
+    - role: waal70.pihole
+  vars:
+    pihole_action: "adlists"
