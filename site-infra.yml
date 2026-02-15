@@ -1,0 +1,32 @@
+---
+# file: site-infra.yml
+# The site-infra ensures the foundation of the homelab is there and provisioned correctly
+# It therefore includes bare-metal config (OS), but also hypervisor (e.g. Proxmox and/or Docker)
+# After this, you should run site-apps-infra.yml, as it will ensure presence of
+# pre-requisites for services in the homelab
+
+- name: Ensure connectivity for Ansible
+  hosts:
+    - localhost
+  tasks:
+  # We choose include because the YAML will use discovered values
+    - name: Include tasks to check for SSH key validity
+      ansible.builtin.include_tasks: validate-ssh.yml
+      run_once: true
+
+- name: Assertions to validate this run
+  ansible.builtin.import_playbook: playbooks/00-assertions.yml
+- name: Common configuration for all Debian-based systems
+  ansible.builtin.import_playbook: playbooks/01-common.yml
+- name: Common configuration for Raspberry Pi
+  ansible.builtin.import_playbook: playbooks/02-pi.yml
+- name: Configure Proxmox Virtual Environment server(s)
+  ansible.builtin.import_playbook: playbooks/03-pve-docker.yml
+
+- name: Inform the user about which private key file is being used
+  hosts:
+    - all
+  tasks:
+    - name: Debug which private key file was used
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} has used {{ ansible_ssh_private_key_file }}"

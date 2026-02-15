@@ -1,0 +1,18 @@
+---
+# file: pve-docker.yml
+# This will install and configure PVE. It also means a template VM will be created
+# and a number of VMs will be created - if you configured this in the pve-role
+- name: Setup Virtualization Environment
+  hosts: proxmox_nodes
+  become: true
+  roles:
+    - role: waal70.pve
+      when: pve_reset is undefined
+    - role: waal70.pxe_prep
+      when: pve_reset is defined # will become defined by adding -e "pve_reset=true" on command-line
+
+- name: Setup Containerization Environment
+  hosts: homeserver:outpost
+  become: true
+  roles:
+    - role: waal70.docker

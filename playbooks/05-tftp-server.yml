@@ -1,5 +1,5 @@
 ---
-# file: 06-tftp-server.yml
+# file: 05-tftp-server.yml
 - name: Setup TFTP server
   hosts:
     - tftp

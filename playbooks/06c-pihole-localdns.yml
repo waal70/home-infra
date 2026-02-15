@@ -1,9 +1,9 @@
 ---
-# file: 06b-piholelocaldns.yml
-# TODO: integrate into waal70.pihole role
+# file: 06c-pihole-localdns.yml
+# Convenience playbook to update local DNS entries in the homelab
 - name: Playbook that will update the local DNS entries in Pi-hole and show current entries
   hosts:
-    - util:dns
+    - dns
   become: true
   vars:
     pihole_localdns_newlist:

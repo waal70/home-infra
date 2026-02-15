@@ -1,6 +1,0 @@
----
-- name: "55 - Backup configuration"
-  hosts: testenv
-  become: true
-  roles:
-    - waal70.backup

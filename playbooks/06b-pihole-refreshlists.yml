@@ -1,5 +1,6 @@
 ---
-# file: 06b-piholedns.yml
+# file: 06b-pihole-refreshlists.yml
+# Convenience playbook to refresh adlists
 - name: Playbook that will update adlists on pihole and re-write configuration
   hosts:
     - dns

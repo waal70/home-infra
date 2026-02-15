@@ -1,0 +1,48 @@
+---
+# file: 08-infra-services.yml
+- name: Deploy virtualized and containerized infra services
+  hosts:
+    - homeserver
+  become: true
+  roles:
+    - waal70.vaultwarden # includes nginx-pm
+    - waal70.authentik
+    - waal70.backup
+  pre_tasks:
+    - name: As we are starting the run, delete any left-over marker
+      ansible.builtin.file:
+        path: /tmp/portainertje
+        state: absent
+  post_tasks:
+    - name: Run completed, so delete the marker
+      ansible.builtin.file:
+        path: /tmp/portainertje
+        state: absent
+
+- name: Deploy infra services to outpost servers
+  hosts:
+    - outpost
+  become: true
+  roles:
+    - waal70.forgejo
+    - waal70.semaphore
+    - waal70.backup
+  vars:
+    endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
+    backup_directories:
+      - /appdata
+      - /data
+    backup_minute: "45"
+  pre_tasks:
+    - name: As we are starting the run, delete any left-over marker
+      ansible.builtin.file:
+        path: /tmp/portainertje
+        state: absent
+  post_tasks:
+    - name: Inform user of state of variable
+      ansible.builtin.debug:
+        msg: "host is {{ ansible_facts['hostname'] }}"
+    - name: Run completed, so delete the marker
+      ansible.builtin.file:
+        path: /tmp/portainertje
+        state: absent

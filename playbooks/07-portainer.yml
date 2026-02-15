@@ -1,17 +1,17 @@
 ---
-# file: 08-portainer-master.yml
+# file: 07-portainer.yml
 - name: Gather facts for homeserver and outposts
   hosts:
     - homeserver
     - outpost
   tasks:
-    - name: Ping these hosts
+    - name: Ping these hosts in order to have their facts gathered
       ansible.builtin.ping:
-- name: Setup main Portainer server. This is required when using a jumpserver
+
+- name: Setup Portainer
   hosts:
     - homeserver
   become: true
   # strategy: free # noqa: run-once[play]
   roles:
-    - role: waal70.docker
     - role: waal70.portainer

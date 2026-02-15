@@ -1,6 +1,6 @@
 ---
-# file: 06b-piholedns.yml
-- name: Playbook that will update adlists on pihole and re-write configuration
+# file: 06-dns.yml
+- name: Playbook that will configure DNS in the homelab. Currently based on pihole.
   hosts:
     - dns
   become: true

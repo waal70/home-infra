@@ -1,8 +1,0 @@
----
-# file: 93-gitea.yml
-- name: Deploy gitea
-  hosts:
-    - testenv
-  become: true
-  roles:
-    - waal70.gitea

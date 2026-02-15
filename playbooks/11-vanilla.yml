@@ -1,8 +1,0 @@
----
-# file: 11-vanilla.yml
-- name: Setup generic and vanilla debian systems
-  hosts:
-    - generic
-  become: true
-  roles:
-    - waal70.debian_common

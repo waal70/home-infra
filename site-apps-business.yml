@@ -1,0 +1,29 @@
+---
+# file: site-apps-business.yml
+# The site-apps-infra ensures the infrastructural services are present.
+# It relies on a foundation (configured by site-infra.yml)
+# Infrastructural services are TFTP, DNS (including Pi-hole and Unbound),
+# Active Directory, etc.
+# These services may also be virtualized or containerized (nginx-pm)
+# Basically anything you require in order to run services in your homelab
+
+- name: Ensure connectivity for Ansible
+  hosts:
+    - localhost
+  tasks:
+  # We choose include because the YAML will use discovered values
+    - name: Include tasks to check for SSH key validity
+      ansible.builtin.include_tasks: validate-ssh.yml
+
+- name: Assertions
+  ansible.builtin.import_playbook: playbooks/00-assertions.yml
+- name: Deploy Containerized/Virtualized business apps
+  ansible.builtin.import_playbook: playbooks/10-business-services.yml
+
+- name: Inform the user about which private key file is being used
+  hosts:
+    - all
+  tasks:
+    - name: Debug which private key file was used
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} has used {{ ansible_ssh_private_key_file }}"
