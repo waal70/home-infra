@@ -3,6 +3,8 @@
 Multiple Ansible playbooks that sets up an infrastructure. Mostly based on raspberry pi's, debian (bookworm and trixie), docker and Proxmox.
 
 It includes an inventory-plugin that uses the UniFi Network Application, but you can also use non-dynamic inventory.
+
+Please note that as of February 2026, the repo was restructured and this README still needs to be updated
   
 ## Pre-requisites
   
