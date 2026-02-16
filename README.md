@@ -5,6 +5,7 @@ Multiple Ansible playbooks that sets up an infrastructure. Mostly based on raspb
 It includes an inventory-plugin that uses the UniFi Network Application, but you can also use non-dynamic inventory.
 
 Please note that as of February 2026, the repo was restructured and this README still needs to be updated
+Also note that I am in the process of migrating from GitHub to CodeBerg.
   
 ## Pre-requisites
   
