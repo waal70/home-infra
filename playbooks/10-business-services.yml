@@ -14,6 +14,7 @@
   roles:
     - waal70.paperless_ngx
     - waal70.immich
+    - waal70.vikunja
     - waal70.homepage
   pre_tasks:
     - name: As we are starting the run, delete any left-over marker

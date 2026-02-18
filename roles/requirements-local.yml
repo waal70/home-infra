@@ -134,6 +134,10 @@ roles:
     src: https://git.andrecatherine.net/waal70/ansible-role-vaultwarden
     version: main
     scm: git
+  - name: waal70.vikunja
+    src: https://git.andrecatherine.net/waal70/ansible-role-vikunja
+    version: main
+    scm: git
   - name: waal70.virtualbox
     src: https://git.andrecatherine.net/waal70/ansible-role-virtualbox
     version: main

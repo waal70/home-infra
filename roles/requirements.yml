@@ -101,6 +101,9 @@ roles:
   - name: waal70.vaultwarden
     src: https://github.com/waal70/ansible-role-vaultwarden
     version: main
+  - name: waal70.vikunja
+    src: https://github.com/waal70/ansible-role-vikunja
+    version: main
   - name: waal70.virtualbox
     src: https://github.com/waal70/ansible-role-virtualbox
     version: main
