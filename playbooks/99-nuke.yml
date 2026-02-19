@@ -8,3 +8,18 @@
 #  strategy: free # noqa: run-once[play]
   roles:
     - waal70.pxe_prep
+  tasks:
+    - name: Remove host from known_hosts of this machine to avoid conflicts
+      ansible.builtin.command:
+        argv:
+          - ssh-keygen
+          - -R
+          - "{{ item }}"
+      with_items:
+        - "{{ inventory_hostname }}"
+        - "{{ ansible_facts['default_ipv4'].address }}"
+      delegate_to: localhost
+      become: true
+      become_user: "{{ interactive_user }}"
+      register: _remove_host
+      changed_when: "'updated' in _remove_host.stdout"
