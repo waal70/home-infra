@@ -20,14 +20,7 @@
 
     - name: Tell the user what is the deal with the SSH-key
       ansible.builtin.debug:
-        msg: >
-          Host {{ inventory_hostname }} has
-          {% if ssh_connectivity_issue %}
-            SSH-connectivity issues.
-          {% else %}
-            no SSH-connectivity issues.
-          {% endif %}
-          Using key {{ ansible_ssh_private_key_file }}.
+        msg: "Host {{ inventory_hostname }} has{% if not ssh_connectivity_issue %} NO{% endif %} SSH-connectivity issues."
 
     # Name of key was changed in February of 2026. If it does not work, try "ansible-key" - you are dealing with an older bootstrap
     - name: Block to correct this host's SSH-key if needed

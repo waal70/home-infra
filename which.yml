@@ -1,3 +1,85 @@
 # file: which.yml
-- name: Assertions
-  ansible.builtin.import_playbook: playbooks/00-assertions.yml
+- name: Inform the user about which private key file is being used
+  hosts:
+    - adpi0
+  tasks:
+    - name: Create temporary build directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: build
+      register: tmp_dir
+
+    - name: Debug
+      ansible.builtin.debug:
+        var: tmp_dir
+
+    - name: Create the buildroot
+      ansible.builtin.file:
+        state: directory
+        path: "{{ tmp_dir.path }}/custom-secrets"
+        mode: "0744"
+
+    - name: Set the new root-folder
+      ansible.builtin.set_fact:
+        buildroot: "{{ tmp_dir.path }}/custom-secrets"
+
+    - name: Create the additional folders
+      ansible.builtin.file:
+        state: directory
+        path: "{{ buildroot }}/{{ item }}"
+        mode: "0744"
+      with_items:
+        - "conf"
+        - "files"
+
+    - name: Create a (dummy) conf file in the conf-folder
+      ansible.builtin.file:
+        path: "{{ buildroot }}/conf/initrd.conf"
+        state: touch
+        mode: "0644"
+
+    - name: "Read the secrets file, skipping if none found"
+      ansible.builtin.set_fact:
+        secret: "{{ lookup('file', item) }}"
+      with_first_found:
+        files:
+          - "{{ private_repo }}/ansible-vault/.master_secret"
+        skip: true
+
+    - name: Place the secret-file in the files-folder
+      ansible.builtin.copy:
+        content: "{{ secret }}"
+        dest: "{{ buildroot }}/files/master-secret"
+        mode: "0400"
+      when: secret is defined
+
+    - name: Slipstream the files
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          cd {{ buildroot }}
+          find . -type f -print0 | sort -z | cpio --null -ov --format=newc > ../custom-secrets.cpio
+          cd ..
+          gzip -9 < custom-secrets.cpio > custom-secrets.img
+        executable: /bin/bash
+      become: true
+      become_user: root
+      register: custom_slipstream
+      changed_when: custom_slipstream.rc == 0
+
+    - name: Move the custom-secrets.img to the tftp folder
+      ansible.builtin.copy:
+        src: "{{ tmp_dir.path }}/custom-secrets.img"
+        remote_src: true
+        dest: "/srv/tftp/debian-installer/amd64/custom-secrets.img"
+        mode: "0644"
+        owner: root
+        force: true
+      become: true
+      become_user: root
+
+    - name: Clean up your temporary folders
+      ansible.builtin.file:
+        path: "{{ tmp_dir.path }}"
+        state: absent
+        force: true

@@ -18,3 +18,11 @@
     - name: Debug which private key file was used
       ansible.builtin.debug:
         msg: "{{ inventory_hostname }} has used {{ ansible_ssh_private_key_file }}"
+
+- name: Inform the user about the state of the use_signed_keys flag
+  hosts:
+    - all
+  tasks:
+    - name: Debug which use_signed_keys
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} has use_signed_keys set to {{ use_signed_keys }}"

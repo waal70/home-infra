@@ -14,6 +14,7 @@ interactive_home: /home/awaal
 private_repo: "{{ lookup('ansible.builtin.env', 'HOME') | default('~') }}/ansible/home"
 ansible_user: "{{ remote_user | default('ansible') }}"
 install_key: "{{ private_repo }}/ssh-keys/{{ ansible_user }}/{{ ansible_user }}-key-install-only"
+use_signed_keys: true
 interactive_password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       63313964383637363938636535653265393836363230363331633064666333336430366362303666
