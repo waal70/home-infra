@@ -26,6 +26,7 @@
   roles:
     - waal70.forgejo
     - waal70.semaphore
+    - waal70.debmirror
     - waal70.backup
   vars:
     endpoint_idx: 1  # These services will be deployed to the second endpoint (first outpost)
