@@ -2,6 +2,9 @@
 # group variables for all servers
 stage: "development"
 ansible_vault: "ansible-vault/{{ stage }}"
+# debian_common will check to see if this mirror is alive and will use it as its main mirror
+local_apt_mirror: debian.andrecatherine.net
+
 enable_journaling: true # Set to true to enable journaling, false to disable
 enable_powersave: true
 log2ram_size: 80M
