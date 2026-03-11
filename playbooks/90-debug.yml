@@ -25,34 +25,7 @@
         state: absent
 
 - name: Update the apt repository
-  hosts: localhost
+  hosts: vb-test
   become: true
-  tasks:
-    - name: Update the regular apt repo
-      ansible.builtin.deb822_repository:
-        name: debian
-        types: deb
-        uris: http://debian.andrecatherine.net/
-        suites:
-          - trixie
-          - trixie-updates
-        components:
-          - main
-          - contrib
-          - non-free
-          - non-free-firmware
-        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
-
-    - name: Update the security repo
-      ansible.builtin.deb822_repository:
-        name: debian-security
-        types: deb
-        uris: http://security.debian.org/debian-security/
-        suites:
-          - trixie-security
-        components:
-          - main
-          - contrib
-          - non-free
-          - non-free-firmware
-        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+  roles:
+    - waal70.docker
