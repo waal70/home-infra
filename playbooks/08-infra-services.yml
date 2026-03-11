@@ -21,7 +21,7 @@
 
 - name: Deploy infra services onto first agent
   hosts:
-    - infa_services:&portainer_agent
+    - infra_services:&portainer_agent
   become: true
   roles:
     - waal70.forgejo
