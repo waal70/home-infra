@@ -8,7 +8,7 @@
       ansible.builtin.ping:
 - name: Deploy business services to the server with endpoint_idx 0
   hosts:
-    - app_services:&portainer_server
+    - services:&portainer_server
   become: true
   roles:
     - waal70.paperless_ngx
@@ -28,7 +28,7 @@
 
 - name: Deploy business services to the server with endpoint_idx 1
   hosts:
-    - app_services:&portainer_agent
+    - services:&portainer_agent
   become: true
   roles:
     - waal70.dev_tools
