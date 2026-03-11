@@ -3,7 +3,7 @@
 # Convenience playbook to update local DNS entries in the homelab
 - name: Playbook that will update the local DNS entries in Pi-hole and show current entries
   hosts:
-    - dns
+    - core
   become: true
   vars:
     pihole_localdns_newlist:

@@ -1,8 +1,8 @@
 ---
 # file: 08-infra-services.yml
-- name: Deploy virtualized and containerized infra services
+- name: Deploy virtualized and containerized infra services onto endpoint_idx 0
   hosts:
-    - homeserver
+    - infra_services:&portainer_server
   become: true
   roles:
     - waal70.vaultwarden # includes nginx-pm
@@ -19,9 +19,9 @@
         path: /tmp/portainertje
         state: absent
 
-- name: Deploy infra services to outpost servers
+- name: Deploy infra services onto first agent
   hosts:
-    - outpost
+    - infa_services:&portainer_agent
   become: true
   roles:
     - waal70.forgejo

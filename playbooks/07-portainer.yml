@@ -2,15 +2,14 @@
 # file: 07-portainer.yml
 - name: Gather facts for homeserver and outposts
   hosts:
-    - homeserver
-    - outpost
+    - portainer
   tasks:
     - name: Ping these hosts in order to have their facts gathered
       ansible.builtin.ping:
 
-- name: Setup Portainer
+- name: Setup the main Portainer server
   hosts:
-    - homeserver
+    - portainer_server
   become: true
   # strategy: free # noqa: run-once[play]
   roles:

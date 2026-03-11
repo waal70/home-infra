@@ -2,7 +2,7 @@
 # file: 10c-services-homepage.yml
 - name: Update homepage and backup services
   hosts:
-    - homeserver
+    - services:&portainer_server
   become: true
   roles:
     - waal70.homepage

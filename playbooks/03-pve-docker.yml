@@ -12,7 +12,7 @@
       when: pve_reset is defined # will become defined by adding -e "pve_reset=true" on command-line
 
 - name: Setup Containerization Environment
-  hosts: homeserver:outpost
+  hosts: docker_hosts
   become: true
   roles:
     - role: waal70.docker

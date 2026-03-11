@@ -54,6 +54,7 @@
     - name: Ensure the host running Ansible has the pre-requisites installed
       ansible.builtin.apt:
         name:
+          - python3-proxmoxer # required by the proxmox inventory plugin
           - python3-netaddr # required by the proxmox inventory plugin
         state: present
       delegate_to: localhost

@@ -3,7 +3,7 @@
 # Convenience playbook to refresh adlists
 - name: Playbook that will update adlists on pihole and re-write configuration
   hosts:
-    - dns
+    - core
   become: true
 #  strategy: free # noqa: run-once[play]
   roles:
