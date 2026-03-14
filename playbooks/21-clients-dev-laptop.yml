@@ -1,13 +1,17 @@
 ---
 # file: 09-dev-laptop.yml
+- name: Assertions to validate this run
+  ansible.builtin.import_playbook: 00-assertions.yml
+
 - name: Setup laptop with GNOME and some packages
   hosts:
     - dev-t440p:chromedev
   become: true
 #  strategy: free # noqa: run-once[play]
   roles:
-    # - waal70.debian_common
+    - waal70.debian_common
     - waal70.debian_desktop
-    - waal70.eclipse
+    # - waal70.eclipse
     - waal70.virtualbox
     - waal70.vscode
+    - waal70.ansible_control
