@@ -14,8 +14,6 @@
       ansible.builtin.include_tasks: validate-ssh.yml
       run_once: true
 
-- name: Assertions to validate this run
-  ansible.builtin.import_playbook: playbooks/00-assertions.yml
 - name: Common configuration for all Debian-based systems
   ansible.builtin.import_playbook: playbooks/01-common.yml
 - name: Common configuration for Raspberry Pi

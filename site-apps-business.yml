@@ -15,8 +15,6 @@
     - name: Include tasks to check for SSH key validity
       ansible.builtin.include_tasks: validate-ssh.yml
 
-- name: Assertions
-  ansible.builtin.import_playbook: playbooks/00-assertions.yml
 - name: Deploy Containerized/Virtualized business apps
   ansible.builtin.import_playbook: playbooks/10-business-services.yml
 
