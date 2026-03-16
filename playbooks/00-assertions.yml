@@ -4,6 +4,46 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: Block to correct known_hosts for the current user running this playbook
+      vars:
+        ssh_keyscan_command: "/usr/bin/ssh-keyscan -T 10"
+        ssh_known_hosts_file: "{{ lookup('env', 'HOME') + '/.ssh/known_hosts' }}"
+        ssout: []
+      run_once: true # Regardless how many hosts were matched, this is a one-off block
+      delegate_to: localhost # Tasks should hit the Ansible controller only!
+      block:
+        - name: Retrieve the hostkeys for hosts from the inventory. Match IP as well as hostname. Ignore comment lines.
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              {{ ssh_keyscan_command }} {{ item }} {{ hostvars[item].ansible_host }} 2>/dev/null | grep ^[^#]
+          with_items: "{{ groups['all'] }}"
+          register: ssh_known_hosts
+          ignore_errors: true
+          changed_when: false
+
+        - name: Process the output of ssh-keyscan. Ignore cases where no output was generated.
+          ansible.builtin.set_fact:
+            ssout: "{{ ssout + skh_r.stdout_lines }}"
+          loop: "{{ ssh_known_hosts.results }}"
+          loop_control:
+            loop_var:
+              skh_r
+          when:
+            - skh_r.stdout_lines is defined
+
+        - name: Add/update the public key in the '{{ ssh_known_hosts_file }}'
+          ansible.builtin.known_hosts:
+            name: "{{ hostkey.split()[0] }}"
+            key: "{{ hostkey }}"
+            path: "{{ ssh_known_hosts_file }}"
+            state: present
+          loop: "{{ ssout }}"
+          loop_control:
+            loop_var: hostkey
+          diff: false
+        # END BLOCK correct known_hosts
+
     - name: Verify connectivity to the hosts that are targeted # noqa: ignore-errors
       ansible.builtin.command: touch /tmp/ansible-ssh-check
       ignore_errors: true
