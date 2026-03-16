@@ -2,6 +2,8 @@
 # file: site.yml
 # Run ALL THE THINGS :)
 
+- name: Run the assertions
+  ansible.builtin.import_playbook: playbooks/00-assertions.yml
 - name: Site Infra
   ansible.builtin.import_playbook: site-infra.yml
 - name: Site Apps Infra
