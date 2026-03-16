@@ -8,16 +8,6 @@
     - waal70.vaultwarden # includes nginx-pm
     - waal70.authentik
     - waal70.backup
-  pre_tasks:
-    - name: As we are starting the run, delete any left-over marker
-      ansible.builtin.file:
-        path: /tmp/portainertje
-        state: absent
-  post_tasks:
-    - name: Run completed, so delete the marker
-      ansible.builtin.file:
-        path: /tmp/portainertje
-        state: absent
 
 - name: Deploy infra services onto first agent
   hosts:
@@ -34,16 +24,7 @@
       - /appdata
       - /data
     backup_minute: "45"
-  pre_tasks:
-    - name: As we are starting the run, delete any left-over marker
-      ansible.builtin.file:
-        path: /tmp/portainertje
-        state: absent
   post_tasks:
     - name: Inform user of state of variable
       ansible.builtin.debug:
         msg: "host is {{ ansible_facts['hostname'] }}"
-    - name: Run completed, so delete the marker
-      ansible.builtin.file:
-        path: /tmp/portainertje
-        state: absent
