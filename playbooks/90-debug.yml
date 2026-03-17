@@ -12,11 +12,14 @@
         msg: "Dummy task for {{ ansible_facts['distribution_release'] }}"
     - name: "Debug dists"
       ansible.builtin.debug:
-        msg: 
+        msg:
           - "dists: {{ debmirror_dists | join(',') }}"
           - "archs: {{ debmirror_archs | join(',') }}"
+          - "role-wrangling: {{ rolio | split('.') | last }}"
+          - "dynamic: {{ service_name }}"
   vars:
     endpoint_idx: 1
+    rolio: "geerlingguy.waal70.thisismyrole"
     debmirror_exe: "/usr/bin/debmirror"
     debmirror_host: "debian.snt.utwente.nl"
     debmirror_arch_pi4: "arm64"
