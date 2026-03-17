@@ -1,26 +1,43 @@
 ---
-- name: Dummy for pi5-02
-  hosts:
-    - pi5-02
-  become: true
-  gather_facts: true
-  tasks:
-    - name: "Debug the hostname"
-      ansible.builtin.debug:
-        msg: "Dummy task for {{ ansible_facts['hostname'] }}"
-
-- name: Show info on specific host
+- name: Dummy for localhost
   hosts:
     - pi5-01
   become: true
   gather_facts: true
   roles:
     - waal70.debmirror
+  tasks:
+    - name: "Debug the facts"
+      ansible.builtin.debug:
+        msg: "Dummy task for {{ ansible_facts['distribution_release'] }}"
+    - name: "Debug dists"
+      ansible.builtin.debug:
+        msg: 
+          - "dists: {{ debmirror_dists | join(',') }}"
+          - "archs: {{ debmirror_archs | join(',') }}"
   vars:
     endpoint_idx: 1
-
-- name: Update the apt repository
-  hosts: vb-test
-  become: true
-  roles:
-    - waal70.docker
+    debmirror_exe: "/usr/bin/debmirror"
+    debmirror_host: "debian.snt.utwente.nl"
+    debmirror_arch_pi4: "arm64"
+    debmirror_arch_pi5: "armhf"
+    debmirror_arch_intel: "amd64"
+    debmirror_archs: [
+      "{{ debmirror_arch_intel }}",
+      "{{ debmirror_arch_pi4 }}",
+      "{{ debmirror_arch_pi5 }}"
+    ]
+    debmirror_dists: [
+      "{{ ansible_facts['distribution_release'] }}",
+      "{{ ansible_facts['distribution_release'] }}-updates"
+    ]
+    debmirror_sections: [
+      "main",
+      "contrib",
+      "non-free",
+      "non-free-firmware",
+      "main/debian-installer",
+      "contrib/debian-installer",
+      "non-free/debian-installer",
+      "non-free-firmware/debian-installer"
+    ]
