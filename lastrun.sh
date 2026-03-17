@@ -3,7 +3,7 @@
 # sudo /bin/bash ${HOME}/ansible/home-infra/luks/mountContainer.sh UNDO
 ansible pi5-01 -m community.general.shutdown -u ansible --become
 ansible pi5-03 -m community.general.shutdown -u ansible --become
-ansible testenv -m community.general.shutdown -u ansible --become
+ansible testenv1 -m community.general.shutdown -u ansible --become
 ansible testenv2 -m community.general.shutdown -u ansible --become
 ansible testenv3 -m community.general.shutdown -u ansible --become
 ssh-add -D
