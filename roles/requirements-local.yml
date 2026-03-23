@@ -114,6 +114,10 @@ roles:
     src: https://git.andrecatherine.net/waal70/ansible-role-pxe_prep
     version: main
     scm: git
+  - name: waal70.romm
+    src: https://git.andrecatherine.net/waal70/ansible-role-romm
+    version: main
+    scm: git
   - name: waal70.samba_ad_dc
     src: https://git.andrecatherine.net/waal70/ansible-role-samba_ad_dc
     version: main

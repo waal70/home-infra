@@ -5,7 +5,7 @@
   become: true
   gather_facts: true
   roles:
-    - waal70.debmirror
+    - waal70.romm
   tasks:
     - name: "Debug the facts"
       ansible.builtin.debug:
