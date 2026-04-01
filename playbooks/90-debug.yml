@@ -4,12 +4,10 @@
     - pi5-01
   become: true
   gather_facts: true
-  roles:
-    - waal70.romm
   tasks:
     - name: "Debug the facts"
       ansible.builtin.debug:
-        msg: "Dummy task for {{ ansible_facts['distribution_release'] }}"
+        msg: "Dummy task for {{ now(fmt='%d %B %Y %H:%M:%S') }}"
     - name: "Debug dists"
       ansible.builtin.debug:
         msg:

@@ -1,14 +1,14 @@
 ---
 # file: site-clients.yml
 # This file ensures configuration for client devices is done
-- name: Ensure connectivity for Ansible
-  hosts:
-    - localhost
-  tasks:
-  # We choose include because the YAML will use discovered values
-    - name: Include tasks to check for SSH key validity
-      ansible.builtin.include_tasks: validate-ssh.yml
-      run_once: true
+# - name: Ensure connectivity for Ansible
+#   hosts:
+#     - localhost
+#   tasks:
+#   # We choose include because the YAML will use discovered values
+#     - name: Include tasks to check for SSH key validity
+#       ansible.builtin.include_tasks: validate-ssh.yml
+#       run_once: true
 
 - name: Common configuration for all Debian-based systems
   ansible.builtin.import_playbook: playbooks/20-clients-common.yml

@@ -7,16 +7,9 @@
 # These services may also be virtualized or containerized (nginx-pm)
 # Basically anything you require in order to run services in your homelab
 
-- name: Ensure connectivity for Ansible
-  hosts:
-    - localhost
-  tasks:
-  # We choose include because the YAML will use discovered values
-    - name: Include tasks to check for SSH key validity
-      ansible.builtin.include_tasks: validate-ssh.yml
 
 - name: Deploy Containerized/Virtualized business apps
-  ansible.builtin.import_playbook: playbooks/10-business-services.yml
+  ansible.builtin.import_playbook: playbooks/10b-all-services.yml
 
 - name: Inform the user about which private key file is being used
   hosts:

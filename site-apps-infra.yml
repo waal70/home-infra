@@ -7,14 +7,6 @@
 # These services may also be virtualized or containerized (nginx-pm)
 # Basically anything you require in order to run services in your homelab
 
-- name: Ensure connectivity for Ansible
-  hosts:
-    - localhost
-  tasks:
-  # We choose include because the YAML will use discovered values
-    - name: Include tasks to check for SSH key validity
-      ansible.builtin.include_tasks: validate-ssh.yml
-
 - name: Active Directory Domain Controller
   ansible.builtin.import_playbook: playbooks/04-ad-dc.yml
 - name: TFTP Server setup
@@ -23,8 +15,6 @@
   ansible.builtin.import_playbook: playbooks/06-dns.yml
 - name: Deploy Portainer and Portainer Agent(s)
   ansible.builtin.import_playbook: playbooks/07-portainer.yml
-- name: Deploy Containerized/Virtualized infra apps
-  ansible.builtin.import_playbook: playbooks/08-infra-services.yml
 
 - name: Inform the user about which private key file is being used
   hosts:
