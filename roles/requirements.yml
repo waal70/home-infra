@@ -98,6 +98,9 @@ roles:
   - name: waal70.ssh_host_key
     src: https://github.com/waal70/ansible-role-ssh_host_key
     version: main
+  - name: waal70.tado_local
+    src: https://github.com/waal70/ansible-role-tado_local
+    version: main
   - name: waal70.tftp
     src: https://github.com/waal70/ansible-role-tftp
     version: main

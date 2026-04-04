@@ -3,6 +3,8 @@
   hosts:
     - pi5-01
   become: true
+  roles:
+    - waal70.tado_local
   gather_facts: true
   tasks:
     - name: "Debug the facts"

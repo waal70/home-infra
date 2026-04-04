@@ -130,6 +130,10 @@ roles:
     src: https://git.andrecatherine.net/waal70/ansible-role-ssh_host_key
     version: main
     scm: git
+  - name: waal70.tado_local
+    src: https://git.andrecatherine.net/waal70/ansible-role-tado_local
+    version: main
+    scm: git
   - name: waal70.tftp
     src: https://git.andrecatherine.net/waal70/ansible-role-tftp
     version: main
